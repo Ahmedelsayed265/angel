@@ -1,0 +1,91 @@
+{% extends 'layout.jinja' %}
+
+{% block header %}
+  {% include 'header.jinja' %}
+{% endblock %}
+
+{% block top_links %}
+  <link rel="stylesheet" type="text/css" href="{{ ('product-details.css?v=' ~ ver) | asset_url }}" />
+  <link rel="stylesheet" type="text/css" href="{{ 'toastr.min.css' | asset_url }}" />
+{% endblock %}
+
+{% block main_content %}
+  <section class="mt-5">
+    <div class="container pb-5 product">
+      <div class="row">
+        {% if product.images and product.images[0].image.medium is defined %}
+          <div class="col-md-3">
+            <img src="{{ product.main_image.image.medium if product.main_image else '' }}" alt="product-image" class="img-fluid" />
+          </div>
+        {% endif %}
+        <div class="col-md-9 d-flex align-items-center">
+          <h3>{{ product.name }}</h3>
+        </div>
+      </div>
+      <div class="questions mt-5">
+        <div class="d-flex justify-content-between align-items-center">
+          <h4>{{ _("Questions") }} </h4>
+          <div>
+            <button type="button" class="btn btn-primary btn-lg add-review-btn" id="addQuestionButton">{{ _("Add your question") }} </button>
+          </div>
+        </div>
+      </div>
+      <div class="mt-5">
+        {% if product.questions is defined and product.questions is not none and product.questions.results is defined and product.questions.results is not none %}
+          {% for question in product.questions.results %}
+            <div class="card questions-card-preview mt-2 mb-5">
+              <div class="card-body p-0">
+                {% if not question.is_anonymous and question.name is defined and question.name is not none %}
+                  <div class="customer-name">{{ question.name }}</div>
+                {% endif %}
+                <div class="d-flex">
+                  <div class="question-box">
+                    <p class="question">{{ question.question }}</p>
+                  </div>
+                </div>
+                <div class="answer-box">
+                  <p class="answer m-0">{{ question.answers[0].answer }}</p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+      {% if product.questions is defined and product.questions.pages_count > 1 %}
+        <div class="d-flex justify-content-center">
+          <nav class="questions-pagination">
+            <ul class="pagination">
+              <!-- Previous Page Link -->
+              <li class="page-item {% if product.questions.page == 1 %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('product_questions', slug=product.id, query_params={'page': product.questions.page - 1}) }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+              </li>
+
+              {% for page in product.questions.pages %}
+                <li class="page-item {% if product.questions.page == page %}disabled selected{% endif %}">
+                  <a class="page-link" href="{{ url_for('product_questions', slug=product.id, query_params={'page': page }) }}">{{ page }}</a>
+                </li>
+              {% endfor %}
+
+              <!-- Next Page Link -->
+              <li class="page-item {% if product.questions.page == product.questions.pages_count %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('product_questions', slug=product.id, query_params={'page': product.questions.page + 1}) }}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      {% endif %}
+    </div>
+    {% set product=product %}{% include 'components/product-question-add.jinja' %}
+  </section>
+{% endblock %}
+
+{% block footer %}
+  {% include 'footer.jinja' %}
+{% endblock %}
+
+{% block footer_scripts %}
+  <script type="text/javascript" src="{{ 'toastr.min.js' | asset_url }}" defer></script>
+  <script>
+  console.log({{product | tojson}});
+  </script>
+{% endblock %}

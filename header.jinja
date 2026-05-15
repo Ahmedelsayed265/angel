@@ -1,0 +1,14 @@
+<header id="{{ sectionId }}" section-id="{{ sectionId }}" class='d-flex flex-column header'>
+  {% include 'vitrin:shared/store_messages.jinja' %}
+
+  {% set ab_settings=settings %}{% include 'components/header-announcement-bar.jinja' %}
+  {% set multiple_countries = store.countries | length > 1 %}
+  {% set multiple_languages = store.languages | length > 1 %}
+
+  <div style="z-index: 3">
+    {% set header_settings=settings %}{% include 'components/header-search-header.jinja' %}
+  </div>
+
+  {% set menu_settings=settings %}{% include 'components/header-sliding-menu.jinja' %}
+  {# {% set menu_settings=settings %}{% include 'components/header-mega-menu.jinja' %} #}
+</header>

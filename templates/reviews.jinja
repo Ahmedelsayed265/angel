@@ -1,0 +1,121 @@
+{% extends "layout.jinja" %}
+
+{% block header %} {% include 'header.jinja' %} {% endblock %}
+
+{% block top_links %}
+<link rel="stylesheet" type="text/css" href="{{ ('product-details.css?v=' ~ ver) | asset_url }}" />
+{% endblock %}
+
+{% block main_content %}
+
+<section class="product products-details-page products-reviews-page">
+   <div class="container pb-5">
+      <section class="products-details mb-5">
+
+         <a href="{{ url_for('product_details', slug=product.slug )}}">
+            <div class="d-flex">
+               <img src="{{ product.main_image.image.large if product.main_image else '' }}" class="product-image" alt="{{ product.name }}" />
+               <h1 style="color: initial">{{ product.name }}</h1>
+            </div>
+         </a>
+
+   <section class="mt-5 review-details">
+      <div>
+         <div class="d-flex flex-wrap align-items-center" style="width: 100%">
+            <div class="description-icon">
+               <span class="icon-reviews_black"></span>
+            </div>
+            <div class="description-title">
+                {{ _("Reviews") }} 
+            </div>
+             {% if product.rating %}
+                <div class="rating-section">
+                   <div>
+                       {% set rating=product.rating.average %}{% include 'components/rating-stars.jinja' %}
+                      <span class="product-card-rating-count">({{ product.rating.total_count }})</span>
+                   </div>
+                </div>
+             {% endif %}
+
+            &nbsp;
+            <!-- Button trigger modal -->
+            <a href="{{ url_for('add_product_review', slug=product.id) }}" class="btn btn-primary add-review-btn"><span class="icon-add_circle"></span>{{ _("Add Comment ") }} </a>
+         </div>
+         <div class="reviews-break-down-div description-paragrah">
+            <div class="d-flex align-items-center mt-3 mb-4">
+                {% if product.rating %}
+                   <h4 class="rating-average">{{ product.rating.average }}</h4>
+                   <div class="d-flex flex-column">
+
+
+                      <div class="row card-rate">
+                         <span class="rating_count_5">{{ product.rating.ratings_5.count }}</span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1"></span> &nbsp;  &nbsp;
+                         <span>{{ _("Great") }} </span>
+                      </div>
+                      <div class="row card-rate">
+                         <span class="rating_count_4">{{ product.rating.ratings_4.count }}</span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1 deactive"></span> &nbsp;  &nbsp;
+                         <span>{{ _("Excellent") }} </span>
+                      </div>
+                      <div class="row card-rate">
+                         <span class="rating_count_3">{{ product.rating.ratings_3.count }}</span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1 deactive"></span>
+                         <span class="icon-star1 deactive"></span> &nbsp;  &nbsp;
+                         <span>{{ _("Good") }} </span>
+                      </div>
+                      <div class="row card-rate">
+                         <span class="rating_count_2">{{ product.rating.ratings_2.count }}</span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1 deactive"></span>
+                         <span class="icon-star1 deactive"></span>
+                         <span class="icon-star1 deactive"></span> &nbsp;  &nbsp;
+                         <span>{{ _("Dislike") }} </span>
+                      </div>
+                      <div class="row card-rate">
+                         <span class="rating_count_1">{{ product.rating.ratings_1.count }}</span>
+                         <span class="icon-star1"></span>
+                         <span class="icon-star1 deactive"></span>
+                         <span class="icon-star1 deactive"></span>
+                         <span class="icon-star1 deactive"></span>
+                         <span class="icon-star1 deactive"></span> &nbsp;  &nbsp;
+                         <span>{{ _("Bad") }} </span>
+                      </div>
+                   </div>
+                {% endif %}
+            </div>
+         </div>
+         <div class="reviews-break-down-empty description-paragrah d-none">
+            <div style="border: 1px solid #ccc; margin: 10px 0px; padding: 10px; border-radius: 3px">
+               <span>{{ _("No reviews, add yours") }} </span>
+            </div>
+         </div>
+
+         <div class="comment-section description-paragrah bg-transparent">
+             {% set reviews=product.reviews.results %}{% include 'components/customer-reviews.jinja' %}
+         </div>
+
+      </div>
+   </section>
+
+    {% set totalPages=product.reviews.pages_count %}{% set currentPage=product.reviews.page %}{% include 'components/pagination.jinja' %}
+
+
+      </section>
+   </div>
+</section>
+{% endblock %}
+
+{% block footer %} {% include 'footer.jinja' %} {% endblock %}

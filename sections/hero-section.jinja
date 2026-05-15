@@ -1,0 +1,122 @@
+{% set hero_tabs = safeget(settings, "tabs", []) %}
+
+{% if hero_tabs and hero_tabs | length > 0 %}
+<section id="{{ sectionId }}" section-id="{{ sectionId }}" class="angel-hero-section">
+  <div class="angel-hero-tabs" role="tablist" aria-label="Hero slides">
+    {% for tab in hero_tabs %}
+      <button
+        type="button"
+        class="angel-hero-tab{% if loop.first %} is-active{% endif %}"
+        role="tab"
+        aria-selected="{{ 'true' if loop.first else 'false' }}"
+        aria-controls="{{ sectionId }}-panel-{{ loop.index }}"
+        data-hero-tab="{{ loop.index }}"
+      >
+        {{ tab.title if tab.title else loop.index }}
+      </button>
+    {% endfor %}
+  </div>
+
+  <div class="angel-hero-panels">
+    {% for tab in hero_tabs %}
+      {% set has_image = tab.image %}
+      {% set has_video = tab.video %}
+      {% set show_video = tab.display_video and has_video %}
+      {% set video_url = tab.video | default("") %}
+
+      <div
+        id="{{ sectionId }}-panel-{{ loop.index }}"
+        class="angel-hero-panel{% if loop.first %} is-active{% endif %}"
+        role="tabpanel"
+        data-hero-panel="{{ loop.index }}"
+      >
+        <div class="angel-hero-loader" aria-hidden="true"></div>
+
+        {% if show_video %}
+          <video class="angel-hero-media" autoplay muted loop playsinline controls>
+            <source src="{{ video_url }}">
+          </video>
+        {% elif has_image %}
+          <img
+            class="angel-hero-media"
+            src="{{ tab.image }}"
+            alt="{{ tab.title if tab.title else store.name }}"
+            loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
+          >
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+  (function () {
+    var section = document.getElementById('{{ sectionId }}');
+    if (!section) return;
+
+    var tabs = section.querySelectorAll('[data-hero-tab]');
+    var panels = section.querySelectorAll('[data-hero-panel]');
+    var loaderTimer;
+
+    function setPanelLoading(panel, isLoading) {
+      panel.classList.toggle('is-loading', isLoading);
+    }
+
+    function waitForPanelMedia(panel) {
+      var media = panel.querySelector('.angel-hero-media');
+      window.clearTimeout(loaderTimer);
+
+      if (!media) {
+        setPanelLoading(panel, false);
+        return;
+      }
+
+      if ((media.tagName === 'IMG' && media.complete) || (media.tagName === 'VIDEO' && media.readyState >= 2)) {
+        setPanelLoading(panel, false);
+        return;
+      }
+
+      var finishLoading = function () {
+        setPanelLoading(panel, false);
+      };
+
+      media.addEventListener('load', finishLoading, { once: true });
+      media.addEventListener('loadeddata', finishLoading, { once: true });
+      media.addEventListener('error', finishLoading, { once: true });
+      loaderTimer = window.setTimeout(finishLoading, 1200);
+    }
+
+    function activateTab(index) {
+      var activePanel;
+
+      tabs.forEach(function (tab) {
+        var isActive = tab.getAttribute('data-hero-tab') === index;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      panels.forEach(function (panel) {
+        var isActive = panel.getAttribute('data-hero-panel') === index;
+        panel.classList.toggle('is-active', isActive);
+
+        if (isActive) {
+          activePanel = panel;
+          setPanelLoading(panel, true);
+        } else {
+          setPanelLoading(panel, false);
+        }
+      });
+
+      if (activePanel) {
+        waitForPanelMedia(activePanel);
+      }
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        activateTab(tab.getAttribute('data-hero-tab'));
+      });
+    });
+  })();
+</script>
+{% endif %}

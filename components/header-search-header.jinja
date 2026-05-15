@@ -1,0 +1,440 @@
+{% set header_options_raw = safeget(settings, "header_options", []) %}
+{% set header_options =
+    header_options_raw
+    if header_options_raw is iterable and header_options_raw is not boolean and header_options_raw is not string
+    else []
+%}
+{% set multiple_languages = store.languages | length > 1 %}
+{% set show_country = 'hide_country' not in header_options %}
+{% set show_language = 'hide_language' not in header_options %}
+{% set selected_country = session.shipping_destination.country if session.shipping_destination else session.country %}
+{% set selected_country_code = safeget(selected_country, "code", safeget(selected_country, "country_code", safeget(selected_country, "iso_code", safeget(selected_country, "iso2", "")))) %}
+{% if session.lang == 'en' %}
+    {% set change_to_lang = 'ar' %}
+    {% set change_to_lang_name = 'العربية' %}
+{% else %}
+    {% set change_to_lang = 'en' %}
+    {% set change_to_lang_name = 'English' %}
+{% endif %}
+{% set suggested_search_tags = [
+    _('iPhone'), _('Apple'), _('Samsung'), _('Headphones'), _('Charger'), _('iPhone 15')
+] %}
+
+<div class="search-header">
+    <div class="container">
+        <div class="search-header-bar search-header-bar--trisection">
+            <div class="search-header-bar__start">
+                <button onclick="openSlidingMenu()" class="header-menu-trigger ic menu icon-menu-top d-block d-lg-none" type="button" tabindex="1" style="all: unset; cursor: pointer;">
+                    <i class="sicon-menu text-primary header-menu-trigger__icon"></i>
+                    <span class="da-tm header-menu-trigger__label">{{ _("Menu") }}</span>
+                </button>
+            </div>
+
+            <div class="search-header-bar__center">
+                <a href="/" class="search-header-bar__logo-link">
+                    {% if settings.header_logo %}
+                        {% set logoUrl = settings.header_logo %}
+                    {% else %}
+                        {% set logoUrl = store.logo %}
+                    {% endif %}
+                    {% if settings.header_logo_mobile %}
+                        {% set logoUrlMobile = settings.header_logo_mobile %}
+                    {% elif store.settings.branding.mobile_app_logo %}
+                        {% set logoUrlMobile = store.settings.branding.mobile_app_logo %}
+                    {% endif %}
+
+                    <img class="image-logo{% if logoUrlMobile is defined and logoUrlMobile is not none %} d-none d-lg-block {% endif %}" src="{{ image_url(logoUrl, h=175, q=100) }}" alt="{{ store.name }}" style="width: auto; max-height: 100%" decoding="async" fetchpriority="high">
+
+                    {% if logoUrlMobile %}
+                        <img class="image-logo d-block d-lg-none" src="{{ image_url(logoUrlMobile, h=175, q=100) }}" alt="{{ store.name }}" style="width: auto; max-height: 100%" decoding="async" fetchpriority="high">
+                    {% endif %}
+                </a>
+            </div>
+
+            <div class="search-header-bar__end header-actions-cluster">
+                {% if show_country or (multiple_languages and show_language) %}
+                <div class="header-region-switcher">
+                    <button type="button" class="header-region-button" onclick="zidOpenRegionSettingDialog()" aria-label="{{ _('Change country or language') }}">
+                        {% if show_country and selected_country_code %}
+                            <img class="header-region-button__flag" src="https://flagcdn.com/w40/{{ selected_country_code | lower }}.png" srcset="https://flagcdn.com/w80/{{ selected_country_code | lower }}.png 2x" alt="" aria-hidden="true" loading="lazy">
+                        {% elif show_country %}
+                            <span class="header-region-button__flag header-region-button__flag--fallback" aria-hidden="true"></span>
+                        {% endif %}
+                        <span class="header-region-button__text">
+                            {% if show_country %}{{ session.currency }}{% endif %}
+                            {% if show_country and (multiple_languages and show_language) %}<span class="header-region-button__separator">/</span>{% endif %}
+                            {% if multiple_languages and show_language %}{{ session.lang | upper }}{% endif %}
+                        </span>
+                        <span class="header-region-button__chevron" aria-hidden="true"></span>
+                    </button>
+                </div>
+                {% endif %}
+
+                {% if not ('hide_search_bar' in header_options) %}
+                <button type="button" class="header-icon-control sm-search-icon js-open-search-popup" aria-label="{{ _('Search') }}">
+                    <span class="header-icon-btn"><i class="sicon-search text-base text-black da-tm"></i></span>
+                </button>
+                {% endif %}
+
+                <button type="button" id="login-btn" class="header-icon-control" onclick="handleLoginAction()" aria-label="{{ _('Login') }}">
+                    <span class="header-icon-btn"><i class="sicon-user text-base text-black da-tm"></i></span>
+                </button>
+                <a href="{{ url_for('profile') }}" id="hello-btn" class="header-icon-control" style="display: none;" aria-label="{{ _('Account') }}">
+                    <span class="header-icon-btn"><i class="sicon-user text-base text-black da-tm"></i></span>
+                    <span id="customer-greeting" class="sr-only">{{ _("Hello") }} ...</span>
+                </a>
+
+                <div style="position: relative">
+                    <a class="header-cart-wrap a-shopping-cart" href="{{ url_for('cart_page') }}" style="color: inherit; display: inline-flex; position: relative">
+                        <span class="header-icon-btn"><i class="sicon-cart text-base text-black da-tm"></i></span>
+                        <span class="cart-badge d-none"></span>
+                    </a>
+                    {% if store.settings.checkout.gift_order_settings.is_gift_order_customer_motivation_enabled == '1' %}
+                      <div id="tooltip" class="d-none popover" role="tooltip">
+                        <div class="arrow"></div>
+                        <div class="gift-popover-body">
+                          <img src="{{ 'gift-popover-icon.svg' | asset_url }}" width="24" height="24" />
+                          <p class="h6 my-2">
+                            {{ _('Send as gift') }}
+                          </p>
+                          <button class="btn round primary d-block">
+                            <a href="/cart" class="no-border d-block">
+                              {{ _('continue') }}
+                            </a>
+                          </button>
+                        </div>
+                      </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not ('hide_search_bar' in header_options) %}
+<div id="search-popup-overlay" class="search-popup-overlay" aria-hidden="true">
+    <div class="search-popup-overlay__backdrop"></div>
+    <button type="button" class="search-popup-close" aria-label="{{ _('Close') }}">&times;</button>
+    <div class="search-popup-overlay__panel">
+        <h2 class="search-popup-title">{{ _("What are you looking for?") }}</h2>
+        <div class="form-group search-popup-field mb-0">
+            <div class="search-popup-input-wrap">
+                <i class="sicon-search search-popup-input-icon" aria-hidden="true"></i>
+                <div class="autocomplete search-popup-autocomplete" style="position: relative; width: 100%">
+                    <input type="text"
+                           data-cat-id="{{ category.id if category is defined else '' }}"
+                           class="form-control search-input-input search-popup-input"
+                           placeholder="{% if settings.header_search_placeholder %}{{ settings.header_search_placeholder }}{% elif settings.search_placeholder %}{{ settings.search_placeholder }}{% else %}{{ _('Enter search term') }}{% endif %}"
+                           autocomplete="off"
+                    >
+                    <div class="autocomplete-items"></div>
+                </div>
+            </div>
+        </div>
+        <div class="search-tags-container">
+            <p class="search-popup-suggest-label">{{ _("Our store customers are searching for") }}</p>
+            <div class="search-popup-tags">
+                {% for tag in suggested_search_tags %}
+                <button type="button" class="search-popup-tag" data-q="{{ tag }}">{{ tag }}</button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+function openSlidingMenu() {
+    if (window.slidingMenu && window.slidingMenu.open) {
+        window.slidingMenu.open();
+
+    } else if (typeof SlideMenu !== 'undefined') {
+        var element = document.getElementById('sliding-menu');
+        if (element) {
+            window.slidingMenu = new SlideMenu(element, {
+                position: (window.appDirection === 'ltr') ? 'left' : 'right',
+                showBackLink: true,
+                backLinkBefore: (window.appDirection === 'ltr') ? '<span class="icon-arrow_left slide-menu-arrow slide-menu-arrow-back"></span>' : '<span class="icon-arrow_right slide-menu-arrow slide-menu-arrow-back"></span>',
+                submenuLinkAfter: (window.appDirection === 'ltr') ? '<span class="icon-arrow_right slide-menu-arrow"></span>' : '<span class="icon-arrow_left slide-menu-arrow"></span>'
+            });
+
+            if (typeof $ !== 'undefined') {
+                element.addEventListener('sm.open', () => $('body').addClass('sidenav-open'));
+                element.addEventListener('sm.close', () => $('body').removeClass('sidenav-open'));
+            }
+
+            window.slidingMenu.open();
+        }
+    }
+}
+
+document.addEventListener('zid-customer-fetched', function (event) {
+    const customer = event.detail.customer;
+    if (customer && customer.name) {
+        const greeting = document.getElementById('customer-greeting');
+        if (!greeting) return;
+        const greetingText = greeting.textContent.trim();
+        const helloWord = greetingText.split(' ')[0];
+        greeting.textContent = `${helloWord} ${customer.name}`;
+
+        const helloBtn = document.getElementById('hello-btn');
+        const loginBtn = document.getElementById('login-btn');
+        if (helloBtn) helloBtn.style.display = 'inline-flex';
+        if (loginBtn) loginBtn.style.display = 'none';
+    }
+});
+
+(function () {
+    var header =
+        document.querySelector('header.header[section-id]') ||
+        document.querySelector('.app > header.header') ||
+        document.querySelector('.header');
+    var searchHeader = header ? header.querySelector('.search-header') : document.querySelector('.search-header');
+    var stickyThreshold = 200;
+
+    if (!header && !searchHeader) return;
+
+    function getScrollTop() {
+        return (
+            window.pageYOffset ||
+            window.scrollY ||
+            (document.scrollingElement && document.scrollingElement.scrollTop) ||
+            document.documentElement.scrollTop ||
+            document.body.scrollTop ||
+            0
+        );
+    }
+
+    function updateStickyState() {
+        var isFixed = getScrollTop() > stickyThreshold;
+
+        if (header) {
+            header.classList.toggle('header--is-fixed', isFixed);
+        }
+
+        if (searchHeader) {
+            searchHeader.classList.toggle('search-header--is-stuck', isFixed);
+        }
+    }
+
+    function bindScroll() {
+        updateStickyState();
+        window.addEventListener('scroll', updateStickyState, { passive: true });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bindScroll);
+    } else {
+        bindScroll();
+    }
+})();
+
+{% if store.settings.products.filter_by_nearest_inventory %}
+document.addEventListener('DOMContentLoaded', function() {
+    const storedData = localStorage.getItem('zid_kit_select_branch');
+    if (!storedData) return;
+
+    const lang = '{{ session.lang }}';
+    const deliveryToText = '{{ _("Delivery to:") }}';
+    const pickupFromText = '{{ _("Pickup from:") }}';
+    const data = JSON.parse(storedData);
+    const branchData = data.branchData;
+    const buttons = document.querySelectorAll('.currency-btn');
+
+    if (!buttons.length) return;
+
+    let displayText = '';
+    if (branchData.type === 'pickup' && branchData.pickup) {
+        displayText = `${pickupFromText} ${branchData.pickup.name}`;
+    } else if (branchData.type === 'delivery' && branchData.address) {
+        const addr = branchData.address;
+        const cityName = lang === 'ar' ? addr.city_name_ar : addr.city_name_en;
+        displayText = `${deliveryToText} ${cityName}`;
+    }
+
+    if (displayText) {
+        buttons.forEach(btn => btn.textContent = displayText);
+    }
+
+});
+{% endif %}
+
+(function () {
+    var overlay = document.getElementById('search-popup-overlay');
+    if (!overlay) return;
+    var input = overlay.querySelector('.search-popup-input');
+    var resultsContainer = overlay.querySelector('.autocomplete-items');
+    var searchIcon = overlay.querySelector('.search-popup-input-icon');
+    var searchDebounceTimer;
+    var latestSearchQuery = '';
+    var noResultsMessage = {{ _("No results found") | tojson }};
+
+    if (overlay.parentElement !== document.body) {
+        document.body.appendChild(overlay);
+    }
+
+    function escapePopupSearchHtml(value) {
+        return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function getPopupSearchProducts(response) {
+        if (!response) return [];
+        if (Array.isArray(response)) return response;
+        if (Array.isArray(response.results)) return response.results;
+        if (response.data && Array.isArray(response.data.results)) return response.data.results;
+        if (response.data && Array.isArray(response.data)) return response.data;
+        if (Array.isArray(response.products)) return response.products;
+        return [];
+    }
+
+    function getPopupSearchImage(product) {
+        if (product.main_image && product.main_image.image) {
+            return product.main_image.image.small || product.main_image.image.medium || product.main_image.image.full_size || '';
+        }
+
+        if (product.images && product.images[0] && product.images[0].image) {
+            return product.images[0].image.small || product.images[0].image.medium || product.images[0].image.full_size || '';
+        }
+
+        return product.image || product.image_url || '';
+    }
+
+    function renderPopupSearchProduct(product) {
+        var imageUrl = getPopupSearchImage(product);
+        var price = product.formatted_sale_price || product.formatted_price || product.price_string || '';
+        var oldPrice = product.formatted_sale_price && product.formatted_price
+            ? '<span class="search-popup-product-result__old-price">' + escapePopupSearchHtml(product.formatted_price) + '</span>'
+            : '';
+        var image = imageUrl
+            ? '<img class="search-popup-product-result__image" src="' + escapePopupSearchHtml(imageUrl) + '" alt="' + escapePopupSearchHtml(product.name) + '" loading="lazy">'
+            : '<span class="search-popup-product-result__image search-popup-product-result__image--empty"></span>';
+        var productUrl = product.html_url || (product.slug ? '/products/' + product.slug : '#');
+
+        return (
+            '<div class="search-popup-product-result">' +
+                '<a class="search-popup-product-result__link" href="' + escapePopupSearchHtml(productUrl) + '">' +
+                    image +
+                    '<span class="search-popup-product-result__content">' +
+                        '<span class="search-popup-product-result__title">' + escapePopupSearchHtml(product.name) + '</span>' +
+                        '<span class="search-popup-product-result__prices">' +
+                            '<span class="search-popup-product-result__price">' + escapePopupSearchHtml(price) + '</span>' +
+                            oldPrice +
+                        '</span>' +
+                    '</span>' +
+                '</a>' +
+            '</div>'
+        );
+    }
+
+    function setPopupSearchLoading(isLoading) {
+        overlay.classList.toggle('search-popup-overlay--is-loading', isLoading);
+        if (searchIcon) {
+            searchIcon.classList.toggle('sicon-search', !isLoading);
+        }
+    }
+
+    function renderPopupSearchMessage(message) {
+        resultsContainer.innerHTML = '<div class="search-popup-product-result search-popup-product-result--message">' + escapePopupSearchHtml(message) + '</div>';
+    }
+
+    function fetchPopupProducts(query) {
+        var trimmedQuery = (query || '').trim();
+        if (!input || !resultsContainer || !trimmedQuery) {
+            if (resultsContainer) resultsContainer.innerHTML = '';
+            setPopupSearchLoading(false);
+            return;
+        }
+
+        if (!window.zid || !zid.products || !zid.products.list) {
+            resultsContainer.innerHTML = '';
+            setPopupSearchLoading(false);
+            return;
+        }
+
+        latestSearchQuery = trimmedQuery;
+        resultsContainer.innerHTML = '';
+        setPopupSearchLoading(true);
+
+        zid.products.list({
+            page_size: 5,
+            q: trimmedQuery,
+            categories: input.getAttribute('data-cat-id') || undefined
+        }, { showErrorNotification: false }).then(function (response) {
+            var products = getPopupSearchProducts(response);
+            if (latestSearchQuery !== trimmedQuery) return;
+
+            if (!products.length) {
+                setPopupSearchLoading(false);
+                renderPopupSearchMessage(noResultsMessage);
+                return;
+            }
+
+            resultsContainer.innerHTML = products.map(renderPopupSearchProduct).join('');
+            setPopupSearchLoading(false);
+        }).catch(function () {
+            if (latestSearchQuery === trimmedQuery) {
+                resultsContainer.innerHTML = '';
+                setPopupSearchLoading(false);
+            }
+        });
+    }
+
+    function openSearchPopup() {
+        overlay.classList.add('is-open');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('search-popup-open');
+        if (input) {
+            setTimeout(function () { input.focus(); }, 50);
+        }
+    }
+
+    function closeSearchPopup() {
+        overlay.classList.remove('is-open');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('search-popup-open');
+        setPopupSearchLoading(false);
+    }
+
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.js-open-search-popup')) {
+            openSearchPopup();
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
+            closeSearchPopup();
+        }
+    });
+
+    overlay.querySelector('.search-popup-close').addEventListener('click', closeSearchPopup);
+    overlay.querySelector('.search-popup-overlay__backdrop').addEventListener('click', closeSearchPopup);
+
+    if (input) {
+        input.addEventListener('input', function () {
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(function () {
+                fetchPopupProducts(input.value);
+            }, 250);
+        });
+    }
+
+    document.addEventListener('click', function (e) {
+        var tag = e.target.closest('.search-popup-tag');
+        if (!tag) return;
+
+        var q = tag.getAttribute('data-q') || tag.textContent.trim();
+        var input = overlay.querySelector('.search-popup-input');
+        if (!q || !input) return;
+
+        input.value = q;
+        input.focus();
+        fetchPopupProducts(q);
+    });
+})();
+</script>

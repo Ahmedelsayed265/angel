@@ -1,0 +1,52 @@
+<div class="profile-section d-none d-lg-block flex-shrink-0" style="background: var( --primary-color); min-height: 550px; padding-top: 20px">
+
+    <div>
+        <div class="profile-item">
+            <a onclick="setTab('#v-pills-home', this)" class="d-flex flex-column profile-row active">
+                <div class="d-flex align-items-center">
+                    <span class="profile-item-image icon-local_shipping"></span>
+                    <h2 class="m-0  profile-item-title">
+                        {{ _("Shipping Option") }}
+                    </h2>
+                </div>
+                <div class="profile-item-description">
+                    <p>{{ _("List of supported shipping options") }}</p>
+                </div>
+
+            </a>
+        </div>
+
+        <div class="profile-item">
+            <a onclick="setTab('#v-pills-profile', this)" class="d-flex flex-column profile-row">
+                <div class="d-flex align-items-center">
+                    <span class="profile-item-image icon-payments_black"></span>
+                    <h2 class=" m-0 profile-item-title">
+                        {{ _("Payment Options") }} 
+                    </h2>
+                </div>
+                <div class="profile-item-description">
+                    <p>{{ _("List of supported payment options") }} </p>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="profile-item">
+            <a onclick="setTab('#v-pills-messages', this)" class="d-flex flex-column profile-row">
+                <div class="d-flex align-items-center">
+                    <span class="profile-item-image icon-account_balance"></span>
+                    <h2 class=" m-0 profile-item-title">
+                        {{ _("Bank Accounts") }}
+                    </h2>
+                </div>
+                <div class="profile-item-description">
+                    <p>{{ _("Bank accounts for regular transfers") }}</p>
+                </div>
+
+            </a>
+        </div>
+
+
+    </div>
+
+</div>

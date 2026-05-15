@@ -1,0 +1,116 @@
+<div class="account-lang-currency upper-bar header-theme-bg-primary header-theme-text-for-primary-bg">
+    <div class="container d-flex justify-content-between">
+        <div class="account-area">
+            <!-- Default Login button (shown initially) -->
+            <button type="button" onclick="handleLoginAction()" class="btn btn-dark account-btn" id="login-btn">
+                <span class="icon-account_circle_black_24dp header-theme-icon-primary" style="position: relative; top: 1px"></span>
+                <span style="position: relative; bottom: 2px">&nbsp;{{ _("Login") }}&nbsp;</span>
+            </button>
+
+            <!-- Placeholder for Hello, Customer (hidden initially) -->
+            <button type="button" onclick="window.location.href='{{ url_for("profile") }}'" class="btn btn-dark account-btn" id="hello-btn" style="display: none;">
+                <span class="icon-account_circle_black_24dp header-theme-icon-primary" style="position: relative; top: 1px"></span>
+                <span id="customer-greeting" style="position: relative; bottom: 2px">{{ _("Hello") }} ...</span>
+            </button>
+        </div>
+
+        {% set multiple_languages = store.languages | length > 1 %}
+        {% set header_options_raw = safeget(settings, "header_options", []) %}
+        {% set header_options =
+            header_options_raw
+            if header_options_raw is iterable and header_options_raw is not boolean and header_options_raw is not string
+            else []
+        %}
+
+        {% set show_country = 'hide_country' not in header_options %}
+        {% set show_language = 'hide_language' not in header_options %}
+
+        
+
+        {% if show_country or (multiple_languages and show_language) %}
+        <div class="language-currency d-flex justify-content-between" onclick="zidOpenRegionSettingDialog()">
+
+            {% if session.lang == 'en' %}
+                {% set change_to_lang = 'ar' %}
+                {% set change_to_lang_name = 'العربية' %}
+            {% else %}
+                {% set change_to_lang = 'en' %}
+                {% set change_to_lang_name = 'English' %}
+            {% endif %}
+
+            {% if show_country %}
+                {% if session.shipping_destination %}
+                    <div class="currency-button-area d-flex justify-content-center">
+                        <button class="c-btn currency-btn">{{ session.shipping_destination.country.name }} - {{ session.shipping_destination.name }} </button>
+                    </div>
+                {% else %}
+                    <div class="currency-button-area d-flex justify-content-center">
+                        <button class="c-btn currency-btn">{{ session.country.names[session.lang] }}</button>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {% if show_country and show_language %}
+            <div class="vertical-line"></div>
+            {% endif %}
+            {% if multiple_languages and show_language %}
+            <div class="language-button-area d-flex justify-content-between">
+                <button type="submit" class='c-btn language-btn d-flex justify-content-between align-items-center'>
+                    <span class="px-2">{{ change_to_lang_name }}</span>&nbsp;
+                    <span class="icon-language_white"></span>
+                </button>
+            </div>
+            {% endif %}
+
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('zid-customer-fetched', function (event) {
+    const customer = event.detail.customer;
+    if (customer && customer.name) {
+        // Update greeting text
+        const greeting = document.getElementById('customer-greeting');
+        // Extract the "Hello" text from the existing greeting element (it contains translated text)
+        const greetingText = greeting.textContent.trim();
+        const helloWord = greetingText.split(' ')[0]; // Get "Hello" or translated equivalent (e.g., "مرحبا")
+        greeting.textContent = `${helloWord} ${customer.name}`;
+
+        // Show Hello button, hide Login button
+        document.getElementById('hello-btn').style.display = 'inline-block';
+        document.getElementById('login-btn').style.display = 'none';
+    }
+});
+
+{% if store.settings.products.filter_by_nearest_inventory %}
+document.addEventListener('DOMContentLoaded', function() {
+    const storedData = localStorage.getItem('zid_kit_select_branch');
+    if (!storedData) return;
+
+    const lang = '{{ session.lang }}';
+    const deliveryToText = '{{ _("Delivery to:") }}';
+    const pickupFromText = '{{ _("Pickup from:") }}';
+    const data = JSON.parse(storedData);
+    const branchData = data.branchData;
+    const buttons = document.querySelectorAll('.currency-btn');
+    
+    if (!buttons.length) return;
+
+    let displayText = '';
+    if (branchData.type === 'pickup' && branchData.pickup) {
+        displayText = `${pickupFromText} ${branchData.pickup.name}`;
+    } else if (branchData.type === 'delivery' && branchData.address) {
+        const addr = branchData.address;
+        const cityName = lang === 'ar' ? addr.city_name_ar : addr.city_name_en;
+        displayText = `${deliveryToText} ${cityName}`;
+    }
+
+    if (displayText) {
+        buttons.forEach(btn => btn.textContent = displayText);
+    }
+
+});
+{% endif %}
+</script>

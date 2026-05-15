@@ -1,0 +1,459 @@
+{% macro angel_slide_menu_image(menu) -%}
+{%- set raw = safeget(menu, 'image', none) -%}
+{%- if raw -%}
+{%- if raw is string -%}{{ raw }}{%- elif safeget(raw, 'url', none) -%}{{ safeget(raw, 'url', '') }}{%- elif safeget(raw, 'image', none) -%}{{ safeget(raw, 'image', '') }}{%- endif -%}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro angel_slide_menu_badge(menu, settings) -%}
+{%- for row in settings.sliding_menu_badges | default([]) -%}
+{%- if row.menu_slug and menu.slug and row.menu_slug == menu.slug and row.badge_text -%}{{ row.badge_text }}{%- endif -%}
+{%- endfor -%}
+{%- endmacro %}
+
+{% macro angel_slide_menu_icon_type(menu) -%}
+{%- set slug = (menu.slug | default('', true)) | lower -%}
+{%- set label = (menu.label | default('', true)) | lower -%}
+{%- set menu_img = angel_slide_menu_image(menu) | trim -%}
+{%- if menu_img -%}image
+{%- elif slug == 'links' or 'روابط' in label -%}link
+{%- elif 'customer' in slug or 'خدمة' in label or 'service' in slug -%}headset
+{%- else -%}wing
+{%- endif -%}
+{%- endmacro %}
+
+{% macro angel_slide_menu_link(menu, settings, is_sub) -%}
+{%- set href = menu.url | localized_url if menu.resource_type != 'url' else menu.url -%}
+{%- set has_children = menu.items | length > 0 -%}
+{%- set badge = angel_slide_menu_badge(menu, settings) | trim -%}
+{%- set icon_type = angel_slide_menu_icon_type(menu) -%}
+{%- set menu_img = angel_slide_menu_image(menu) | trim -%}
+<a
+    href="{{ href }}"
+    title="{{ menu.label }}"
+    class="angel-slide-menu__link menu-link{% if is_sub %} angel-slide-menu__link--sub{% endif %}{% if has_children %} angel-slide-menu__link--parent{% endif %}"
+    {% if has_children %}aria-haspopup="true"{% endif %}
+>
+    <span class=angel-slide-menu__media">
+        {% if icon_type == 'image' and menu_img %}
+            <img class="angel-slide-menu__thumb" src="{{ image_url(menu_img, w=96, h=96, q=90) }}" alt="" loading="lazy" decoding="async" width="40" height="40" />
+        {% elif icon_type == 'link' %}
+            <i class="sicon-link ltr:mr-2 rtl:ml-2 angel-slide-menu__sicon" aria-hidden="true"></i>
+        {% elif icon_type == 'headset' %}
+            <i class="sicon-headphones ltr:mr-2 rtl:ml-2 angel-slide-menu__sicon" aria-hidden="true"></i>
+        {% else %}
+            <span class="angel-slide-menu__wing" aria-hidden="true">
+                {% if settings.header_logo %}
+                    <img src="{{ image_url(settings.header_logo, h=56, q=90) }}" alt="" width="28" height="28" loading="lazy" decoding="async" />
+                {% else %}
+                    <img src="{{ image_url(store.logo, h=56, q=90) }}" alt="" width="28" height="28" loading="lazy" decoding="async" />
+                {% endif %}
+            </span>
+        {% endif %}
+    </span>
+    <span class="angel-slide-menu__label-wrap">
+        <span class="angel-slide-menu__label">{{ menu.label }}</span>
+        {% if badge %}
+            <span class="angel-slide-menu__badge">{{ badge }}</span>
+        {% endif %}
+    </span>
+    {% if has_children %}
+        <span class="angel-slide-menu__chevron" aria-hidden="true"></span>
+    {% endif %}
+</a>
+{%- endmacro %}
+
+{% macro angel_slide_menu_telegram_link(settings, store) -%}
+{%- set t = (settings.sliding_menu_customer_service_telegram_url | default('', true)) | trim -%}
+{%- if not t -%}
+{%- set t = (safeget(store.settings.contact, 'telegram', '') | default('', true)) | trim -%}
+{%- endif -%}
+{%- if t -%}
+{%- if t | length >= 4 and t[0:4] == 'http' -%}
+{{ t }}
+{%- else -%}
+https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('http://t.me/', '') | replace('t.me/', '') }}
+{%- endif -%}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro angel_slide_menu_telegram_label(settings, store) -%}
+{%- set t = (settings.sliding_menu_customer_service_telegram_url | default('', true)) | trim -%}
+{%- if not t -%}
+{%- set t = (safeget(store.settings.contact, 'telegram', '') | default('', true)) | trim -%}
+{%- endif -%}
+{%- if t -%}
+{%- if t | length >= 4 and t[0:4] == 'http' -%}
+{{ t | replace('https://t.me/', '') | replace('http://t.me/', '') | replace('t.me/', '') }}
+{%- else -%}
+{{ t | replace('@', '') }}
+{%- endif -%}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro angel_slide_menu_parent_link(label, icon_type) -%}
+<a href="#" class="angel-slide-menu__link menu-link angel-slide-menu__link--parent" aria-haspopup="true" title="{{ label }}">
+    <span class="">
+        {% if icon_type == 'link' %}
+            <i class="sicon-link ltr:mr-2 rtl:ml-2" aria-hidden="true"></i>
+        {% elif icon_type == 'headset' %}
+            <i class="sicon-headphones ltr:mr-2 rtl:ml-2" aria-hidden="true"></i>
+        {% endif %}
+    </span>
+    <span class="angel-slide-menu__label-wrap">
+        <span class="angel-slide-menu__label">{{ label }}</span>
+    </span>
+    <span class="angel-slide-menu__chevron" aria-hidden="true"></span>
+</a>
+{%- endmacro %}
+
+{% macro angel_slide_menu_simple_link(label, href, is_sub) -%}
+<a href="{{ href }}" class="angel-slide-menu__link menu-link{% if is_sub %} angel-slide-menu__link--sub angel-slide-menu__link--text-only{% endif %}" title="{{ label }}">
+    <span class="angel-slide-menu__label-wrap">
+        <span class="angel-slide-menu__label">{{ label }}</span>
+    </span>
+</a>
+{%- endmacro %}
+
+{% macro angel_slide_menu_support_card(href, label, icon) -%}
+<a href="{{ href }}" class="angel-slide-menu__support-card angel-slide-menu__support-card--{{ icon }} menu-link"{% if href and href[0:4] == 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
+    <span class="angel-slide-menu__support-label">{{ label }}</span>
+    <span class="angel-slide-menu__support-icon" aria-hidden="true">
+        {% if icon == 'mobile' %}
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
+            <title>iphone</title>
+            <path d="M15.053 27.613c0.133 0.12 0.28 0.213 0.44 0.28s0.333 0.107 0.507 0.107c0.36 0 0.693-0.135 0.947-0.387 0.12-0.135 0.213-0.28 0.28-0.44 0.080-0.16 0.107-0.333 0.107-0.507 0-0.347-0.147-0.695-0.387-0.947-0.507-0.493-1.387-0.493-1.893 0-0.12 0.12-0.213 0.267-0.28 0.44-0.067 0.16-0.107 0.333-0.107 0.507s0.040 0.347 0.107 0.507 0.16 0.305 0.28 0.44zM24 0h-16c-2.205 0-4 1.795-4 4v24c0 2.205 1.795 4 4 4h16c2.205 0 4-1.795 4-4v-24c0-2.205-1.795-4-4-4zM25.333 28c0 0.736-0.599 1.333-1.333 1.333h-16c-0.735 0-1.333-0.597-1.333-1.333v-4h18.667zM25.333 21.333h-18.667v-17.333c0-0.735 0.599-1.333 1.333-1.333h16c0.735 0 1.333 0.599 1.333 1.333z"></path>
+            </svg>
+        {% elif icon == 'phone' %}
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
+            <title>phone</title>
+            <path d="M30.823 21.713l-3.883-3.883c-1.569-1.568-4.12-1.568-5.689 0l-2.568 2.568c-3.063-1.499-5.583-4.019-7.081-7.083l2.568-2.567c0.759-0.76 1.177-1.771 1.177-2.845s-0.419-2.084-1.179-2.844l-3.881-3.881c-1.52-1.521-4.171-1.521-5.689 0l-1.845 1.847c-2.22 2.219-3.183 5.407-2.573 8.527 1.98 10.144 10.125 18.292 20.269 20.271 0.616 0.121 1.236 0.18 1.849 0.18 2.492 0 4.896-0.972 6.677-2.752l1.847-1.847c1.568-1.571 1.568-4.121 0.001-5.691zM28.936 25.517l-1.845 1.847c-1.592 1.592-3.883 2.283-6.132 1.841-9.089-1.776-16.388-9.075-18.163-18.165-0.439-2.247 0.249-4.539 1.841-6.129l1.847-1.847c0.256-0.257 0.596-0.397 0.959-0.397s0.703 0.14 0.959 0.397l3.883 3.883c0.256 0.256 0.397 0.596 0.397 0.959s-0.141 0.703-0.397 0.96l-3.22 3.217c-0.383 0.384-0.496 0.959-0.287 1.457 1.813 4.339 5.343 7.868 9.683 9.684 0.497 0.207 1.073 0.095 1.457-0.288l3.22-3.22c0.529-0.529 1.389-0.528 1.917 0l3.881 3.883c0.528 0.529 0.528 1.389 0 1.919z"></path>
+            </svg>
+        {% elif icon == 'email' %}
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
+            <title>mail</title>
+            <path d="M28 2.667h-24c-2.205 0-4 1.795-4 4v18.667c0 2.205 1.795 4 4 4h24c2.205 0 4-1.795 4-4v-18.667c0-2.205-1.795-4-4-4zM29.333 25.333c0 0.735-0.599 1.333-1.333 1.333h-24c-0.735 0-1.333-0.599-1.333-1.333v-12.685l10.54 4.865c0.888 0.409 1.84 0.613 2.793 0.613s1.907-0.204 2.793-0.615l10.54-4.864zM29.333 9.711l-11.657 5.38c-1.065 0.492-2.288 0.492-3.353 0l-11.656-5.38v-3.044c0-0.735 0.599-1.333 1.333-1.333h24c0.735 0 1.333 0.599 1.333 1.333z"></path>
+            </svg>
+        {% elif icon == 'telegram' %}
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
+            <title>paper-plane-o</title>
+            <path d="M31.5 0.482c0.375 0.268 0.554 0.696 0.482 1.143l-4.571 27.429c-0.054 0.339-0.268 0.625-0.571 0.804-0.161 0.089-0.357 0.143-0.554 0.143-0.143 0-0.286-0.036-0.429-0.089l-9.411-3.839-5.321 5.839c-0.214 0.25-0.518 0.375-0.839 0.375-0.143 0-0.286-0.018-0.411-0.071-0.446-0.179-0.732-0.607-0.732-1.071v-8.071l-8.429-3.446c-0.411-0.161-0.679-0.536-0.714-0.982-0.036-0.429 0.196-0.839 0.571-1.054l29.714-17.143c0.375-0.232 0.857-0.214 1.214 0.036zM25.393 27.25l3.946-23.625-25.607 14.768 6 2.446 15.411-11.411-8.536 14.232z"></path>
+            </svg>
+        {% endif %}
+    </span>
+</a>
+{%- endmacro %}
+
+{% macro angel_slide_menu_branch(items, settings, is_sub) -%}
+{% for menu in items %}
+    {% if menu.url %}
+    <li class="slide-menu-ul-li angel-slide-menu__item{% if menu.items | length > 0 %} angel-slide-menu__item--has-children{% endif %}">
+        {{ angel_slide_menu_link(menu, settings, is_sub) }}
+        {% if menu.items | length > 0 %}
+            <ul>
+                {{ angel_slide_menu_branch(menu.items, settings, true) }}
+            </ul>
+        {% endif %}
+    </li>
+    {% endif %}
+{% endfor %}
+{%- endmacro %}
+
+{% set header_options_raw = safeget(settings, 'header_options', []) %}
+{% set header_options =
+    header_options_raw
+    if header_options_raw is iterable and header_options_raw is not boolean and header_options_raw is not string
+    else []
+%}
+{% set multiple_languages = store.languages | length > 1 %}
+{% set show_country = 'hide_country' not in header_options %}
+{% set show_language = 'hide_language' not in header_options %}
+{% set slide_show_region = show_country or (multiple_languages and show_language) %}
+
+{% if settings.header_logo %}
+    {% set slide_logo = settings.header_logo %}
+{% else %}
+    {% set slide_logo = store.logo %}
+{% endif %}
+
+{% set slide_cs_email = (settings.sliding_menu_customer_service_email | default('', true)) | trim %}
+{% if not slide_cs_email %}
+    {% set slide_cs_email = (store.settings.contact.email | default('', true)) | trim %}
+{% endif %}
+{% set slide_cs_phone = (settings.sliding_menu_customer_service_phone | default('', true)) | trim %}
+{% if not slide_cs_phone %}
+    {% set slide_cs_phone = (store.settings.contact.phone | default('', true)) | trim %}
+{% endif %}
+{% set slide_cs_mobile_url = (settings.sliding_menu_customer_service_mobile_url | default('', true)) | trim %}
+{% if not slide_cs_mobile_url %}
+    {% if store.settings.general.one_signal.ios_app_id %}
+        {% set slide_cs_mobile_url = 'https://apps.apple.com/app/id' ~ store.settings.general.one_signal.ios_app_id %}
+    {% elif store.settings.general.one_signal.android_package_name %}
+        {% set slide_cs_mobile_url = 'https://play.google.com/store/apps/details?id=' ~ store.settings.general.one_signal.android_package_name %}
+    {% endif %}
+{% endif %}
+{% set slide_tg_href %}{{ angel_slide_menu_telegram_link(settings, store) }}{% endset %}
+{% set slide_tg_href = slide_tg_href | trim %}
+{% set slide_tg_label %}{{ angel_slide_menu_telegram_label(settings, store) }}{% endset %}
+{% set slide_tg_label = slide_tg_label | trim %}
+{% set slide_useful_links = settings.sliding_menu_useful_links | default([]) %}
+{% set slide_has_support = not (settings.sliding_menu_customer_service_hide | default(false)) and (slide_cs_phone or slide_cs_email or slide_tg_href or slide_cs_mobile_url) %}
+{% set slide_has_useful = not (settings.sliding_menu_useful_links_hide | default(false)) %}
+
+<div id="sidenav-overlay" onclick="closeSlidingMenu()" aria-hidden="true"></div>
+<nav class="slide-menu angel-slide-menu" id="sliding-menu" aria-label="{{ settings.sliding_menu_title | default(_('Main Menu'), true) }}">
+    <div class="angel-slide-menu__header">
+        <div class="angel-slide-menu__topbar">
+            <div class="angel-slide-menu__topbar-end">
+                <span class="angel-slide-menu__title" id="angel-slide-menu-title">{{ settings.sliding_menu_title | default(_('Main Menu'), true) }}</span>
+                <button type="button" class="angel-slide-menu__back" id="angel-slide-menu-back" hidden aria-label="{{ _('Back') }}">
+                    <span class="angel-slide-menu__back-chevron" aria-hidden="true"></span>
+                </button>
+            </div>
+            <button type="button" class="angel-slide-menu__close" onclick="closeSlidingMenu()" aria-label="{{ _('Close') }}">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="angel-slide-menu__brand">
+            <a href="/" class="angel-slide-menu__brand-link">
+                <img class="angel-slide-menu__brand-logo" src="{{ image_url(slide_logo, h=120, q=100) }}" alt="{{ store.name }}" loading="lazy" decoding="async" />
+            </a>
+            {% if settings.sliding_menu_tagline %}
+                <p class="angel-slide-menu__brand-tagline">{{ settings.sliding_menu_tagline }}</p>
+            {% else %}
+                <p class="angel-slide-menu__brand-tagline">{{ _("Your trading partner on Salla platform") }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="angel-slide-menu__scroll">
+        <ul class="angel-slide-menu__list">
+            {{ angel_slide_menu_branch(store.settings.menus.main_menu.items, settings, false) }}
+            {% if slide_has_useful %}
+                {% set useful_title = settings.sliding_menu_useful_links_title | default(_('Links of interest'), true) %}
+                <li class="slide-menu-ul-li angel-slide-menu__item angel-slide-menu__item--has-children">
+                    {{ angel_slide_menu_parent_link(useful_title, 'link') }}
+                    <ul class="angel-slide-menu__subpanel">
+                        {% if slide_useful_links | length > 0 %}
+                            {% for link in slide_useful_links %}
+                                {% set link_title = (link.title | default('', true)) | trim %}
+                                {% set link_url = (link.url | default('', true)) | trim %}
+                                {% if link_title and link_url %}
+                                <li class="slide-menu-ul-li angel-slide-menu__item">
+                                    {{ angel_slide_menu_simple_link(link_title, link_url | localized_url if link_url[0:1] == '/' else link_url, true) }}
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <li class="slide-menu-ul-li angel-slide-menu__item">
+                                {{ angel_slide_menu_simple_link(_('Blog'), '/blogs' | localized_url, true) }}
+                            </li>
+                        {% endif %}
+                    </ul>
+                </li>
+            {% endif %}
+
+            {% if slide_has_support %}
+                {% set support_title = settings.sliding_menu_customer_service_title | default(_('Customer service'), true) %}
+                <li class="slide-menu-ul-li angel-slide-menu__item angel-slide-menu__item--has-children">
+                    {{ angel_slide_menu_parent_link(support_title, 'headset') }}
+                    <ul class="angel-slide-menu__subpanel angel-slide-menu__subpanel--support" data-angel-panel="support">
+                        {% if slide_cs_phone %}
+                            <li class="slide-menu-ul-li angel-slide-menu__support-item">
+                                {{ angel_slide_menu_support_card('tel:' ~ slide_cs_phone, slide_cs_phone, 'mobile') }}
+                            </li>
+                            <li class="slide-menu-ul-li angel-slide-menu__support-item">
+                                {{ angel_slide_menu_support_card('tel:' ~ slide_cs_phone, slide_cs_phone, 'phone') }}
+                            </li>
+                        {% elif slide_cs_mobile_url %}
+                            <li class="slide-menu-ul-li angel-slide-menu__support-item">
+                                {{ angel_slide_menu_support_card(slide_cs_mobile_url, _('Mobile app'), 'mobile') }}
+                            </li>
+                        {% endif %}
+                        {% if slide_cs_email %}
+                            <li class="slide-menu-ul-li angel-slide-menu__support-item">
+                                {{ angel_slide_menu_support_card('mailto:' ~ slide_cs_email, slide_cs_email, 'email') }}
+                            </li>
+                        {% endif %}
+                        {% if slide_tg_href %}
+                            <li class="slide-menu-ul-li angel-slide-menu__support-item">
+                                {{ angel_slide_menu_support_card(slide_tg_href, slide_tg_label or _('Telegram'), 'telegram') }}
+                            </li>
+                        {% endif %}
+                    </ul>
+                </li>
+            {% endif %}
+            {% if slide_show_region %}
+                <li class="slide-menu-ul-li angel-slide-menu__item angel-slide-menu__item--region">
+                    <button type="button" class="angel-slide-menu__link angel-slide-menu__link--region menu-link" onclick="zidOpenRegionSettingDialog()" aria-label="{{ _('Change country or language') }}">
+                        <span class="">
+                            <i class="sicon-dollar-coin-stack ltr:mr-2 rtl:ml-2" aria-hidden="true"></i>
+                        </span>
+                        <span class="angel-slide-menu__label-wrap">
+                            <span class="angel-slide-menu__label">{{ _('Currency') }}</span>
+                        </span>
+                    </button>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function cleanUrl(url) {
+        if (!url) return url;
+        if (url.startsWith('//')) {
+            url = '/' + url.slice(2);
+        }
+        url = url.replace(/([^:]\/)\/+/g, '$1');
+        if (url !== '/' && url.endsWith('/')) {
+            url = url.slice(0, -1);
+        }
+        return url;
+    }
+
+    document.querySelectorAll('#sliding-menu .menu-link').forEach(function (link) {
+        var href = link.getAttribute('href');
+        if (href && href !== '#') {
+            link.setAttribute('href', cleanUrl(href));
+        }
+    });
+
+    /* Keep menu list inside scroll area after SlideMenu initializes */
+    function angelSlideMenuMountScroll() {
+        var nav = document.getElementById('sliding-menu');
+        if (!nav) return;
+        var scroll = nav.querySelector('.angel-slide-menu__scroll');
+        var slider = nav.querySelector(':scope > .slide-menu__slider');
+        if (scroll && slider && slider.parentElement === nav) {
+            scroll.appendChild(slider);
+        }
+    }
+
+    var nav = document.getElementById('sliding-menu');
+    var titleEl = document.getElementById('angel-slide-menu-title');
+    var backBtn = document.getElementById('angel-slide-menu-back');
+    var rootTitle = titleEl ? titleEl.textContent.trim() : '';
+
+    function angelSlideMenuSlider() {
+        if (!nav) return null;
+        return nav.querySelector('.angel-slide-menu__scroll .slide-menu__slider') || nav.querySelector('.slide-menu__slider');
+    }
+
+    function angelSlideMenuVisibleBacklink() {
+        if (!nav) return null;
+        var links = nav.querySelectorAll('.slide-menu__backlink');
+        for (var i = 0; i < links.length; i++) {
+            var link = links[i];
+            if (link.offsetParent !== null && link.getClientRects().length) {
+                return link;
+            }
+        }
+        return links.length ? links[links.length - 1] : null;
+    }
+
+    function angelSlideMenuBacklinkTitle(backlink) {
+        if (!backlink) return '';
+        var clone = backlink.cloneNode(true);
+        clone.querySelectorAll('.slide-menu-arrow, .slide-menu-arrow-back, .slide-menu__decorator').forEach(function (node) {
+            node.remove();
+        });
+        return clone.textContent.replace(/\s+/g, ' ').trim();
+    }
+
+    function angelSlideMenuEnterSub(label) {
+        if (!nav || !label) return;
+        nav.classList.add('angel-slide-menu--sub');
+        if (titleEl) titleEl.textContent = label;
+        if (backBtn) backBtn.hidden = false;
+    }
+
+    function angelSlideMenuExitSub() {
+        if (!nav) return;
+        nav.classList.remove('angel-slide-menu--sub', 'angel-slide-menu--support');
+        if (titleEl) titleEl.textContent = rootTitle;
+        if (backBtn) backBtn.hidden = true;
+    }
+
+    function angelSlideMenuSyncHeader() {
+        var backlink = angelSlideMenuVisibleBacklink();
+        var slider = angelSlideMenuSlider();
+        var tx = slider ? window.getComputedStyle(slider).transform : 'none';
+        var atRoot = !slider || tx === 'none' || tx === 'matrix(1, 0, 0, 1, 0, 0)';
+
+        if (atRoot || !backlink) {
+            angelSlideMenuExitSub();
+            return;
+        }
+
+        var label = angelSlideMenuBacklinkTitle(backlink);
+        if (label) {
+            angelSlideMenuEnterSub(label);
+        }
+    }
+
+    if (backBtn) {
+        backBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+            var backlink = angelSlideMenuVisibleBacklink();
+            if (backlink) {
+                backlink.click();
+            }
+        });
+    }
+
+    function angelSlideMenuBind() {
+        angelSlideMenuMountScroll();
+        var sliderNode = angelSlideMenuSlider();
+        if (sliderNode && !sliderNode.__angelSlideMenuObserved) {
+            sliderNode.__angelSlideMenuObserved = true;
+            new MutationObserver(angelSlideMenuSyncHeader).observe(sliderNode, {
+                attributes: true,
+                attributeFilter: ['style'],
+            });
+        }
+        angelSlideMenuSyncHeader();
+    }
+
+    if (nav) {
+        nav.addEventListener('click', function (event) {
+            var parentLink = event.target.closest('.angel-slide-menu__link--parent');
+            if (parentLink && nav.contains(parentLink)) {
+                var labelNode = parentLink.querySelector('.angel-slide-menu__label');
+                var label = labelNode ? labelNode.textContent.trim() : '';
+                var subpanel = parentLink.parentElement ? parentLink.parentElement.querySelector(':scope > ul') : null;
+                if (label) {
+                    angelSlideMenuEnterSub(label);
+                }
+                nav.classList.toggle('angel-slide-menu--support', !!(subpanel && subpanel.getAttribute('data-angel-panel') === 'support'));
+                window.setTimeout(angelSlideMenuSyncHeader, 320);
+            }
+
+            if (event.target.closest('.slide-menu__backlink')) {
+                window.setTimeout(angelSlideMenuSyncHeader, 320);
+            }
+        });
+
+        nav.addEventListener('sm.close', angelSlideMenuExitSub);
+    }
+
+    function angelSlideMenuWaitReady(attempt) {
+        if (nav && (nav.querySelector('.slide-menu__slider') || window.slidingMenu)) {
+            angelSlideMenuBind();
+            return;
+        }
+        if ((attempt || 0) < 40) {
+            window.setTimeout(function () {
+                angelSlideMenuWaitReady((attempt || 0) + 1);
+            }, 50);
+        }
+    }
+
+    angelSlideMenuWaitReady(0);
+    document.addEventListener('sm.open', angelSlideMenuBind);
+});
+
+document.addEventListener('zid-customer-fetched', function () {});
+</script>

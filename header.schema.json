@@ -1,0 +1,335 @@
+{
+  "icon": "fa fa-square",
+  "name": {
+    "ar": "اعلى الصفحة",
+    "en": "Header"
+  },
+  "groups": [
+    {
+      "id": "header",
+      "icon": "font_awesome",
+      "name": {
+        "ar": "رأس الصفحة",
+        "en": "Header"
+      },
+      "settings": [
+        {
+          "id": "logo",
+          "type": "image",
+          "label": {
+            "ar": "الشعار",
+            "en": "Logo"
+          },
+          "info": {
+            "ar": "ارفع صورة بحجم 750 * 750 ",
+            "en": "This is an info text sample here"
+          }
+        },
+        {
+          "id": "options",
+          "type": "checkboxes",
+          "label": {
+            "ar": "الخيارات",
+            "en": "Options"
+          },
+          "options": [
+            {
+              "label": {
+                "ar": "إخفاء شريط البحث",
+                "en": "Hide search bar"
+              },
+              "value": "hide_search_bar"
+            },
+            {
+              "label": {
+                "ar": "إخفاء اللغة",
+                "en": "Hide language"
+              },
+              "value": "hide_language"
+            },
+            {
+              "label": {
+                "ar": "إخفاء اسم الدولة",
+                "en": "Hide country"
+              },
+              "value": "hide_country"
+            }
+          ]
+        },
+        {
+          "id": "logo_mobile",
+          "type": "image",
+          "label": {
+            "ar": " الشعار للجوال (اختياري)",
+            "en": "Logo mobile (optional)"
+          },
+          "info": {
+            "ar": "ارفع صورة بحجم 322 * 750 ",
+            "en": "This is an info text sample here"
+          }
+        },
+        {
+          "id": "search_placeholder",
+          "type": "text",
+          "label": {
+            "ar": "تلميح شريط البحث",
+            "en": "Search placeholder"
+          }
+        },
+        {
+          "id": "sticky",
+          "type": "checkbox",
+          "label": {
+            "ar": "رأس ثابت مع التمرير",
+            "en": "Sticky header"
+          },
+          "default": true
+        }
+      ]
+    },
+    {
+      "id": "sliding_menu",
+      "icon": "fa fa-bars",
+      "name": {
+        "ar": "القائمة الجانبية",
+        "en": "Sliding menu"
+      },
+      "settings": [
+        {
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "عنوان القائمة",
+            "en": "Menu title"
+          }
+        },
+        {
+          "id": "tagline",
+          "type": "text",
+          "label": {
+            "ar": "نص تحت الشعار",
+            "en": "Tagline under logo"
+          }
+        },
+        {
+          "id": "badges",
+          "type": "list",
+          "label": {
+            "ar": "شارات القائمة (جديد)",
+            "en": "Menu badges (e.g. New)"
+          },
+          "settings": [
+            {
+              "id": "menu_slug",
+              "type": "text",
+              "label": {
+                "ar": "معرّف القائمة (slug)",
+                "en": "Menu slug"
+              }
+            },
+            {
+              "id": "badge_text",
+              "type": "text",
+              "label": {
+                "ar": "نص الشارة",
+                "en": "Badge text"
+              }
+            }
+          ]
+        },
+        {
+          "id": "useful_links_hide",
+          "type": "checkbox",
+          "label": {
+            "ar": "إخفاء روابط تهمك",
+            "en": "Hide useful links section"
+          }
+        },
+        {
+          "id": "useful_links_title",
+          "type": "text",
+          "label": {
+            "ar": "عنوان روابط تهمك",
+            "en": "Useful links title"
+          }
+        },
+        {
+          "id": "useful_links",
+          "type": "list",
+          "label": {
+            "ar": "روابط تهمك",
+            "en": "Useful links"
+          },
+          "settings": [
+            {
+              "id": "title",
+              "type": "text",
+              "label": {
+                "ar": "العنوان",
+                "en": "Title"
+              }
+            },
+            {
+              "id": "url",
+              "type": "url",
+              "label": {
+                "ar": "الرابط",
+                "en": "Link"
+              }
+            }
+          ]
+        },
+        {
+          "id": "customer_service_hide",
+          "type": "checkbox",
+          "label": {
+            "ar": "إخفاء خدمة العملاء في القائمة",
+            "en": "Hide customer service in menu"
+          }
+        },
+        {
+          "id": "customer_service_title",
+          "type": "text",
+          "label": {
+            "ar": "عنوان خدمة العملاء",
+            "en": "Customer service title"
+          }
+        },
+        {
+          "id": "customer_service_telegram_url",
+          "type": "url",
+          "label": {
+            "ar": "رابط تيليجرام (اختياري)",
+            "en": "Telegram link (optional)"
+          }
+        },
+        {
+          "id": "customer_service_email",
+          "type": "text",
+          "label": {
+            "ar": "البريد الإلكتروني (اختياري)",
+            "en": "Email (optional)"
+          }
+        },
+        {
+          "id": "customer_service_phone",
+          "type": "text",
+          "label": {
+            "ar": "رقم الهاتف (اختياري)",
+            "en": "Phone (optional)"
+          }
+        },
+        {
+          "id": "customer_service_mobile_url",
+          "type": "url",
+          "label": {
+            "ar": "رابط التطبيق أو الجوال (اختياري)",
+            "en": "Mobile / app link (optional)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "announcement_bar",
+      "icon": "font_awesome",
+      "name": {
+        "ar": "شريط التنبيهات",
+        "en": "Announcement bar"
+      },
+      "settings": [
+        {
+          "id": "display",
+          "type": "checkbox",
+          "label": {
+            "ar": "إظهار",
+            "en": "Display menu"
+          }
+        },
+        {
+          "id": "text_color",
+          "type": "color",
+          "label": {
+            "ar": "لون النص",
+            "en": "Text color"
+          }
+        },
+        {
+          "id": "page_display",
+          "type": "select",
+          "label": {
+            "ar": "عرض شريط التنبيهات في",
+            "en": "Display announcement bar in"
+          },
+          "default": "all",
+          "options": [
+            {
+              "label": {
+                "ar": "جميع الصفحات",
+                "en": "all pages"
+              },
+              "value": "all"
+            },
+            {
+              "label": {
+                "ar": "الصفحة الرئيسية ففط",
+                "en": "home page only"
+              },
+              "value": "home"
+            }
+          ]
+        },
+        {
+          "id": "background_color",
+          "type": "color",
+          "label": {
+            "ar": "لون الخلفية",
+            "en": "Text color"
+          }
+        },
+        {
+          "id": "features_bar_list",
+          "type": "list",
+          "max_items": 10,
+          "label": {
+            "ar": "قائمة الاعلانات",
+            "en": "Announcements List"
+          },
+          "settings": [
+            {
+              "type": "image",
+              "id": "image",
+              "label": {
+                "ar": "الصورة",
+                "en": "Image"
+              }
+            },
+            {
+              "type": "text",
+              "id": "title",
+              "label": {
+                "ar": "نص الاعلان",
+                "en": "Text"
+              }
+            },
+            {
+              "type": "color",
+              "id": "text_color",
+              "label": {
+                "ar": "لون النص",
+                "en": "Text color"
+              }
+            },
+            {
+              "type": "url",
+              "id": "url",
+              "label": {
+                "ar": "الرابط",
+                "en": "Link"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

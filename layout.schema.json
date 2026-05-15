@@ -1,0 +1,114 @@
+{
+  "name": {
+    "ar": "إعدادات التخطيط",
+    "en": "Layout Settings"
+  },
+  "groups": [
+    {
+      "id": "colors",
+      "icon": "fa fa-paint-brush",
+      "name": {
+        "ar": "الالوان",
+        "en": "Colors"
+      },
+      "settings": [
+        {
+          "id": "header",
+          "icon": "font_awesome",
+          "type": "fieldset",
+          "label": {
+            "ar": "رأس الصفحة",
+            "en": "Header"
+          },
+          "expandable": true,
+          "settings": [
+            {
+              "id": "text_color",
+              "type": "color",
+              "label": {
+                "ar": "لون النص",
+                "en": "Text color"
+              }
+            },
+            {
+              "id": "menu_text_color",
+              "type": "color",
+              "label": {
+                "ar": "لون نص القائممة الرئيسية (اختياري)",
+                "en": "Text color"
+              }
+            },
+            {
+              "id": "background_color",
+              "type": "color",
+              "label": {
+                "ar": "لون الخلفية",
+                "en": "Background color"
+              }
+            },
+            {
+              "id": "menu_background_color",
+              "type": "color",
+              "label": {
+                "ar": "لون خلفية القائمة الرئيسية (اختياري)",
+                "en": "Menu color"
+              }
+            }
+          ]
+        },
+        {
+          "id": "footer",
+          "icon": "font_awesome",
+          "type": "fieldset",
+          "label": {
+            "ar": "اسفل الصفحة",
+            "en": "Footer"
+          },
+          "expandable": true,
+          "settings": [
+            {
+              "id": "text_color",
+              "type": "color",
+              "label": {
+                "ar": "لون النص",
+                "en": "Text color"
+              }
+            },
+            {
+              "id": "background_color",
+              "type": "color",
+              "label": {
+                "ar": "لون الخلفية",
+                "en": "Text color"
+              }
+            }
+          ]
+        },
+        {
+          "id": "background",
+          "icon": "font_awesome",
+          "type": "fieldset",
+          "label": {
+            "ar": "الخلفية",
+            "en": "Background"
+          },
+          "expandable": true,
+          "settings": [
+            {
+              "id": "image",
+              "type": "image",
+              "label": {
+                "ar": "الصورة",
+                "en": "Logo"
+              },
+              "info": {
+                "ar": "ارفع صورة بحجم 150 * 150 ",
+                "en": "This is an info text sample here"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+<section id="shippingAndPayment">
+<div class="row">
+    <div class="col-3 shipping-tabs theme-bg-primary">
+      <div class="nav flex-column nav-pills container mt-5 mb-5" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link shipping-payment active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
+            
+            <div class="d-flex">
+                <span class="icon-local_shipping"></span>
+                <p class="bank-account-tab">  
+                  {{ _("Shipping Option") }} 
+                </p>  
+            </div> 
+                <span class="bank-account-sub-title">
+                  {{ _("List of supported shipping options") }}
+                </span>
+        </a>
+        <a class="nav-link shipping-payment" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+            <div class="d-flex">
+            <span class="icon-payments_black"></span>
+            <p class="bank-account-tab"> 
+{{ _("Payment Options") }}            
+            </p>  
+        </div>
+            <span class="bank-account-sub-title">
+              {{ _("List of supported payment options") }}
+            </span>
+        </a>
+        <a class="nav-link shipping-payment" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">
+            <div class="d-flex">
+            <span class="icon-account_balance"></span>
+            <p class="bank-account-tab">  
+              {{ _("Bank Accounts") }}
+            </p>  
+        </div> 
+            <span class="bank-account-sub-title">
+              {{ _("Bank accounts for regular transfers") }}
+            </span>
+      
+       
+        </a>
+
+      </div>
+    </div>
+    <div class="col-9 shipping-pillars mb-5">
+      <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+               <!--nav Section-->
+         <div>
+           <p> {{ _("Shipping Option") }}</p>
+         </div>
+
+            <!--shipping Section-->
+<div class="mt-5 mb-5">
+    {% include 'components/shipping-section.jinja' %}
+</div>
+        </div>
+        <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+             <!--nav Section-->
+             <div>
+                <p> {{ _("Shipping Option") }}</p>
+              </div>
+     
+          
+<!--Payment Section-->
+<div class="mt-5 mb-5">
+    {% include 'components/payment-section.jinja' %}
+</div>
+
+        </div>
+        <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+             <!--nav Section-->
+             <div>
+                <p>{{ _("Bank Accounts") }} </p>
+              </div>
+     
+            <!--Bank account section-->
+            <div class="mt-5 mb-5">
+            {% include 'components/shipping-payment-cards.jinja' %}
+        </div>
+        <div class="mt-5 mb-5">
+            {% include 'components/shipping-payment-cards.jinja' %}
+        </div>
+      
+
+        </div>
+      
+      </div>
+    </div>
+  </div>
+</section>
+
+ <!--Mobile View  section-->
+ {% include 'components/shipping-payment-tabs-mobile.jinja' %}

@@ -1,0 +1,63 @@
+{
+    "section_id": "uuid",
+    "template": "sections/hero-section.jinja",
+    "icon": "fa fa-image",
+    "name": {
+        "ar": "القسم الرئيسي",
+        "en": "Hero section"
+    },
+    "settings": [
+        {
+            "id": "tabs",
+            "type": "list",
+            "max_items": 3,
+            "label": {
+                "ar": "التبويبات",
+                "en": "Tabs"
+            },
+            "info": {
+                "ar": "أضف حتى 3 تبويبات. يمكن لكل تبويب أن يحتوي على صورة أو فيديو.",
+                "en": "Add up to 3 tabs. Each tab can contain an image or a video."
+            },
+            "settings": [
+                {
+                    "id": "title",
+                    "type": "text",
+                    "label": {
+                        "ar": "عنوان التبويب",
+                        "en": "Tab title"
+                    }
+                },
+                {
+                    "id": "image",
+                    "type": "image",
+                    "label": {
+                        "ar": "الصورة",
+                        "en": "Image"
+                    }
+                },
+                {
+                    "id": "video",
+                    "type": "video",
+                    "label": {
+                        "ar": "الفيديو",
+                        "en": "Video"
+                    }
+                },
+                {
+                    "id": "display_video",
+                    "type": "checkbox",
+                    "label": {
+                        "ar": "عرض الفيديو",
+                        "en": "Display video"
+                    },
+                    "info": {
+                        "ar": "عند التفعيل، يتم عرض الفيديو بدلاً من الصورة لهذا التبويب.",
+                        "en": "When enabled, the video is shown instead of the image for this tab."
+                    },
+                    "default": false
+                }
+            ]
+        }
+    ]
+}
