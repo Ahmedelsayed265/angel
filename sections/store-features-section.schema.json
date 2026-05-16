@@ -1,0 +1,109 @@
+{
+    "section_id": "angel-store-features-section",
+    "template": "sections/store-features-section.jinja",
+    "icon": "fa fa-star",
+    "name": {
+        "ar": "مميزات المتجر",
+        "en": "Store features"
+    },
+    "settings": [
+        {
+            "id": "title",
+            "type": "text",
+            "label": {
+                "ar": "العنوان",
+                "en": "Title"
+            },
+            "default": "مميزات المتجر"
+        },
+        {
+            "id": "subtitle",
+            "type": "text",
+            "label": {
+                "ar": "العنوان الفرعي",
+                "en": "Subtitle"
+            },
+            "default": ""
+        },
+        {
+            "id": "title_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان",
+                "en": "Title color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "subtitle_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان الفرعي",
+                "en": "Subtitle color"
+            },
+            "default": "#9ca3af"
+        },
+        {
+            "id": "bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون الخلفية",
+                "en": "Background color"
+            },
+            "default": "#141414"
+        },
+        {
+            "id": "value_color",
+            "type": "color",
+            "label": {
+                "ar": "لون النص الرئيسي",
+                "en": "Primary text color"
+            },
+            "default": "#ffffff"
+        },
+        {
+            "id": "label_color",
+            "type": "color",
+            "label": {
+                "ar": "لون النص الثانوي",
+                "en": "Secondary text color"
+            },
+            "default": "#9ca3af"
+        },
+        {
+            "id": "features",
+            "type": "list",
+            "max_items": 6,
+            "label": {
+                "ar": "المميزات",
+                "en": "Features"
+            },
+            "settings": [
+                {
+                    "id": "icon",
+                    "type": "image",
+                    "label": {
+                        "ar": "الأيقونة",
+                        "en": "Icon"
+                    }
+                },
+                {
+                    "id": "value",
+                    "type": "text",
+                    "label": {
+                        "ar": "النص الرئيسي",
+                        "en": "Primary text"
+                    }
+                },
+                {
+                    "id": "label",
+                    "type": "text",
+                    "label": {
+                        "ar": "النص الثانوي",
+                        "en": "Secondary text"
+                    }
+                }
+            ]
+        }
+    ]
+}

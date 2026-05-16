@@ -1,0 +1,422 @@
+{% set stories = safeget(settings, "stories", []) %}
+{% set section_title = settings.title | default("قصص المتجر") %}
+{% set exit_label = settings.exit_label | default("خروج") %}
+{% set slide_duration = settings.slide_duration | default(5) %}
+{% set bg_start = settings.bg_color_start | default("#061018") %}
+{% set bg_end = settings.bg_color_end | default("#0e4a6e") %}
+{% set title_grad_start = settings.title_gradient_start | default("#f472b6") %}
+{% set title_grad_end = settings.title_gradient_end | default("#fbbf24") %}
+
+{% if stories and stories | length > 0 %}
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-stories-section"
+  style="
+    --stories-bg-start: {{ bg_start }};
+    --stories-bg-end: {{ bg_end }};
+    --stories-title-start: {{ title_grad_start }};
+    --stories-title-end: {{ title_grad_end }};
+  "
+  data-slide-duration="{{ slide_duration }}"
+>
+  <div class="angel-stories-section__inner">
+    <div class="container">
+      <div class="angel-stories-heading">
+        <span class="angel-stories-heading__line" aria-hidden="true"></span>
+        <h2 class="angel-stories-heading__title">{{ section_title }}</h2>
+        <span class="angel-stories-heading__line" aria-hidden="true"></span>
+      </div>
+
+      <div class="angel-stories-rail" role="list">
+        {% for story in stories %}
+          {% set ring = story.border_style | default("cyan") %}
+          {% set cover = story.cover %}
+          {% if cover %}
+            <button
+              type="button"
+              class="angel-stories-item"
+              role="listitem"
+              data-story-open="{{ loop.index0 }}"
+              aria-label="{{ story.title if story.title else _('Story') }}"
+            >
+              <span class="angel-stories-item__ring angel-stories-item__ring--{{ ring }}">
+                <img
+                  class="angel-stories-item__img"
+                  src="{{ cover }}"
+                  alt=""
+                  loading="lazy"
+                  width="72"
+                  height="72"
+                >
+              </span>
+              {% if story.title %}
+                <span class="angel-stories-item__label">{{ story.title }}</span>
+              {% endif %}
+            </button>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <svg class="angel-stories-wave" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,32 C360,8 720,48 1080,24 C1260,12 1380,20 1440,28 L1440,48 L0,48 Z" fill="currentColor"></path>
+    </svg>
+  </div>
+
+  <div
+    class="angel-stories-modal"
+    id="{{ sectionId }}-modal"
+    hidden
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-label="{{ section_title }}"
+  >
+    <div class="angel-stories-modal__backdrop" data-story-close></div>
+    <div class="angel-stories-viewer">
+      <div class="angel-stories-viewer__top">
+        <div class="angel-stories-progress" data-story-progress></div>
+        <div class="angel-stories-viewer__bar">
+          <button type="button" class="angel-stories-exit" data-story-close>{{ exit_label }}</button>
+          <div class="angel-stories-profile">
+            <img class="angel-stories-profile__avatar" src="" alt="" width="36" height="36" data-story-avatar>
+            <div class="angel-stories-profile__meta">
+              <strong class="angel-stories-profile__name" data-story-name></strong>
+              <span class="angel-stories-profile__time" data-story-time></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="angel-stories-viewer__stage" data-story-stage>
+        <button type="button" class="angel-stories-tap angel-stories-tap--prev" data-story-prev aria-label="{{ _('Previous') }}"></button>
+        <div class="angel-stories-viewer__media" data-story-media></div>
+        <button type="button" class="angel-stories-tap angel-stories-tap--next" data-story-next aria-label="{{ _('Next') }}"></button>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" id="{{ sectionId }}-stories-data">
+    [
+      {% for story in stories %}
+        {% set story_slides = safeget(story, "slides", []) %}
+        {
+          "title": {{ (story.title | default("")) | tojson }},
+          "cover": {{ (story.cover | default("")) | tojson }},
+          "avatar": {{ (story.avatar if story.avatar else story.cover) | default("") | tojson }},
+          "time": {{ (story.time_label | default("")) | tojson }},
+          "border": {{ (story.border_style | default("cyan")) | tojson }},
+          "slides": [
+            {% for slide in story_slides %}
+              {
+                "image": {{ (slide.image | default("")) | tojson }},
+                "video": {{ (slide.video | default("")) | tojson }},
+                "link": {{ (slide.link | default("")) | tojson }}
+              }{% if not loop.last %},{% endif %}
+            {% endfor %}
+          ]
+        }{% if not loop.last %},{% endif %}
+      {% endfor %}
+    ]
+  </script>
+</section>
+
+<script>
+  (function () {
+    var section = document.getElementById('{{ sectionId }}');
+    if (!section) return;
+
+    var dataEl = document.getElementById('{{ sectionId }}-stories-data');
+    var modal = document.getElementById('{{ sectionId }}-modal');
+    if (!dataEl || !modal) return;
+
+    var stories = [];
+    try {
+      stories = JSON.parse(dataEl.textContent || '[]');
+    } catch (e) {
+      return;
+    }
+
+    if (!stories.length) return;
+
+    var duration = (parseInt(section.getAttribute('data-slide-duration'), 10) || 5) * 1000;
+    var progressEl = modal.querySelector('[data-story-progress]');
+    var mediaEl = modal.querySelector('[data-story-media]');
+    var nameEl = modal.querySelector('[data-story-name]');
+    var timeEl = modal.querySelector('[data-story-time]');
+    var avatarEl = modal.querySelector('[data-story-avatar]');
+    var storyIndex = 0;
+    var slideIndex = 0;
+    var timer = null;
+    var progressFallbackTimer = null;
+    var activeVideo = null;
+    var onVideoTimeUpdate = null;
+
+    function clearTimer() {
+      window.clearTimeout(timer);
+      window.clearTimeout(progressFallbackTimer);
+      timer = null;
+      progressFallbackTimer = null;
+      if (progressEl) {
+        progressEl.querySelectorAll('.angel-stories-progress__fill').forEach(function (fill) {
+          fill.removeEventListener('animationend', onProgressEnd);
+        });
+      }
+      if (activeVideo) {
+        if (onVideoTimeUpdate) {
+          activeVideo.removeEventListener('timeupdate', onVideoTimeUpdate);
+          activeVideo.removeEventListener('ended', onProgressEnd);
+        }
+        activeVideo.pause();
+        activeVideo = null;
+        onVideoTimeUpdate = null;
+      }
+    }
+
+    function getSlides(story) {
+      var slides = story.slides || [];
+      return slides.filter(function (s) {
+        return s.image || s.video;
+      });
+    }
+
+    function buildProgress(count) {
+      if (!progressEl) return;
+      progressEl.innerHTML = '';
+      for (var i = 0; i < count; i++) {
+        var bar = document.createElement('span');
+        bar.className = 'angel-stories-progress__item';
+        bar.innerHTML = '<span class="angel-stories-progress__fill"></span>';
+        progressEl.appendChild(bar);
+      }
+    }
+
+    function onProgressEnd() {
+      goNext(true);
+    }
+
+    function updateProgressBars() {
+      if (!progressEl) return;
+      var bars = progressEl.querySelectorAll('.angel-stories-progress__item');
+      bars.forEach(function (bar, i) {
+        bar.classList.remove('is-done', 'is-active');
+        var fill = bar.querySelector('.angel-stories-progress__fill');
+        if (!fill) return;
+        fill.style.animation = 'none';
+        fill.style.transform = 'scaleX(0)';
+        if (i < slideIndex) {
+          bar.classList.add('is-done');
+          fill.style.transform = 'scaleX(1)';
+        }
+        if (i === slideIndex) {
+          bar.classList.add('is-active');
+          fill.style.transform = '';
+          void fill.offsetWidth;
+          fill.style.animation = '';
+        }
+      });
+    }
+
+    function getActiveFill() {
+      if (!progressEl) return null;
+      return progressEl.querySelector('.angel-stories-progress__item.is-active .angel-stories-progress__fill');
+    }
+
+    function setFillProgress(fill, ratio) {
+      if (!fill) return;
+      var pct = Math.max(0, Math.min(1, ratio));
+      fill.style.animation = 'none';
+      fill.style.transform = 'scaleX(' + pct + ')';
+    }
+
+    function startImageProgress(slideMs) {
+      modal.style.setProperty('--story-progress-duration', (slideMs / 1000) + 's');
+      updateProgressBars();
+
+      var activeFill = getActiveFill();
+      if (!activeFill) {
+        timer = window.setTimeout(function () {
+          goNext(true);
+        }, slideMs);
+        return;
+      }
+
+      activeFill.addEventListener('animationend', onProgressEnd, { once: true });
+      progressFallbackTimer = window.setTimeout(function () {
+        activeFill.removeEventListener('animationend', onProgressEnd);
+        goNext(true);
+      }, slideMs + 200);
+    }
+
+    function startVideoProgress(video) {
+      activeVideo = video;
+      video.loop = false;
+
+      function bootVideoProgress() {
+        var videoMs = (video.duration && isFinite(video.duration) ? video.duration : duration / 1000) * 1000;
+        modal.style.setProperty('--story-progress-duration', (videoMs / 1000) + 's');
+        updateProgressBars();
+
+        var activeFill = getActiveFill();
+        setFillProgress(activeFill, 0);
+
+        onVideoTimeUpdate = function () {
+          if (!video.duration || !isFinite(video.duration)) return;
+          setFillProgress(activeFill, video.currentTime / video.duration);
+        };
+
+        video.addEventListener('timeupdate', onVideoTimeUpdate);
+        video.addEventListener('ended', onProgressEnd, { once: true });
+
+        progressFallbackTimer = window.setTimeout(function () {
+          goNext(true);
+        }, videoMs + 500);
+
+        var playPromise = video.play();
+        if (playPromise && playPromise.catch) playPromise.catch(function () {});
+      }
+
+      if (video.readyState >= 1) {
+        bootVideoProgress();
+      } else {
+        video.addEventListener('loadedmetadata', bootVideoProgress, { once: true });
+        video.addEventListener('error', function () {
+          startImageProgress(duration);
+        }, { once: true });
+      }
+    }
+
+    function renderSlide() {
+      clearTimer();
+      var story = stories[storyIndex];
+      var slides = getSlides(story);
+      if (!slides.length) return;
+
+      var slide = slides[slideIndex];
+      if (!mediaEl) return;
+
+      mediaEl.innerHTML = '';
+      var wrap = document.createElement('div');
+      wrap.className = 'angel-stories-viewer__slide';
+      var videoEl = null;
+
+      if (slide.video) {
+        videoEl = document.createElement('video');
+        videoEl.src = slide.video;
+        videoEl.autoplay = false;
+        videoEl.muted = true;
+        videoEl.playsInline = true;
+        videoEl.preload = 'auto';
+        videoEl.setAttribute('playsinline', '');
+        wrap.appendChild(videoEl);
+      } else if (slide.image) {
+        var img = document.createElement('img');
+        img.src = slide.image;
+        img.alt = story.title || '';
+        wrap.appendChild(img);
+      }
+
+      if (slide.link) {
+        var link = document.createElement('a');
+        link.href = slide.link;
+        link.className = 'angel-stories-viewer__link';
+        link.setAttribute('aria-label', story.title || '');
+        link.appendChild(wrap);
+        mediaEl.appendChild(link);
+      } else {
+        mediaEl.appendChild(wrap);
+      }
+
+      if (videoEl) {
+        startVideoProgress(videoEl);
+      } else {
+        startImageProgress(duration);
+      }
+    }
+
+    function openModal(index) {
+      clearTimer();
+      storyIndex = index;
+      slideIndex = 0;
+      var story = stories[storyIndex];
+      var slides = getSlides(story);
+      if (!slides.length) return;
+
+      if (nameEl) nameEl.textContent = story.title || '';
+      if (timeEl) timeEl.textContent = story.time || '';
+      if (avatarEl) {
+        avatarEl.src = story.avatar || story.cover || '';
+        avatarEl.alt = story.title || '';
+      }
+
+      modal.style.setProperty('--story-progress-duration', (duration / 1000) + 's');
+      buildProgress(slides.length);
+      renderSlide();
+
+      modal.hidden = false;
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('angel-stories-modal-open');
+    }
+
+    function closeModal() {
+      clearTimer();
+      modal.hidden = true;
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('angel-stories-modal-open');
+      if (mediaEl) mediaEl.innerHTML = '';
+    }
+
+    function goPrev() {
+      var slides = getSlides(stories[storyIndex]);
+      if (!slides.length) return;
+      slideIndex = slideIndex > 0 ? slideIndex - 1 : slides.length - 1;
+      renderSlide();
+    }
+
+    function goNext(auto) {
+      var slides = getSlides(stories[storyIndex]);
+      if (!slides.length) {
+        closeModal();
+        return;
+      }
+
+      if (slideIndex < slides.length - 1) {
+        slideIndex += 1;
+        renderSlide();
+        return;
+      }
+
+      if (storyIndex < stories.length - 1) {
+        openModal(storyIndex + 1);
+        return;
+      }
+
+      closeModal();
+    }
+
+    section.querySelectorAll('[data-story-open]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var idx = parseInt(btn.getAttribute('data-story-open'), 10);
+        if (!isNaN(idx)) openModal(idx);
+      });
+    });
+
+    modal.querySelectorAll('[data-story-close]').forEach(function (el) {
+      el.addEventListener('click', closeModal);
+    });
+
+    var prevBtn = modal.querySelector('[data-story-prev]');
+    var nextBtn = modal.querySelector('[data-story-next]');
+    if (prevBtn) prevBtn.addEventListener('click', goPrev);
+    if (nextBtn) nextBtn.addEventListener('click', function () { goNext(false); });
+
+    document.addEventListener('keydown', function (e) {
+      if (modal.hidden) return;
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'ArrowLeft') goNext(false);
+      if (e.key === 'ArrowRight') goPrev();
+    });
+  })();
+</script>
+{% endif %}

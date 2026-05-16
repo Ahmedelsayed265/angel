@@ -1,0 +1,41 @@
+{% set items = safeget(settings, "items", []) %}
+{% set bg_color = settings.bg_color | default("#141414") %}
+{% set title_color = settings.item_title_color | default("#ffffff") %}
+{% set columns = (settings.columns | default('3')) | int %}
+
+{% if items and items | length > 0 %}
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-image-title-grid"
+  style="
+    --itg-bg: {{ bg_color }};
+    --itg-title: {{ title_color }};
+    --itg-columns: {{ columns if columns >= 1 and columns <= 4 else 3 }};
+  "
+>
+  <div class="container angel-image-title-grid__inner">
+    <div class="angel-image-title-grid__grid" role="list">
+      {% for item in items %}
+        {% if item.image or item.title %}
+          <div class="angel-image-title-grid__item" role="listitem">
+            {% if item.image %}
+              <img
+                class="angel-image-title-grid__image"
+                src="{{ item.image }}"
+                alt="{{ item.title if item.title else '' }}"
+                loading="lazy"
+                width="88"
+                height="88"
+              >
+            {% endif %}
+            {% if item.title %}
+              <p class="angel-image-title-grid__title">{{ item.title }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}

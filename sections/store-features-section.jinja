@@ -1,0 +1,57 @@
+{% set features = safeget(settings, "features", []) %}
+{% set section_title = settings.title | default("مميزات المتجر") %}
+{% set subtitle = settings.subtitle | default("") %}
+{% set title_color = settings.title_color | default("#54c8e9") %}
+{% set subtitle_color = settings.subtitle_color | default("#9ca3af") %}
+{% set bg_color = settings.bg_color | default("#141414") %}
+{% set value_color = settings.value_color | default("#ffffff") %}
+{% set label_color = settings.label_color | default("#9ca3af") %}
+
+{% if features and features | length > 0 %}
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-store-features"
+  style="
+    --sf-bg: {{ bg_color }};
+    --sf-title: {{ title_color }};
+    --sf-subtitle: {{ subtitle_color }};
+    --sf-value: {{ value_color }};
+    --sf-label: {{ label_color }};
+  "
+>
+  <div class="container angel-store-features__inner">
+    <header class="angel-store-features-header">
+      <h2 class="angel-store-features-header__title">{{ section_title }}</h2>
+      {% if subtitle %}
+        <p class="angel-store-features-header__subtitle">{{ subtitle }}</p>
+      {% endif %}
+    </header>
+
+    <div class="angel-store-features-grid" role="list">
+      {% for item in features %}
+        {% if item.value or item.label or item.icon %}
+          <div class="angel-store-features-item" role="listitem">
+            {% if item.icon %}
+              <img
+                class="angel-store-features-item__icon"
+                src="{{ item.icon }}"
+                alt=""
+                loading="lazy"
+                width="80"
+                height="80"
+              >
+            {% endif %}
+            {% if item.value %}
+              <p class="angel-store-features-item__value">{{ item.value }}</p>
+            {% endif %}
+            {% if item.label %}
+              <p class="angel-store-features-item__label">{{ item.label }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}

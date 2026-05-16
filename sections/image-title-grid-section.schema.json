@@ -1,0 +1,88 @@
+{
+    "section_id": "angel-image-title-grid-section",
+    "template": "sections/image-title-grid-section.jinja",
+    "icon": "fa fa-th",
+    "name": {
+        "ar": "شبكة صورة وعنوان",
+        "en": "Image & title grid"
+    },
+    "settings": [
+        {
+            "id": "bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون الخلفية",
+                "en": "Background color"
+            },
+            "default": "#141414"
+        },
+        {
+            "id": "item_title_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان",
+                "en": "Title color"
+            },
+            "default": "#ffffff"
+        },
+        {
+            "id": "columns",
+            "type": "select",
+            "label": {
+                "ar": "عدد الأعمدة (سطح المكتب)",
+                "en": "Columns (desktop)"
+            },
+            "default": "3",
+            "options": [
+                {
+                    "value": "2",
+                    "label": {
+                        "ar": "2",
+                        "en": "2"
+                    }
+                },
+                {
+                    "value": "3",
+                    "label": {
+                        "ar": "3",
+                        "en": "3"
+                    }
+                },
+                {
+                    "value": "4",
+                    "label": {
+                        "ar": "4",
+                        "en": "4"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "items",
+            "type": "list",
+            "max_items": 12,
+            "label": {
+                "ar": "العناصر",
+                "en": "Items"
+            },
+            "settings": [
+                {
+                    "id": "image",
+                    "type": "image",
+                    "label": {
+                        "ar": "الصورة",
+                        "en": "Image"
+                    }
+                },
+                {
+                    "id": "title",
+                    "type": "text",
+                    "label": {
+                        "ar": "العنوان",
+                        "en": "Title"
+                    }
+                }
+            ]
+        }
+    ]
+}

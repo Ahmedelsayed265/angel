@@ -1,0 +1,67 @@
+{% set title = settings.title | default("") %}
+{% set subtitle = settings.subtitle | default("") %}
+{% set button_text = settings.button_text | default("") %}
+{% set button_url = settings.button_url | default("") %}
+{% set image_desktop = settings.image_desktop | default("") %}
+{% set image_mobile = settings.image_mobile | default(image_desktop) %}
+{% set bg_color = settings.bg_color | default("#000000") %}
+{% set title_color = settings.title_color | default("#54c8e9") %}
+{% set subtitle_color = settings.subtitle_color | default("#ffffff") %}
+{% set button_bg = settings.button_bg_color | default("#54c8e9") %}
+{% set button_text_color = settings.button_text_color | default("#0f172a") %}
+
+{% if title or subtitle or image_desktop or image_mobile or button_text %}
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-promo-banner"
+  style="
+    --pb-bg: {{ bg_color }};
+    --pb-title: {{ title_color }};
+    --pb-subtitle: {{ subtitle_color }};
+    --pb-btn-bg: {{ button_bg }};
+    --pb-btn-color: {{ button_text_color }};
+  "
+>
+  <div class="angel-promo-banner__layout">
+    {% if image_desktop or image_mobile %}
+      <div class="angel-promo-banner__media">
+        <picture>
+          {% if image_mobile and image_mobile != image_desktop %}
+            <source media="(max-width: 767px)" srcset="{{ image_mobile }}">
+          {% endif %}
+          <img
+            class="angel-promo-banner__image"
+            src="{{ image_desktop if image_desktop else image_mobile }}"
+            alt=""
+            loading="eager"
+            width="1920"
+            height="800"
+          >
+        </picture>
+      </div>
+    {% endif %}
+
+    {% if title or subtitle or button_text %}
+      <div class="angel-promo-banner__content">
+        {% if title %}
+          <h2 class="angel-promo-banner__title">{{ title }}</h2>
+        {% endif %}
+        {% if subtitle %}
+          <p class="angel-promo-banner__subtitle">{{ subtitle }}</p>
+        {% endif %}
+        {% if button_text %}
+          <a
+            class="angel-promo-banner__btn"
+            href="{{ button_url if button_url else 'javascript:;' }}"
+            {% if not button_url %}aria-disabled="true" tabindex="-1"{% endif %}
+          >
+            <span class="angel-promo-banner__btn-label">{{ button_text }}</span>
+            <span class="angel-promo-banner__btn-arrow sicon-arrow-up-left" aria-hidden="true"></span>
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}

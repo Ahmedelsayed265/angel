@@ -1,0 +1,94 @@
+{% set categories = safeget(settings, "categories", []) %}
+{% set section_title = settings.title | default("تصنيفات شائعة") %}
+{% set title_color = settings.title_color | default("#54c8e9") %}
+{% set bg_color = settings.bg_color | default("#141414") %}
+{% set card_bg = settings.card_bg_color | default("#2b2b2b") %}
+{% set card_text = settings.card_text_color | default("#ffffff") %}
+
+{% if categories and categories | length > 0 %}
+<link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
+
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-popular-categories"
+  style="
+    --pc-bg: {{ bg_color }};
+    --pc-title: {{ title_color }};
+    --pc-card-bg: {{ card_bg }};
+    --pc-card-text: {{ card_text }};
+  "
+>
+  <div class="container angel-popular-categories__inner">
+    <div class="angel-popular-categories-heading">
+      <span class="angel-popular-categories-heading__line" aria-hidden="true"></span>
+      <h2 class="angel-popular-categories-heading__title">{{ section_title }}</h2>
+      <span class="angel-popular-categories-heading__line" aria-hidden="true"></span>
+    </div>
+
+    <div class="angel-popular-categories-slider-wrap">
+      <div class="swiper angel-popular-categories-swiper">
+        <div class="swiper-wrapper">
+          {% for item in categories %}
+            {% if item.image or item.title %}
+              <div class="swiper-slide">
+                <a
+                  class="angel-popular-categories-card"
+                  href="{{ item.url if item.url else 'javascript:;' }}"
+                  {% if not item.url %}aria-disabled="true" tabindex="-1"{% endif %}
+                >
+                  {% if item.image %}
+                    <span class="angel-popular-categories-card__media">
+                      <img
+                        class="angel-popular-categories-card__img"
+                        src="{{ item.image }}"
+                        alt="{{ item.title if item.title else '' }}"
+                        loading="lazy"
+                        width="120"
+                        height="120"
+                      >
+                    </span>
+                  {% endif %}
+                  {% if item.title %}
+                    <span class="angel-popular-categories-card__title">{{ item.title }}</span>
+                  {% endif %}
+                </a>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
+<script>
+  (function () {
+    var section = document.getElementById('{{ sectionId }}');
+    if (!section || typeof Swiper === 'undefined') return;
+
+    var el = section.querySelector('.angel-popular-categories-swiper');
+    if (!el) return;
+
+    var isRtl = window.appDirection === 'rtl';
+
+    new Swiper(el, {
+      slidesPerView: 2.15,
+      slidesPerGroup: 1,
+      spaceBetween: 12,
+      speed: 500,
+      direction: 'horizontal',
+      rtl: isRtl,
+      watchOverflow: true,
+      observer: true,
+      observeParents: true,
+      breakpoints: {
+        576: { slidesPerView: 3, spaceBetween: 12 },
+        768: { slidesPerView: 4, spaceBetween: 14 },
+        1200: { slidesPerView: 6, spaceBetween: 14 }
+      }
+    });
+  })();
+</script>
+{% endif %}

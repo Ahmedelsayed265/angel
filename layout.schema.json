@@ -95,15 +95,11 @@
           "expandable": true,
           "settings": [
             {
-              "id": "image",
-              "type": "image",
+              "id": "color",
+              "type": "color",
               "label": {
-                "ar": "الصورة",
-                "en": "Logo"
-              },
-              "info": {
-                "ar": "ارفع صورة بحجم 150 * 150 ",
-                "en": "This is an info text sample here"
+                "ar": "لون خلفية الصفحة",
+                "en": "Page background color"
               }
             }
           ]

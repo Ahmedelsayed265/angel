@@ -1,0 +1,134 @@
+{
+    "section_id": "angel-testimonials-section",
+    "template": "sections/testimonials-section.jinja",
+    "icon": "fa fa-quote-right",
+    "name": {
+        "ar": "آراء العملاء",
+        "en": "Testimonials"
+    },
+    "settings": [
+        {
+            "id": "title",
+            "type": "text",
+            "label": {
+                "ar": "العنوان",
+                "en": "Title"
+            },
+            "default": "قالوا عن متجرنا"
+        },
+        {
+            "id": "subtitle",
+            "type": "text",
+            "label": {
+                "ar": "العنوان الفرعي",
+                "en": "Subtitle"
+            },
+            "default": "أفضل متجر في السعودية"
+        },
+        {
+            "id": "title_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان",
+                "en": "Title color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون الخلفية",
+                "en": "Background color"
+            },
+            "default": "#141414"
+        },
+        {
+            "id": "card_bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون البطاقة",
+                "en": "Card background"
+            },
+            "default": "#2b2b2b"
+        },
+        {
+            "id": "accent_color",
+            "type": "color",
+            "label": {
+                "ar": "لون التمييز (نجوم / شريط التقدم)",
+                "en": "Accent color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "autoplay",
+            "type": "checkbox",
+            "label": {
+                "ar": "تشغيل تلقائي",
+                "en": "Autoplay"
+            },
+            "default": true
+        },
+        {
+            "id": "autoplay_delay",
+            "type": "number",
+            "label": {
+                "ar": "مدة كل شريحة (ثانية)",
+                "en": "Slide duration (seconds)"
+            },
+            "default": 6
+        },
+        {
+            "id": "testimonials",
+            "type": "list",
+            "max_items": 12,
+            "label": {
+                "ar": "الآراء",
+                "en": "Testimonials"
+            },
+            "settings": [
+                {
+                    "id": "avatar",
+                    "type": "image",
+                    "label": {
+                        "ar": "الصورة / الشعار",
+                        "en": "Avatar / logo"
+                    }
+                },
+                {
+                    "id": "name",
+                    "type": "text",
+                    "label": {
+                        "ar": "الاسم",
+                        "en": "Name"
+                    }
+                },
+                {
+                    "id": "rating",
+                    "type": "select",
+                    "label": {
+                        "ar": "التقييم",
+                        "en": "Rating"
+                    },
+                    "default": "5",
+                    "options": [
+                        { "label": { "ar": "5", "en": "5" }, "value": "5" },
+                        { "label": { "ar": "4", "en": "4" }, "value": "4" },
+                        { "label": { "ar": "3", "en": "3" }, "value": "3" },
+                        { "label": { "ar": "2", "en": "2" }, "value": "2" },
+                        { "label": { "ar": "1", "en": "1" }, "value": "1" }
+                    ]
+                },
+                {
+                    "id": "text",
+                    "type": "textarea",
+                    "label": {
+                        "ar": "نص الرأي",
+                        "en": "Review text"
+                    }
+                }
+            ]
+        }
+    ]
+}

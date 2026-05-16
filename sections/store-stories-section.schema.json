@@ -1,0 +1,172 @@
+{
+    "section_id": "angel-store-stories-section",
+    "template": "sections/store-stories-section.jinja",
+    "icon": "fa fa-circle",
+    "name": {
+        "ar": "قصص المتجر",
+        "en": "Store stories"
+    },
+    "settings": [
+        {
+            "id": "title",
+            "type": "text",
+            "label": {
+                "ar": "عنوان القسم",
+                "en": "Section title"
+            },
+            "default": "قصص المتجر"
+        },
+        {
+            "id": "exit_label",
+            "type": "text",
+            "label": {
+                "ar": "نص زر الخروج",
+                "en": "Exit button label"
+            },
+            "default": "خروج"
+        },
+        {
+            "id": "slide_duration",
+            "type": "number",
+            "label": {
+                "ar": "مدة كل شريحة (ثانية)",
+                "en": "Slide duration (seconds)"
+            },
+            "default": 5
+        },
+        {
+            "id": "bg_color_start",
+            "type": "color",
+            "label": {
+                "ar": "لون الخلفية (بداية)",
+                "en": "Background gradient start"
+            },
+            "default": "#061018"
+        },
+        {
+            "id": "bg_color_end",
+            "type": "color",
+            "label": {
+                "ar": "لون الخلفية (نهاية)",
+                "en": "Background gradient end"
+            },
+            "default": "#0e4a6e"
+        },
+        {
+            "id": "title_gradient_start",
+            "type": "color",
+            "label": {
+                "ar": "تدرج العنوان (بداية)",
+                "en": "Title gradient start"
+            },
+            "default": "#f472b6"
+        },
+        {
+            "id": "title_gradient_end",
+            "type": "color",
+            "label": {
+                "ar": "تدرج العنوان (نهاية)",
+                "en": "Title gradient end"
+            },
+            "default": "#fbbf24"
+        },
+        {
+            "id": "stories",
+            "type": "list",
+            "max_items": 12,
+            "label": {
+                "ar": "القصص",
+                "en": "Stories"
+            },
+            "settings": [
+                {
+                    "id": "title",
+                    "type": "text",
+                    "label": {
+                        "ar": "اسم القصة",
+                        "en": "Story name"
+                    }
+                },
+                {
+                    "id": "cover",
+                    "type": "image",
+                    "label": {
+                        "ar": "صورة الدائرة",
+                        "en": "Circle cover"
+                    }
+                },
+                {
+                    "id": "avatar",
+                    "type": "image",
+                    "label": {
+                        "ar": "صورة الملف (داخل العارض)",
+                        "en": "Avatar in viewer"
+                    }
+                },
+                {
+                    "id": "time_label",
+                    "type": "text",
+                    "label": {
+                        "ar": "الوقت (مثال: منذ ١ ساعة)",
+                        "en": "Time label"
+                    },
+                    "default": "منذ ١ ساعة"
+                },
+                {
+                    "id": "border_style",
+                    "type": "select",
+                    "label": {
+                        "ar": "لون الإطار",
+                        "en": "Ring color"
+                    },
+                    "default": "cyan",
+                    "options": [
+                        {
+                            "label": { "ar": "سماوي", "en": "Cyan" },
+                            "value": "cyan"
+                        },
+                        {
+                            "label": { "ar": "وردي", "en": "Pink" },
+                            "value": "pink"
+                        }
+                    ]
+                },
+                {
+                    "id": "slides",
+                    "type": "list",
+                    "max_items": 10,
+                    "label": {
+                        "ar": "شرائح القصة",
+                        "en": "Story slides"
+                    },
+                    "settings": [
+                        {
+                            "id": "image",
+                            "type": "image",
+                            "label": {
+                                "ar": "صورة الشريحة",
+                                "en": "Slide image"
+                            }
+                        },
+                        {
+                            "id": "video",
+                            "type": "video",
+                            "label": {
+                                "ar": "فيديو الشريحة (اختياري)",
+                                "en": "Slide video (optional)"
+                            }
+                        },
+                        {
+                            "id": "link",
+                            "type": "url",
+                            "label": {
+                                "ar": "رابط عند الضغط",
+                                "en": "Click URL"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

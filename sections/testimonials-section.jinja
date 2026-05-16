@@ -1,0 +1,142 @@
+{% set items = safeget(settings, "testimonials", []) %}
+{% set section_title = settings.title | default("قالوا عن متجرنا") %}
+{% set subtitle = settings.subtitle | default("أفضل متجر في السعودية") %}
+{% set title_color = settings.title_color | default("#54c8e9") %}
+{% set bg_color = settings.bg_color | default("#141414") %}
+{% set card_bg = settings.card_bg_color | default("#2b2b2b") %}
+{% set accent = settings.accent_color | default("#54c8e9") %}
+{% set testimonials_autoplay = settings.autoplay | default(true) %}
+{% set testimonials_delay = settings.autoplay_delay | default(6) %}
+
+{% if items and items | length > 0 %}
+<link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
+
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-testimonials-section"
+  style="
+    --testimonials-bg: {{ bg_color }};
+    --testimonials-title: {{ title_color }};
+    --testimonials-card-bg: {{ card_bg }};
+    --testimonials-accent: {{ accent }};
+  "
+  data-autoplay="{{ 'true' if testimonials_autoplay else 'false' }}"
+  data-autoplay-delay="{{ testimonials_delay }}"
+>
+  <div class="container angel-testimonials-section__inner">
+    <span class="angel-testimonials-quote-mark" aria-hidden="true">”</span>
+
+    <header class="angel-testimonials-header">
+      <div class="angel-testimonials-heading">
+        <span class="angel-testimonials-heading__line" aria-hidden="true"></span>
+        <h2 class="angel-testimonials-heading__title">{{ section_title }}</h2>
+        <span class="angel-testimonials-heading__line" aria-hidden="true"></span>
+      </div>
+      {% if subtitle %}
+        <p class="angel-testimonials-header__subtitle">{{ subtitle }}</p>
+      {% endif %}
+    </header>
+
+    <div class="angel-testimonials-slider-wrap">
+      <div class="swiper angel-testimonials-swiper">
+        <div class="swiper-wrapper">
+          {% for item in items %}
+            {% if item.name or item.text %}
+              {% set rating = (item.rating | default('5')) | int %}
+              <div class="swiper-slide">
+                <article class="angel-testimonials-card">
+                  <span class="angel-testimonials-card__quote" aria-hidden="true">”</span>
+                  {% if item.avatar %}
+                    <div class="angel-testimonials-card__avatar-wrap">
+                      <img
+                        class="angel-testimonials-card__avatar"
+                        src="{{ item.avatar }}"
+                        alt="{{ item.name if item.name else '' }}"
+                        loading="lazy"
+                        width="72"
+                        height="72"
+                      >
+                    </div>
+                  {% endif %}
+                  {% if item.name %}
+                    <h3 class="angel-testimonials-card__name">{{ item.name }}</h3>
+                  {% endif %}
+                  <div class="angel-testimonials-card__stars" aria-label="{{ rating }} / 5">
+                    {% for i in range(1, 6) %}
+                      <span class="angel-testimonials-star{% if i <= rating %} is-filled{% endif %}" aria-hidden="true">★</span>
+                    {% endfor %}
+                  </div>
+                  {% if item.text %}
+                    <p class="angel-testimonials-card__text">{{ item.text }}</p>
+                  {% endif %}
+                </article>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="angel-testimonials-scroll swiper-pagination" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
+<script>
+  (function () {
+    var section = document.getElementById('{{ sectionId }}');
+    if (!section || typeof Swiper === 'undefined') return;
+
+    var el = section.querySelector('.angel-testimonials-swiper');
+    if (!el) return;
+
+    var scrollEl = section.querySelector('.angel-testimonials-scroll');
+    var autoplayEnabled = section.getAttribute('data-autoplay') === 'true';
+    var autoplayDelay = (parseInt(section.getAttribute('data-autoplay-delay'), 10) || 6) * 1000;
+    var isRtl = window.appDirection === 'rtl';
+
+    function updateTestimonialsScroll(sw) {
+      if (!scrollEl) return;
+      var pages = sw.snapGrid ? sw.snapGrid.length : 0;
+      scrollEl.style.display = pages <= 1 ? 'none' : '';
+    }
+
+    var config = {
+      slidesPerView: 1,
+      slidesPerGroup: 1,
+      spaceBetween: 16,
+      speed: 600,
+      direction: 'horizontal',
+      rtl: isRtl,
+      watchOverflow: true,
+      observer: true,
+      observeParents: true,
+      pagination: scrollEl ? {
+        el: scrollEl,
+        clickable: true,
+        type: 'bullets'
+      } : false,
+      breakpoints: {
+        768: { slidesPerView: 2, slidesPerGroup: 2, spaceBetween: 18 },
+        1200: { slidesPerView: 3, slidesPerGroup: 3, spaceBetween: 20 }
+      },
+      on: {
+        init: function () { updateTestimonialsScroll(this); },
+        resize: function () { updateTestimonialsScroll(this); },
+        breakpoint: function () { updateTestimonialsScroll(this); }
+      }
+    };
+
+    if (autoplayEnabled) {
+      config.autoplay = {
+        delay: autoplayDelay,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true
+      };
+    }
+
+    new Swiper(el, config);
+  })();
+</script>
+{% endif %}

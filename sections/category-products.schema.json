@@ -1,0 +1,113 @@
+{
+    "section_id": "angel-category-products",
+    "template": "sections/category-products.jinja",
+    "icon": "fa fa-shopping-bag",
+    "name": {
+        "ar": "منتجات التصنيف",
+        "en": "Category products"
+    },
+    "settings": [
+        {
+            "id": "category",
+            "type": "category_products",
+            "label": {
+                "ar": "التصنيف",
+                "en": "Category"
+            }
+        },
+        {
+            "id": "title",
+            "type": "text",
+            "label": {
+                "ar": "عنوان مخصص (فارغ = اسم التصنيف)",
+                "en": "Custom title (empty = category name)"
+            },
+            "default": ""
+        },
+        {
+            "id": "subtitle",
+            "type": "text",
+            "label": {
+                "ar": "الوصف",
+                "en": "Subtitle"
+            },
+            "default": ""
+        },
+        {
+            "id": "bg_image",
+            "type": "image",
+            "label": {
+                "ar": "صورة الخلفية",
+                "en": "Background image"
+            }
+        },
+        {
+            "id": "overlay_opacity",
+            "type": "text",
+            "label": {
+                "ar": "تعتيم الخلفية (0–100)",
+                "en": "Background overlay (0–100)"
+            },
+            "default": "65"
+        },
+        {
+            "id": "title_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان",
+                "en": "Title color"
+            },
+            "default": "#ffffff"
+        },
+        {
+            "id": "subtitle_color",
+            "type": "color",
+            "label": {
+                "ar": "لون الوصف",
+                "en": "Subtitle color"
+            },
+            "default": "#ffffff"
+        },
+        {
+            "id": "accent_color",
+            "type": "color",
+            "label": {
+                "ar": "لون التمييز (الأسهم والزر)",
+                "en": "Accent color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "slides_desktop",
+            "type": "select",
+            "label": {
+                "ar": "عدد المنتجات في الصف (سطح المكتب)",
+                "en": "Products per row (desktop)"
+            },
+            "default": "6",
+            "options": [
+                { "value": "4", "label": { "ar": "4", "en": "4" } },
+                { "value": "5", "label": { "ar": "5", "en": "5" } },
+                { "value": "6", "label": { "ar": "6", "en": "6" } }
+            ]
+        },
+        {
+            "id": "bg_height",
+            "type": "text",
+            "label": {
+                "ar": "ارتفاع صورة الخلفية (بكسل)",
+                "en": "Background height (px)"
+            },
+            "default": "384"
+        },
+        {
+            "id": "show_arrows",
+            "type": "checkbox",
+            "label": {
+                "ar": "إظهار أسهم التنقل",
+                "en": "Show navigation arrows"
+            },
+            "default": true
+        }
+    ]
+}

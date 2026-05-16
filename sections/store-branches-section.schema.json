@@ -1,0 +1,127 @@
+{
+    "section_id": "angel-store-branches-section",
+    "template": "sections/store-branches-section.jinja",
+    "icon": "fa fa-map-marker",
+    "name": {
+        "ar": "فروع المتجر",
+        "en": "Store branches"
+    },
+    "settings": [
+        {
+            "id": "title",
+            "type": "text",
+            "label": {
+                "ar": "العنوان",
+                "en": "Title"
+            },
+            "default": "زورونا في فروعنا"
+        },
+        {
+            "id": "subtitle",
+            "type": "text",
+            "label": {
+                "ar": "النص الفرعي (مواعيد العمل)",
+                "en": "Subtitle (working hours)"
+            },
+            "default": "الأحد إلى الخميس من الساعة 11 ص حتى 6 م"
+        },
+        {
+            "id": "title_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان",
+                "en": "Title color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون الخلفية",
+                "en": "Background color"
+            },
+            "default": "#141414"
+        },
+        {
+            "id": "accent_color",
+            "type": "color",
+            "label": {
+                "ar": "لون الزر النشط",
+                "en": "Active button color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "branches",
+            "type": "list",
+            "max_items": 6,
+            "label": {
+                "ar": "الفروع",
+                "en": "Branches"
+            },
+            "settings": [
+                {
+                    "id": "name",
+                    "type": "text",
+                    "label": {
+                        "ar": "اسم الفرع (على الزر)",
+                        "en": "Branch name (button)"
+                    }
+                },
+                {
+                    "id": "place_name",
+                    "type": "text",
+                    "label": {
+                        "ar": "اسم المكان على الخريطة",
+                        "en": "Place name on map card"
+                    }
+                },
+                {
+                    "id": "address",
+                    "type": "text",
+                    "label": {
+                        "ar": "العنوان المختصر",
+                        "en": "Short address"
+                    }
+                },
+                {
+                    "id": "rating",
+                    "type": "text",
+                    "label": {
+                        "ar": "التقييم (مثال: 3.6)",
+                        "en": "Rating (e.g. 3.6)"
+                    }
+                },
+                {
+                    "id": "reviews",
+                    "type": "text",
+                    "label": {
+                        "ar": "عدد التقييمات (مثال: 4744)",
+                        "en": "Reviews count"
+                    }
+                },
+                {
+                    "id": "map_embed_url",
+                    "type": "textarea",
+                    "label": {
+                        "ar": "رابط تضمين خرائط Google",
+                        "en": "Google Maps embed URL"
+                    },
+                    "info": {
+                        "ar": "من Google Maps: مشاركة ← تضمين خريطة ← انسخ قيمة src من iframe",
+                        "en": "Google Maps: Share → Embed → copy the iframe src URL"
+                    }
+                },
+                {
+                    "id": "maps_link",
+                    "type": "url",
+                    "label": {
+                        "ar": "رابط فتح في خرائط Google",
+                        "en": "Open in Google Maps URL"
+                    }
+                }
+            ]
+        }
+    ]
+}

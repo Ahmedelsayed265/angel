@@ -6,7 +6,7 @@
 {% set items_list = settings.announcement_bar_features_bar_list %}
 
 <div class="announcement-bar tp-bar" style="z-index: 4; {% if settings.announcement_bar_background_color %}background: {{ settings.announcement_bar_background_color }}{% endif %}; overflow: hidden; position: relative; width: 100%;">
-    <div class="tp-mask" style="direction: ltr;">
+    <div class="tp-mask">
         <div class="tp-marquee">
             {% for item in items_list %}
                 <a href="{% if item.url %}{{ item.url }}{% else %}javascript:;{% endif %}" style="color: {{ item.text_color | default(settings.announcement_bar_text_color) }};">

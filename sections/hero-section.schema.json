@@ -1,5 +1,5 @@
 {
-    "section_id": "uuid",
+    "section_id": "angel-hero-section",
     "template": "sections/hero-section.jinja",
     "icon": "fa fa-image",
     "name": {
@@ -8,26 +8,82 @@
     },
     "settings": [
         {
-            "id": "tabs",
+            "id": "home_title",
+            "type": "text",
+            "label": {
+                "ar": "الرئيسية — عنوان التبويب",
+                "en": "Home — tab title"
+            },
+            "default": "الرئيسية"
+        },
+        {
+            "id": "home_accent_color",
+            "type": "color",
+            "label": {
+                "ar": "الرئيسية — لون خط التبويب",
+                "en": "Home — tab accent"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "home_video",
+            "type": "video",
+            "label": {
+                "ar": "الرئيسية — فيديو أعلى الصفحة",
+                "en": "Home — top video"
+            }
+        },
+        {
+            "id": "home_display_video",
+            "type": "checkbox",
+            "label": {
+                "ar": "الرئيسية — عرض الفيديو",
+                "en": "Home — show video"
+            },
+            "default": true
+        },
+        {
+            "id": "home_video_loop",
+            "type": "checkbox",
+            "label": {
+                "ar": "الرئيسية — تكرار الفيديو (Loop)",
+                "en": "Home — video loop"
+            },
+            "default": true
+        },
+        {
+            "id": "home_video_url",
+            "type": "url",
+            "label": {
+                "ar": "الرئيسية — رابط عند الضغط على الفيديو",
+                "en": "Home — video click URL"
+            },
+            "info": {
+                "ar": "عند الضغط على الفيديو ينتقل الزائر لهذا الرابط",
+                "en": "Visitors go to this URL when clicking the video"
+            }
+        },
+        {
+            "id": "home_bg_image",
+            "type": "image",
+            "label": {
+                "ar": "الرئيسية — غلاف الفيديو / صورة بديلة",
+                "en": "Home — video poster"
+            }
+        },
+        {
+            "id": "home_cards",
             "type": "list",
             "max_items": 3,
             "label": {
-                "ar": "التبويبات",
-                "en": "Tabs"
+                "ar": "الرئيسية — البطاقات (حد أقصى 3)",
+                "en": "Home — cards (max 3)"
             },
             "info": {
-                "ar": "أضف حتى 3 تبويبات. يمكن لكل تبويب أن يحتوي على صورة أو فيديو.",
-                "en": "Add up to 3 tabs. Each tab can contain an image or a video."
+                "ar": "أضف حتى 3 بطاقات: صورة ورابط فقط.",
+                "en": "Add up to 3 cards: image and link only."
             },
             "settings": [
-                {
-                    "id": "title",
-                    "type": "text",
-                    "label": {
-                        "ar": "عنوان التبويب",
-                        "en": "Tab title"
-                    }
-                },
                 {
                     "id": "image",
                     "type": "image",
@@ -37,25 +93,514 @@
                     }
                 },
                 {
-                    "id": "video",
-                    "type": "video",
+                    "id": "url",
+                    "type": "url",
                     "label": {
-                        "ar": "الفيديو",
-                        "en": "Video"
+                        "ar": "الرابط",
+                        "en": "Link"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "discounts_title",
+            "type": "text",
+            "label": {
+                "ar": "التخفيضات — عنوان التبويب",
+                "en": "Discounts — tab title"
+            },
+            "default": "التخفيضات"
+        },
+        {
+            "id": "discounts_accent_color",
+            "type": "color",
+            "label": {
+                "ar": "التخفيضات — لون خط التبويب",
+                "en": "Discounts — tab accent"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "discounts_video",
+            "type": "video",
+            "label": {
+                "ar": "التخفيضات — فيديو الخلفية",
+                "en": "Discounts — background video"
+            },
+            "info": {
+                "ar": "الخلفية فيديو بعرض كامل (مثل المتجر التجريبي). ارفع ملف MP4.",
+                "en": "Full-width background video (like the demo store). Upload MP4."
+            }
+        },
+        {
+            "id": "discounts_video_loop",
+            "type": "checkbox",
+            "label": {
+                "ar": "التخفيضات — تكرار الفيديو (Loop)",
+                "en": "Discounts — loop video"
+            },
+            "default": true
+        },
+        {
+            "id": "discounts_heading",
+            "type": "text",
+            "label": {
+                "ar": "التخفيضات — العنوان الرئيسي",
+                "en": "Discounts — heading"
+            },
+            "default": "تخفيضات مميزة على"
+        },
+        {
+            "id": "discounts_subtitle",
+            "type": "text",
+            "label": {
+                "ar": "التخفيضات — العنوان الفرعي",
+                "en": "Discounts — subtitle"
+            },
+            "default": "أقوى تخفيضات نهاية العام على جميع المنتجات"
+        },
+        {
+            "id": "discounts_button_text",
+            "type": "text",
+            "label": {
+                "ar": "التخفيضات — نص الزر",
+                "en": "Discounts — button text"
+            },
+            "default": "اعرف المزيد"
+        },
+        {
+            "id": "discounts_button_url",
+            "type": "url",
+            "label": {
+                "ar": "التخفيضات — رابط الزر",
+                "en": "Discounts — button URL"
+            }
+        },
+        {
+            "id": "discounts_button_icon",
+            "type": "image",
+            "label": {
+                "ar": "التخفيضات — أيقونة الزر (اختياري)",
+                "en": "Discounts — button icon (optional)"
+            },
+            "info": {
+                "ar": "اتركه فارغاً لعرض علامة + داخل دائرة.",
+                "en": "Leave empty for the default + icon in a circle."
+            }
+        },
+        {
+            "id": "discounts_title_color",
+            "type": "color",
+            "label": {
+                "ar": "التخفيضات — لون العنوان",
+                "en": "Discounts — title color"
+            },
+            "default": "#ffffff"
+        },
+        {
+            "id": "discounts_subtitle_color",
+            "type": "color",
+            "label": {
+                "ar": "التخفيضات — لون العنوان الفرعي",
+                "en": "Discounts — subtitle color"
+            },
+            "default": "#ffffff"
+        },
+        {
+            "id": "discounts_button_bg_color",
+            "type": "color",
+            "label": {
+                "ar": "التخفيضات — لون خلفية الزر",
+                "en": "Discounts — button background"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "discounts_button_text_color",
+            "type": "color",
+            "label": {
+                "ar": "التخفيضات — لون نص الزر",
+                "en": "Discounts — button text color"
+            },
+            "default": "#0f172a"
+        },
+        {
+            "id": "discounts_overlay_opacity",
+            "type": "number",
+            "label": {
+                "ar": "التخفيضات — شفافية التعتيم (0-100)",
+                "en": "Discounts — overlay opacity"
+            },
+            "default": 35
+        },
+        {
+            "id": "discounts_cards",
+            "type": "list",
+            "max_items": 4,
+            "label": {
+                "ar": "التخفيضات — البطاقات العائمة",
+                "en": "Discounts — floating cards"
+            },
+            "info": {
+                "ar": "بطاقتان جنباً لجنب فوق الفيديو (بدون فراغ). عند المرور يظهر زر «تسوق الآن».",
+                "en": "Two side-by-side cards over the video. Hover shows Shop Now button."
+            },
+            "settings": [
+                {
+                    "id": "image",
+                    "type": "image",
+                    "label": {
+                        "ar": "صورة البطاقة",
+                        "en": "Card image"
                     }
                 },
                 {
-                    "id": "display_video",
-                    "type": "checkbox",
+                    "id": "title",
+                    "type": "text",
                     "label": {
-                        "ar": "عرض الفيديو",
-                        "en": "Display video"
+                        "ar": "عنوان البطاقة",
+                        "en": "Card title"
+                    }
+                },
+                {
+                    "id": "url",
+                    "type": "url",
+                    "label": {
+                        "ar": "رابط البطاقة",
+                        "en": "Card link"
+                    }
+                },
+                {
+                    "id": "button_text",
+                    "type": "text",
+                    "label": {
+                        "ar": "نص الزر عند المرور",
+                        "en": "Hover button text"
+                    },
+                    "default": "تسوق الآن"
+                }
+            ]
+        },
+        {
+            "id": "discounts_card_title_color",
+            "type": "color",
+            "label": {
+                "ar": "التخفيضات — لون عنوان البطاقة",
+                "en": "Discounts — card title color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "discounts_card_btn_bg_color",
+            "type": "color",
+            "label": {
+                "ar": "التخفيضات — لون خلفية زر المرور",
+                "en": "Discounts — hover button background"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "discounts_card_btn_text_color",
+            "type": "color",
+            "label": {
+                "ar": "التخفيضات — لون نص زر المرور",
+                "en": "Discounts — hover button text color"
+            },
+            "default": "#0f172a"
+        },
+        {
+            "id": "latest_title",
+            "type": "text",
+            "label": {
+                "ar": "الأحدث — عنوان التبويب",
+                "en": "Latest — tab title"
+            },
+            "default": "الأحدث"
+        },
+        {
+            "id": "latest_accent_color",
+            "type": "color",
+            "label": {
+                "ar": "الأحدث — لون خط التبويب",
+                "en": "Latest — tab accent"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "latest_bg_image",
+            "type": "image",
+            "label": {
+                "ar": "الأحدث — خلفية افتراضية للشرائح",
+                "en": "Latest — default slide background"
+            }
+        },
+        {
+            "id": "latest_space_between",
+            "type": "number",
+            "label": {
+                "ar": "الأحدث — المسافة بين الشرائح (بكسل)",
+                "en": "Latest — space between slides"
+            },
+            "default": 0
+        },
+        {
+            "id": "latest_content_direction",
+            "type": "select",
+            "label": {
+                "ar": "الأحدث — اتجاه المحتوى (افتراضي)",
+                "en": "Latest — content direction (default)"
+            },
+            "default": "row",
+            "options": [
+                {
+                    "label": { "ar": "أفقي (row)", "en": "Horizontal (row)" },
+                    "value": "row"
+                },
+                {
+                    "label": { "ar": "عمودي (column)", "en": "Vertical (column)" },
+                    "value": "column"
+                }
+            ]
+        },
+        {
+            "id": "latest_content_justify",
+            "type": "select",
+            "label": {
+                "ar": "الأحدث — justify-content (افتراضي)",
+                "en": "Latest — justify-content (default)"
+            },
+            "default": "space-between",
+            "options": [
+                { "label": { "ar": "في المنتصف", "en": "Center" }, "value": "center" },
+                { "label": { "ar": "البداية", "en": "Start" }, "value": "flex-start" },
+                { "label": { "ar": "النهاية", "en": "End" }, "value": "flex-end" },
+                { "label": { "ar": "space-between", "en": "Space between" }, "value": "space-between" },
+                { "label": { "ar": "space-around", "en": "Space around" }, "value": "space-around" }
+            ]
+        },
+        {
+            "id": "latest_content_align",
+            "type": "select",
+            "label": {
+                "ar": "الأحدث — align-items (افتراضي)",
+                "en": "Latest — align-items (default)"
+            },
+            "default": "center",
+            "options": [
+                { "label": { "ar": "في المنتصف", "en": "Center" }, "value": "center" },
+                { "label": { "ar": "أعلى", "en": "Start" }, "value": "flex-start" },
+                { "label": { "ar": "أسفل", "en": "End" }, "value": "flex-end" },
+                { "label": { "ar": "ممتد", "en": "Stretch" }, "value": "stretch" }
+            ]
+        },
+        {
+            "id": "latest_image_style",
+            "type": "select",
+            "label": {
+                "ar": "الأحدث — شكل الصورة (افتراضي)",
+                "en": "Latest — image style (default)"
+            },
+            "default": "default",
+            "options": [
+                { "label": { "ar": "افتراضي", "en": "Default" }, "value": "default" },
+                { "label": { "ar": "زوايا دائرية", "en": "Rounded" }, "value": "rounded" },
+                { "label": { "ar": "دائري", "en": "Circle" }, "value": "circle" }
+            ]
+        },
+        {
+            "id": "show_arrows",
+            "type": "checkbox",
+            "label": {
+                "ar": "الأحدث — إظهار أسهم التنقل",
+                "en": "Latest — show arrows"
+            },
+            "default": true
+        },
+        {
+            "id": "show_pagination",
+            "type": "checkbox",
+            "label": {
+                "ar": "الأحدث — إظهار نقاط التنقل",
+                "en": "Latest — show pagination"
+            },
+            "default": true
+        },
+        {
+            "id": "autoplay",
+            "type": "checkbox",
+            "label": {
+                "ar": "الأحدث — تشغيل تلقائي",
+                "en": "Latest — autoplay"
+            },
+            "default": true
+        },
+        {
+            "id": "autoplay_delay",
+            "type": "number",
+            "label": {
+                "ar": "الأحدث — مدة التشغيل التلقائي (ثانية)",
+                "en": "Latest — autoplay delay (sec)"
+            },
+            "default": 6
+        },
+        {
+            "id": "latest_slides",
+            "type": "list",
+            "max_items": 12,
+            "label": {
+                "ar": "الأحدث — شرائح السلايدر",
+                "en": "Latest — swiper slides"
+            },
+            "settings": [
+                {
+                    "id": "bg_image",
+                    "type": "image",
+                    "label": {
+                        "ar": "صورة الشريحة (خلفية + fade)",
+                        "en": "Slide image (background with fade)"
+                    }
+                },
+                {
+                    "id": "image",
+                    "type": "image",
+                    "label": {
+                        "ar": "صورة المحتوى (تتحرك مع النص)",
+                        "en": "Content image (moves with text)"
+                    }
+                },
+                {
+                    "id": "content_direction",
+                    "type": "select",
+                    "label": {
+                        "ar": "اتجاه المحتوى",
+                        "en": "Content direction"
                     },
                     "info": {
-                        "ar": "عند التفعيل، يتم عرض الفيديو بدلاً من الصورة لهذا التبويب.",
-                        "en": "When enabled, the video is shown instead of the image for this tab."
+                        "ar": "اتركه فارغاً لاستخدام الإعداد الافتراضي للتبويب",
+                        "en": "Leave empty to use tab default"
                     },
-                    "default": false
+                    "options": [
+                        { "label": { "ar": "افتراضي التبويب", "en": "Tab default" }, "value": "" },
+                        { "label": { "ar": "أفقي (row)", "en": "Row" }, "value": "row" },
+                        { "label": { "ar": "عمودي (column)", "en": "Column" }, "value": "column" }
+                    ]
+                },
+                {
+                    "id": "content_justify",
+                    "type": "select",
+                    "label": {
+                        "ar": "justify-content",
+                        "en": "justify-content"
+                    },
+                    "options": [
+                        { "label": { "ar": "افتراضي التبويب", "en": "Tab default" }, "value": "" },
+                        { "label": { "ar": "center", "en": "center" }, "value": "center" },
+                        { "label": { "ar": "flex-start", "en": "flex-start" }, "value": "flex-start" },
+                        { "label": { "ar": "flex-end", "en": "flex-end" }, "value": "flex-end" },
+                        { "label": { "ar": "space-between", "en": "space-between" }, "value": "space-between" },
+                        { "label": { "ar": "space-around", "en": "space-around" }, "value": "space-around" }
+                    ]
+                },
+                {
+                    "id": "content_align",
+                    "type": "select",
+                    "label": {
+                        "ar": "align-items",
+                        "en": "align-items"
+                    },
+                    "options": [
+                        { "label": { "ar": "افتراضي التبويب", "en": "Tab default" }, "value": "" },
+                        { "label": { "ar": "center", "en": "center" }, "value": "center" },
+                        { "label": { "ar": "flex-start", "en": "flex-start" }, "value": "flex-start" },
+                        { "label": { "ar": "flex-end", "en": "flex-end" }, "value": "flex-end" },
+                        { "label": { "ar": "stretch", "en": "stretch" }, "value": "stretch" }
+                    ]
+                },
+                {
+                    "id": "image_style",
+                    "type": "select",
+                    "label": {
+                        "ar": "شكل الصورة",
+                        "en": "Image style"
+                    },
+                    "options": [
+                        { "label": { "ar": "افتراضي التبويب", "en": "Tab default" }, "value": "" },
+                        { "label": { "ar": "افتراضي", "en": "Default" }, "value": "default" },
+                        { "label": { "ar": "زوايا دائرية", "en": "Rounded" }, "value": "rounded" },
+                        { "label": { "ar": "دائري", "en": "Circle" }, "value": "circle" }
+                    ]
+                },
+                {
+                    "id": "subtitle",
+                    "type": "text",
+                    "label": {
+                        "ar": "العنوان الفرعي",
+                        "en": "Subtitle"
+                    }
+                },
+                {
+                    "id": "heading",
+                    "type": "text",
+                    "label": {
+                        "ar": "العنوان",
+                        "en": "Heading"
+                    }
+                },
+                {
+                    "id": "button_text",
+                    "type": "text",
+                    "label": {
+                        "ar": "نص الزر",
+                        "en": "Button text"
+                    }
+                },
+                {
+                    "id": "button_url",
+                    "type": "url",
+                    "label": {
+                        "ar": "رابط الزر",
+                        "en": "Button URL"
+                    }
+                },
+                {
+                    "id": "button_icon",
+                    "type": "image",
+                    "label": {
+                        "ar": "أيقونة الزر",
+                        "en": "Button icon"
+                    }
+                },
+                {
+                    "id": "subtitle_color",
+                    "type": "color",
+                    "label": {
+                        "ar": "لون العنوان الفرعي",
+                        "en": "Subtitle color"
+                    }
+                },
+                {
+                    "id": "title_color",
+                    "type": "color",
+                    "label": {
+                        "ar": "لون العنوان",
+                        "en": "Title color"
+                    }
+                },
+                {
+                    "id": "button_bg_color",
+                    "type": "color",
+                    "label": {
+                        "ar": "لون خلفية الزر",
+                        "en": "Button background"
+                    }
+                },
+                {
+                    "id": "button_text_color",
+                    "type": "color",
+                    "label": {
+                        "ar": "لون نص الزر",
+                        "en": "Button text color"
+                    }
                 }
             ]
         }

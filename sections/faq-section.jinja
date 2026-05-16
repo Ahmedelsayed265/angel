@@ -1,0 +1,96 @@
+{% set faq_items = safeget(settings, "faq_items", []) %}
+{% set section_title = settings.title | default("الأسئلة الشائعة") %}
+{% set subtitle = settings.subtitle | default("إجابات على أهم الأسئلة") %}
+{% set title_color = settings.title_color | default("#54c8e9") %}
+{% set bg_color = settings.bg_color | default("#141414") %}
+{% set card_bg = settings.card_bg_color | default("#2b2b2b") %}
+{% set accent = settings.accent_color | default("#54c8e9") %}
+{% set open_first = settings.open_first | default(false) %}
+
+{% if faq_items and faq_items | length > 0 %}
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-faq-section"
+  style="
+    --faq-bg: {{ bg_color }};
+    --faq-title: {{ title_color }};
+    --faq-card-bg: {{ card_bg }};
+    --faq-accent: {{ accent }};
+  "
+>
+  <div class="container angel-faq-section__inner">
+    <header class="angel-faq-header">
+      <h2 class="angel-faq-header__title">{{ section_title }}</h2>
+      {% if subtitle %}
+        <p class="angel-faq-header__subtitle">{{ subtitle }}</p>
+      {% endif %}
+    </header>
+
+    <div class="angel-faq-grid" data-faq-accordion>
+      {% for item in faq_items %}
+        {% if item.question %}
+          {% set is_open = open_first and loop.first %}
+          <div class="angel-faq-item{% if is_open %} is-open{% endif %}">
+            <button
+              type="button"
+              class="angel-faq-item__trigger"
+              aria-expanded="{{ 'true' if is_open else 'false' }}"
+              aria-controls="{{ sectionId }}-faq-panel-{{ loop.index }}"
+            >
+              <span class="angel-faq-item__question">{{ item.question }}</span>
+              <span class="angel-faq-item__icon" aria-hidden="true"></span>
+            </button>
+            <div
+              id="{{ sectionId }}-faq-panel-{{ loop.index }}"
+              class="angel-faq-item__panel"
+              {% if not is_open %}hidden{% endif %}
+            >
+              {% if item.answer %}
+                <p class="angel-faq-item__answer">{{ item.answer }}</p>
+              {% endif %}
+              {% if item.button_text %}
+                <a
+                  class="angel-faq-item__btn"
+                  href="{{ item.button_url if item.button_url else 'javascript:;' }}"
+                >
+                  {{ item.button_text }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var section = document.getElementById('{{ sectionId }}');
+    if (!section) return;
+
+    var accordion = section.querySelector('[data-faq-accordion]');
+    if (!accordion) return;
+
+    accordion.querySelectorAll('.angel-faq-item__trigger').forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        var item = trigger.closest('.angel-faq-item');
+        var panel = item && item.querySelector('.angel-faq-item__panel');
+        if (!item || !panel) return;
+
+        var willOpen = !item.classList.contains('is-open');
+
+        accordion.querySelectorAll('.angel-faq-item').forEach(function (other) {
+          var otherTrigger = other.querySelector('.angel-faq-item__trigger');
+          var otherPanel = other.querySelector('.angel-faq-item__panel');
+          var open = other === item && willOpen;
+          other.classList.toggle('is-open', open);
+          if (otherTrigger) otherTrigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+          if (otherPanel) otherPanel.hidden = !open;
+        });
+      });
+    });
+  })();
+</script>
+{% endif %}

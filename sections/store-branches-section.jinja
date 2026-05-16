@@ -1,0 +1,121 @@
+{% set branches = safeget(settings, "branches", []) %}
+{% set section_title = settings.title | default("زورونا في فروعنا") %}
+{% set subtitle = settings.subtitle | default("") %}
+{% set title_color = settings.title_color | default("#54c8e9") %}
+{% set bg_color = settings.bg_color | default("#141414") %}
+{% set accent_color = settings.accent_color | default("#54c8e9") %}
+
+{% if branches and branches | length > 0 %}
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-branches-section"
+  style="
+    --branches-bg: {{ bg_color }};
+    --branches-title: {{ title_color }};
+    --branches-accent: {{ accent_color }};
+  "
+>
+  <div class="container angel-branches-section__inner">
+    <header class="angel-branches-header">
+      <h2 class="angel-branches-header__title">{{ section_title }}</h2>
+      {% if subtitle %}
+        <p class="angel-branches-header__subtitle">{{ subtitle }}</p>
+      {% endif %}
+    </header>
+
+    <div class="angel-branches-tabs" role="tablist" aria-label="{{ section_title }}">
+      {% for branch in branches %}
+        {% if branch.name and branch.map_embed_url %}
+          <button
+            type="button"
+            class="angel-branches-tab{% if loop.first %} is-active{% endif %}"
+            role="tab"
+            aria-selected="{{ 'true' if loop.first else 'false' }}"
+            aria-controls="{{ sectionId }}-branch-{{ loop.index }}"
+            data-branch-tab="{{ loop.index0 }}"
+          >
+            <span class="angel-branches-tab__icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+            </span>
+            <span class="angel-branches-tab__label">{{ branch.name }}</span>
+          </button>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="angel-branches-map-wrap">
+      {% for branch in branches %}
+        {% if branch.name and branch.map_embed_url %}
+          <div
+            id="{{ sectionId }}-branch-{{ loop.index }}"
+            class="angel-branches-map{% if loop.first %} is-active{% endif %}"
+            role="tabpanel"
+            data-branch-panel="{{ loop.index0 }}"
+            {% if not loop.first %}hidden{% endif %}
+          >
+            {% if branch.place_name or branch.address or branch.rating %}
+              <div class="angel-branches-map__card">
+                {% if branch.place_name %}
+                  <strong class="angel-branches-map__place">{{ branch.place_name }}</strong>
+                {% endif %}
+                {% if branch.address %}
+                  <p class="angel-branches-map__address">{{ branch.address }}</p>
+                {% endif %}
+                {% if branch.rating %}
+                  <p class="angel-branches-map__rating">
+                    <span class="angel-branches-map__stars" aria-hidden="true">★</span>
+                    {{ branch.rating }}{% if branch.reviews %} ({{ branch.reviews }}){% endif %}
+                  </p>
+                {% endif %}
+                {% if branch.maps_link %}
+                  <a class="angel-branches-map__link" href="{{ branch.maps_link }}" target="_blank" rel="noopener noreferrer">
+                    {{ _("Open in Google Maps") }}
+                  </a>
+                {% endif %}
+              </div>
+            {% endif %}
+            <iframe
+              class="angel-branches-map__iframe"
+              src="{{ branch.map_embed_url }}"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen
+              title="{{ branch.name }}"
+            ></iframe>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var section = document.getElementById('{{ sectionId }}');
+    if (!section) return;
+
+    var tabs = section.querySelectorAll('[data-branch-tab]');
+    var panels = section.querySelectorAll('[data-branch-panel]');
+    if (!tabs.length || !panels.length) return;
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var index = tab.getAttribute('data-branch-tab');
+
+        tabs.forEach(function (t) {
+          var active = t.getAttribute('data-branch-tab') === index;
+          t.classList.toggle('is-active', active);
+          t.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+
+        panels.forEach(function (panel) {
+          var active = panel.getAttribute('data-branch-panel') === index;
+          panel.classList.toggle('is-active', active);
+          panel.hidden = !active;
+        });
+      });
+    });
+  })();
+</script>
+{% endif %}

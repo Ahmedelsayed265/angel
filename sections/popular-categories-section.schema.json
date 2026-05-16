@@ -1,0 +1,91 @@
+{
+    "section_id": "angel-popular-categories-section",
+    "template": "sections/popular-categories-section.jinja",
+    "icon": "fa fa-th-large",
+    "name": {
+        "ar": "تصنيفات شائعة",
+        "en": "Popular categories"
+    },
+    "settings": [
+        {
+            "id": "title",
+            "type": "text",
+            "label": {
+                "ar": "عنوان القسم",
+                "en": "Section title"
+            },
+            "default": "تصنيفات شائعة"
+        },
+        {
+            "id": "title_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان",
+                "en": "Title color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون خلفية القسم",
+                "en": "Section background"
+            },
+            "default": "#141414"
+        },
+        {
+            "id": "card_bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون خلفية البطاقة",
+                "en": "Card background"
+            },
+            "default": "#2b2b2b"
+        },
+        {
+            "id": "card_text_color",
+            "type": "color",
+            "label": {
+                "ar": "لون نص التصنيف",
+                "en": "Card text color"
+            },
+            "default": "#ffffff"
+        },
+        {
+            "id": "categories",
+            "type": "list",
+            "max_items": 12,
+            "label": {
+                "ar": "التصنيفات",
+                "en": "Categories"
+            },
+            "settings": [
+                {
+                    "id": "image",
+                    "type": "image",
+                    "label": {
+                        "ar": "صورة التصنيف",
+                        "en": "Category image"
+                    }
+                },
+                {
+                    "id": "title",
+                    "type": "text",
+                    "label": {
+                        "ar": "اسم التصنيف",
+                        "en": "Category name"
+                    }
+                },
+                {
+                    "id": "url",
+                    "type": "url",
+                    "label": {
+                        "ar": "رابط التصنيف",
+                        "en": "Category URL"
+                    }
+                }
+            ]
+        }
+    ]
+}
