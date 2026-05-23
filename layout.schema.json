@@ -95,11 +95,136 @@
           "expandable": true,
           "settings": [
             {
-              "id": "color",
-              "type": "color",
+              "id": "image",
+              "type": "image",
               "label": {
-                "ar": "لون خلفية الصفحة",
-                "en": "Page background color"
+                "ar": "الصورة",
+                "en": "Logo"
+              },
+              "info": {
+                "ar": "ارفع صورة بحجم 150 * 150 ",
+                "en": "This is an info text sample here"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "category",
+      "icon": "fa fa-th-large",
+      "name": {
+        "ar": "صفحة التصنيف",
+        "en": "Category page"
+      },
+      "settings": [
+        {
+          "id": "testimonials_enabled",
+          "type": "checkbox",
+          "label": {
+            "ar": "عرض آراء العملاء",
+            "en": "Show customer reviews"
+          },
+          "default": true
+        },
+        {
+          "id": "testimonials_source",
+          "type": "select",
+          "label": {
+            "ar": "مصدر التعليقات",
+            "en": "Comments source"
+          },
+          "info": {
+            "ar": "يدوي: من القائمة أدناه. API: من تقييمات منتجات التصنيف. كلاهما: يدمج المصدرين.",
+            "en": "Manual: from the list below. API: from product reviews in the category. Both: merges both sources."
+          },
+          "options": [
+            {
+              "value": "both",
+              "label": {
+                "ar": "يدوي + تقييمات المنتجات",
+                "en": "Manual + product reviews"
+              }
+            },
+            {
+              "value": "api",
+              "label": {
+                "ar": "تقييمات المنتجات فقط",
+                "en": "Product reviews only"
+              }
+            },
+            {
+              "value": "manual",
+              "label": {
+                "ar": "يدوي فقط",
+                "en": "Manual only"
+              }
+            }
+          ],
+          "default": "both"
+        },
+        {
+          "id": "testimonials_api_max_products",
+          "type": "number",
+          "label": {
+            "ar": "عدد المنتجات لجلب التقييمات منها",
+            "en": "Max products to fetch reviews from"
+          },
+          "default": 12
+        },
+        {
+          "id": "testimonials_max_slides",
+          "type": "number",
+          "label": {
+            "ar": "الحد الأقصى للبطاقات",
+            "en": "Maximum slides"
+          },
+          "default": 8
+        },
+        {
+          "id": "testimonials",
+          "type": "list",
+          "max_items": 12,
+          "label": {
+            "ar": "تعليقات يدوية",
+            "en": "Manual testimonials"
+          },
+          "info": {
+            "ar": "تُستخدم عند اختيار مصدر يدوي أو يدوي + API. اترك التعليق فارغاً لإخفاء البطاقة.",
+            "en": "Used when source is manual or both. Leave comment empty to skip a card."
+          },
+          "settings": [
+            {
+              "id": "name",
+              "type": "text",
+              "label": {
+                "ar": "اسم العميل",
+                "en": "Customer name"
+              }
+            },
+            {
+              "id": "comment",
+              "type": "textarea",
+              "label": {
+                "ar": "التعليق",
+                "en": "Comment"
+              }
+            },
+            {
+              "id": "rating",
+              "type": "number",
+              "label": {
+                "ar": "التقييم (1–5)",
+                "en": "Rating (1–5)"
+              },
+              "default": 5
+            },
+            {
+              "id": "image",
+              "type": "image",
+              "label": {
+                "ar": "صورة العميل (اختياري)",
+                "en": "Customer image (optional)"
               }
             }
           ]

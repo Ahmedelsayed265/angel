@@ -34,6 +34,27 @@ msgstr "أضف منتجات بقيمة %s لتحصل على شحن مجاني"
 msgid "Add your question"
 msgstr "أضف سؤالك"
 
+msgid "Added to shopping cart"
+msgstr "تمت الإضافة إلى سلة المشتريات"
+
+msgid "You have {count} products in the cart for {total}"
+msgstr "لديك {count} منتجات في السلة بـ {total}"
+
+msgid "View cart"
+msgstr "عرض السلة"
+
+msgid "Complete order"
+msgstr "إتمام الطلب"
+
+msgid "Continue shopping"
+msgstr "متابعة التسوق"
+
+msgid "Could not add to cart"
+msgstr "تعذر الإضافة إلى السلة"
+
+msgid "This product is already in your cart. Quantity updated."
+msgstr "المنتج موجود في السلة — تم تحديث الكمية"
+
 msgid "Added to cart successfully"
 msgstr "تم إضافة المنتج للسلة بنجاح"
 
@@ -187,9 +208,6 @@ msgstr "مجاني"
 
 msgid "Free Shipping"
 msgstr "شحن مجاني"
-
-msgid "Free Shipping Applied"
-msgstr "تم تطبيق الشحن المجاني"
 
 msgid "Free shipping applied"
 msgstr "تم تطبيق الشحن المجاني"
@@ -446,8 +464,8 @@ msgstr "هذا المنتج غير متوفر في المخزون"
 msgid "To"
 msgstr "إلى"
 
-msgid "Total "
-msgstr "إجمالي "
+msgid "Total"
+msgstr "إجمالي"
 
 msgid "Total Posts"
 msgstr "مجموع التدوينات"
@@ -517,9 +535,6 @@ msgstr "منذ يوم"
 msgid "days ago"
 msgstr "منذ أيام"
 
-msgid "failed to send"
-msgstr "فشل في الإرسال"
-
 msgid "have"
 msgstr "لديك"
 
@@ -561,12 +576,6 @@ msgstr "منذ أشهر"
 
 msgid "more information"
 msgstr "مزيد من المعلومات"
-
-msgid "name"
-msgstr "الاسم"
-
-msgid "price"
-msgstr "السعر"
 
 msgid "product description"
 msgstr "وصف المنتج"
@@ -658,3 +667,138 @@ msgstr "رجوع"
 
 msgid "Currency"
 msgstr "العملة"
+
+msgid "Details"
+msgstr "التفاصيل"
+
+msgid "Ratings"
+msgstr "التقييمات"
+
+msgid "Enter your question here"
+msgstr "ادخل سؤالك هنا"
+
+msgid "Write your review here"
+msgstr "اكتب تقييمك هنا"
+
+msgid "Available"
+msgstr "متوفر"
+
+msgid "Out of stock"
+msgstr "غير متوفر"
+
+msgid "Get an extra discount when you use a coupon code at checkout"
+msgstr "احصل على خصم إضافي عند استخدام كود الخصم عند الدفع"
+
+msgid "Best price"
+msgstr "أفضل سعر"
+
+msgid "Technical support"
+msgstr "دعم فني"
+
+msgid "Exclusive benefits"
+msgstr "مزايا حصرية"
+
+msgid "View image"
+msgstr "عرض الصورة"
+
+msgid "Read more"
+msgstr "قراءة المزيد"
+
+msgid "100% authentic product"
+msgstr "منتج أصلي 100%"
+
+msgid "Click for more from brand"
+msgstr "اضغط هنا للمزيد من ماركة"
+
+msgid "Product classification:"
+msgstr "تصنيف المنتج:"
+
+msgid "Quantity depleted"
+msgstr "نفدت الكمية"
+
+msgid "%(pct)s%% discount on order"
+msgstr "خصم %(pct)s%% عند الطلب"
+
+msgid "Do not miss this exclusive order discount."
+msgstr "لا يفوتك خصم مميز عند الطلب"
+
+msgid "Best theme"
+msgstr "أفضل ثيم"
+
+msgid "Exclusive advantages"
+msgstr "مزايا حصرية"
+
+msgid "Frequently bought together"
+msgstr "عادة ما يتم شراؤها معًا"
+
+msgid "Almost out of stock"
+msgstr "على وشك النفاد"
+
+msgid "Apply"
+msgstr "تطبيق"
+
+msgid "Copy link"
+msgstr "نسخ الرابط"
+
+msgid "Link copied"
+msgstr "تم نسخ الرابط"
+
+msgid "Select"
+msgstr "اختر"
+
+msgid "Remaining until the discount ends:"
+msgstr "متبقي على انتهاء الخصم:"
+
+msgid "Why wait?"
+msgstr "ليش تنتظر؟"
+
+msgid "Get the product directly now"
+msgstr "احصل على المنتج مباشرة الآن"
+
+msgid "Order it now"
+msgstr "اطلبه الان"
+
+msgid "Exclusive brands"
+msgstr "ماركات حصرية"
+
+msgid "Safe delivery"
+msgstr "توصيل آمن"
+
+msgid "Hello, I would like to inquire about"
+msgstr "مرحبًا، أرغب بالاستفسار عن"
+
+msgid "Contact us on WhatsApp"
+msgstr "تواصل عبر واتساب"
+
+msgid "Sale"
+msgstr "تخفيض"
+
+msgid "Wishlist"
+msgstr "المفضلة"
+
+msgid "Decrease"
+msgstr "تقليل"
+
+msgid "Increase"
+msgstr "زيادة"
+
+msgid "Previous"
+msgstr "السابق"
+
+msgid "Please choose product options first"
+msgstr "يجب اختيار المتغيرات أولاً"
+
+msgid "Our suggestions"
+msgstr "مقترحاتنا"
+
+msgid "Clear filter"
+msgstr "مسح الفلتر"
+
+msgid "New"
+msgstr "جديد"
+
+msgid "Customer reviews"
+msgstr "آراء العملاء"
+
+msgid "Order summary"
+msgstr "ملخص الطلب"

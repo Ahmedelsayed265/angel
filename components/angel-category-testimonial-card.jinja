@@ -1,0 +1,39 @@
+{# Single testimonial slide — expects: review_item with name, comment, rating, image_src #}
+<article class="angel-category-testimonial-card">
+    <i class="testimonial__icon sicon-quote angel-category-testimonial-card__quote" aria-hidden="true"></i>
+
+    <div class="angel-category-testimonial-card__avatar-wrap">
+        {% if review_item.image_src %}
+            <img
+                class="angel-category-testimonial-card__avatar"
+                src="{{ review_item.image_src }}"
+                alt=""
+                width="96"
+                height="96"
+                loading="lazy"
+            />
+        {% else %}
+            <span class="angel-category-testimonial-card__avatar-fallback" aria-hidden="true">
+                {{ (review_item.name | default('?'))[:1] }}
+            </span>
+        {% endif %}
+    </div>
+
+    <h3 class="angel-category-testimonial-card__name">{{ review_item.name }}</h3>
+
+    <div class="angel-category-testimonial-card__stars" aria-hidden="true">
+        {% set star_count = review_item.rating | default(5) | int %}
+        {% if star_count < 1 %}{% set star_count = 5 %}{% endif %}
+        {% if star_count > 5 %}{% set star_count = 5 %}{% endif %}
+        {% for i in range(star_count) %}
+            <svg class="angel-category-testimonial-card__star" version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 30 32" aria-hidden="true">
+                <title>star2</title>
+                <path d="M29.714 11.839c0 0.321-0.232 0.625-0.464 0.857l-6.482 6.321 1.536 8.929c0.018 0.125 0.018 0.232 0.018 0.357 0 0.464-0.214 0.893-0.732 0.893-0.25 0-0.5-0.089-0.714-0.214l-8.018-4.214-8.018 4.214c-0.232 0.125-0.464 0.214-0.714 0.214-0.518 0-0.75-0.429-0.75-0.893 0-0.125 0.018-0.232 0.036-0.357l1.536-8.929-6.5-6.321c-0.214-0.232-0.446-0.536-0.446-0.857 0-0.536 0.554-0.75 1-0.821l8.964-1.304 4.018-8.125c0.161-0.339 0.464-0.732 0.875-0.732s0.714 0.393 0.875 0.732l4.018 8.125 8.964 1.304c0.429 0.071 1 0.286 1 0.821z"></path>
+            </svg>
+        {% endfor %}
+    </div>
+
+    {% if review_item.comment %}
+        <p class="angel-category-testimonial-card__comment">{{ review_item.comment }}</p>
+    {% endif %}
+</article>

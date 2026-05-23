@@ -1,0 +1,231 @@
+<div
+
+    id="angel-grouped-quick-view"
+
+    class="angel-grouped-quick-view"
+
+    aria-hidden="true"
+
+    role="dialog"
+
+    aria-modal="true"
+
+    aria-labelledby="angel-grouped-quick-view-title"
+
+    data-label-add="{{ _('add to cart') | e }}"
+
+    data-label-preorder="{{ _('Preorder now') | e }}"
+
+    data-label-view-product="{{ _('View product') | e }}"
+
+    data-label-discount="{{ _('Discount') | e }}"
+
+    data-label-copied="{{ _('Link copied') | e }}"
+
+    data-label-loading="{{ _('Loading') | e }}"
+
+    data-label-read-more="{{ _('Read more') | e }}"
+
+    data-asset-placeholder="{{ 'product-img.svg' | asset_url }}"
+
+    data-wishlist-enabled="{{ 'true' if store.settings.products.wishlist_enabled == true else 'false' }}"
+
+>
+
+    <div class="angel-grouped-quick-view__backdrop" data-grouped-qv-close></div>
+
+
+
+    <div class="angel-grouped-quick-view__loading" data-grouped-qv-loading hidden>
+
+        <div class="angel-grouped-quick-view__loading-pill" role="status" aria-live="polite">
+
+            <span class="angel-grouped-quick-view__spinner" aria-hidden="true"></span>
+
+            <span class="sr-only">{{ _("Loading") }}</span>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="angel-grouped-quick-view__dialog" data-grouped-qv-dialog hidden>
+
+        <button type="button" class="angel-grouped-quick-view__close" data-grouped-qv-close aria-label="{{ _('Close') }}">
+
+            <span aria-hidden="true">&times;</span>
+
+        </button>
+
+
+
+        <div class="angel-grouped-quick-view__inner" data-grouped-qv-content hidden>
+
+            <div class="angel-grouped-quick-view__media">
+
+                <div class="angel-grouped-quick-view__stage">
+
+                    <img class="angel-grouped-quick-view__img" data-grouped-qv-img src="" alt="" />
+
+                    <button type="button" class="angel-grouped-quick-view__nav angel-grouped-quick-view__nav--prev" data-grouped-qv-prev aria-label="{{ _('Previous') }}">
+
+                        <span class="icon-keyboard_arrow_right angel-grouped-quick-view__chevron angel-grouped-quick-view__chevron--rtl" aria-hidden="true"></span>
+
+                        <span class="icon-keyboard_arrow_left angel-grouped-quick-view__chevron angel-grouped-quick-view__chevron--ltr" aria-hidden="true"></span>
+
+                    </button>
+
+                    <button type="button" class="angel-grouped-quick-view__nav angel-grouped-quick-view__nav--next" data-grouped-qv-next aria-label="{{ _('Next') }}">
+
+                        <span class="icon-keyboard_arrow_left angel-grouped-quick-view__chevron angel-grouped-quick-view__chevron--rtl" aria-hidden="true"></span>
+
+                        <span class="icon-keyboard_arrow_right angel-grouped-quick-view__chevron angel-grouped-quick-view__chevron--ltr" aria-hidden="true"></span>
+
+                    </button>
+
+                    <div class="angel-grouped-quick-view__media-actions">
+                        <span class="angel-grouped-quick-view__wishlist add-to-wishlist" data-grouped-qv-wishlist-wrap hidden>
+
+                            <button type="button" class="angel-grouped-quick-view__media-action angel-grouped-quick-view__media-action--wishlist" data-grouped-qv-wishlist aria-label="{{ _('Wishlist') }}">
+
+                               <i class="sicon-heart"></i>
+
+                            </button>
+
+                        </span>
+
+                        <button type="button" class="angel-grouped-quick-view__media-action angel-grouped-quick-view__media-action--share" data-grouped-qv-share aria-label="{{ _('share product') }}">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32">
+                                <title>share-alt</title>
+                                <path fill="white" d="M26.667 21.333c-1.699 0-3.196 0.812-4.173 2.052l-11.912-5.211c0.044-0.276 0.085-0.553 0.085-0.841 0-0.472-0.081-0.923-0.197-1.359l12.361-6.952c0.971 1.009 2.328 1.644 3.836 1.644 2.941 0 5.333-2.392 5.333-5.333s-2.392-5.333-5.333-5.333-5.333 2.392-5.333 5.333c0 0.472 0.081 0.923 0.197 1.359l-12.361 6.952c-0.971-1.009-2.328-1.644-3.836-1.644-2.941 0-5.333 2.392-5.333 5.333s2.392 5.333 5.333 5.333c1.699 0 3.196-0.812 4.173-2.052l11.912 5.211c-0.044 0.276-0.085 0.553-0.085 0.841 0 2.941 2.392 5.333 5.333 5.333s5.333-2.392 5.333-5.333-2.392-5.333-5.333-5.333zM26.667 2.667c1.471 0 2.667 1.196 2.667 2.667s-1.196 2.667-2.667 2.667-2.667-1.196-2.667-2.667 1.196-2.667 2.667-2.667zM5.333 20c-1.471 0-2.667-1.196-2.667-2.667s1.196-2.667 2.667-2.667 2.667 1.196 2.667 2.667-1.196 2.667-2.667 2.667zM26.667 29.333c-1.471 0-2.667-1.196-2.667-2.667s1.196-2.667 2.667-2.667 2.667 1.196 2.667 2.667-1.196 2.667-2.667 2.667z"></path>
+                            </svg>
+                        </button>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="angel-grouped-quick-view__info">
+
+                <div class="angel-grouped-quick-view__info-head">
+
+                    <div class="angel-grouped-quick-view__brand" data-grouped-qv-brand hidden></div>
+
+                </div>
+
+                <h2 id="angel-grouped-quick-view-title" class="angel-grouped-quick-view__title" data-grouped-qv-title></h2>
+
+                <p class="angel-grouped-quick-view__subtitle" data-grouped-qv-subtitle hidden></p>
+
+
+
+                <div class="angel-grouped-quick-view__prices" data-grouped-qv-prices>
+
+                    <span class="angel-grouped-quick-view__price" data-grouped-qv-price></span>
+
+                    <del class="angel-grouped-quick-view__price-old" data-grouped-qv-price-old></del>
+
+                    <span class="angel-grouped-quick-view__discount-badge" data-grouped-qv-discount hidden></span>
+
+                </div>
+
+
+
+                <div class="angel-grouped-quick-view__rating" data-grouped-qv-rating hidden></div>
+
+
+
+                <div class="angel-grouped-quick-view__description-wrap" data-grouped-qv-description-wrap hidden>
+
+                    <div class="angel-grouped-quick-view__description" data-grouped-qv-description></div>
+
+                    <a class="angel-grouped-quick-view__read-more" data-grouped-qv-read-more href="#" hidden>{{ _("Read more") }}</a>
+
+                </div>
+
+
+
+                <div class="angel-grouped-quick-view__options" data-grouped-qv-options hidden></div>
+
+                <div class="angel-grouped-quick-view__color-panel" data-grouped-qv-color-panel hidden>
+
+                    <div class="angel-grouped-quick-view__color-row">
+
+
+                        <div class="angel-grouped-quick-view__color-main">
+
+                            <p class="angel-grouped-quick-view__color-heading">
+
+                                <span data-grouped-qv-color-label></span><span class="angel-grouped-quick-view__color-req" aria-hidden="true">*</span>
+
+                            </p>
+
+                            <div class="angel-grouped-quick-view__color-choices" data-grouped-qv-color-choices role="list"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="angel-grouped-quick-view__color-price">
+
+                        <span class="angel-grouped-quick-view__color-price-label">
+
+                            <i class="sicon-dollar-cash" aria-hidden="true"></i>
+
+                            {{ _("Price") }}
+
+                        </span>
+
+                        <div class="angel-grouped-quick-view__color-price-values">
+
+                            <span class="angel-grouped-quick-view__price" data-grouped-qv-panel-price></span>
+
+                            <del class="angel-grouped-quick-view__price-old" data-grouped-qv-panel-price-old></del>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="angel-grouped-quick-view__footer">
+
+                    <button type="button" class="angel-grouped-quick-view__add" data-grouped-qv-add>
+
+                        <img class="angel-grouped-quick-view__add-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="18" height="18" alt="" />
+
+                        <span data-grouped-qv-add-label>{{ _("add to cart") }}</span>
+
+                    </button>
+
+                    <div class="angel-grouped-quick-view__qty" data-grouped-qv-qty-wrap>
+
+                        <button type="button" data-grouped-qv-qty-minus aria-label="{{ _('Decrease') }}">−</button>
+
+                        <input type="number" class="angel-grouped-quick-view__qty-input" data-grouped-qv-qty value="1" min="1" step="1" inputmode="numeric" aria-label="{{ _('Quantity') }}" />
+
+                        <button type="button" data-grouped-qv-qty-plus aria-label="{{ _('Increase') }}">+</button>
+
+                    </div>
+
+                    <a class="angel-grouped-quick-view__view-link d-none" data-grouped-qv-view-link href="#">{{ _("View product") }}</a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+

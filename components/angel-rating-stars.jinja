@@ -1,0 +1,15 @@
+{% if rating is defined and rating %}
+{% set ratingRounded = ((rating * 2) | round(0, 'ceil')) / 2 %}
+{% set star_tone = star_tone | default('cyan') %}
+<div class="angel-rating-stars angel-rating-stars--{{ star_tone }}" data-rating="{{ rating }}" aria-hidden="true">
+    {% for n in range(1, 6) %}
+        {% if n <= ratingRounded %}
+            <span class="angel-rating-stars__icon angel-rating-stars__icon--full">★</span>
+        {% elif n <= ratingRounded + 0.5 %}
+            <span class="angel-rating-stars__icon angel-rating-stars__icon--half">★</span>
+        {% else %}
+            <span class="angel-rating-stars__icon angel-rating-stars__icon--empty">★</span>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}

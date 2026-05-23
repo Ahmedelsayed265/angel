@@ -309,7 +309,6 @@
   </div>
 </section>
 
-<script src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
 <script>
   (function () {
     var section = document.getElementById('{{ sectionId }}');
@@ -318,44 +317,22 @@
     var tabs = section.querySelectorAll('[data-hero-tab]');
     var panels = section.querySelectorAll('[data-hero-panel]');
     var loaderTimer;
-    var swiperInstances = {};
-    var isRtl = window.appDirection === 'rtl';
 
     function setPanelLoading(panel, isLoading) {
       panel.classList.toggle('is-loading', isLoading);
     }
 
-    function finishPanelLoading(panel) {
-      setPanelLoading(panel, false);
-    }
-
     function waitForPanelMedia(panel) {
+      var media = panel.querySelector('.angel-hero-media');
       window.clearTimeout(loaderTimer);
-      var media = panel.querySelectorAll('.angel-hero-bg-media, .angel-hero-home-video, .angel-hero-home-card-img, .angel-hero-side-image, .angel-hero-slide-bg-img, .angel-hero-slide-product');
-      var pending = 0;
 
-      if (!media.length) {
-        finishPanelLoading(panel);
+      if (!media) {
+        setPanelLoading(panel, false);
         return;
       }
 
-      media.forEach(function (item) {
-        if (item.tagName === 'IMG' && item.complete) return;
-        if (item.tagName === 'VIDEO' && item.readyState >= 2) return;
-        pending += 1;
-
-        var done = function () {
-          pending -= 1;
-          if (pending <= 0) finishPanelLoading(panel);
-        };
-
-        item.addEventListener('load', done, { once: true });
-        item.addEventListener('loadeddata', done, { once: true });
-        item.addEventListener('error', done, { once: true });
-      });
-
-      if (!pending) {
-        finishPanelLoading(panel);
+      if ((media.tagName === 'IMG' && media.complete) || (media.tagName === 'VIDEO' && media.readyState >= 2)) {
+        setPanelLoading(panel, false);
         return;
       }
 
@@ -453,22 +430,11 @@
           setPanelLoading(panel, true);
         } else {
           setPanelLoading(panel, false);
-          syncPanelVideos(panel, false);
         }
       });
 
       if (activePanel) {
-        syncHeroLayout(section, activePanel);
-        syncPanelVideos(activePanel, true);
         waitForPanelMedia(activePanel);
-
-        if (activePanel.getAttribute('data-layout') === 'swiper') {
-          window.requestAnimationFrame(function () {
-            initSwiper(activePanel);
-            var instance = swiperInstances[activePanel.id];
-            if (instance) instance.update();
-          });
-        }
       }
     }
 
@@ -477,15 +443,6 @@
         activateTab(tab.getAttribute('data-hero-tab'));
       });
     });
-
-    var firstPanel = section.querySelector('.angel-hero-panel.is-active');
-    if (firstPanel) {
-      syncHeroLayout(section, firstPanel);
-      waitForPanelMedia(firstPanel);
-      if (firstPanel.getAttribute('data-layout') === 'swiper') {
-        initSwiper(firstPanel);
-      }
-    }
   })();
 </script>
 {% endif %}

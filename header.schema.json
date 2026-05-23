@@ -238,6 +238,26 @@
       },
       "settings": [
         {
+          "id": "url",
+          "type": "url",
+          "label": {
+            "ar": "الرابط",
+            "en": "Link"
+          },
+          "info": {
+            "ar": "في حال كان الحقل فارغا لن يتم الانتقال للرابط عند الضغط",
+            "en": "This is an info text sample here"
+          }
+        },
+        {
+          "id": "text",
+          "type": "text",
+          "label": {
+            "ar": "النص",
+            "en": "Text"
+          }
+        },
+        {
           "id": "display",
           "type": "checkbox",
           "label": {
@@ -287,47 +307,31 @@
           }
         },
         {
-          "id": "features_bar_list",
-          "type": "list",
-          "max_items": 10,
+          "id": "enable_animation",
+          "type": "checkbox",
           "label": {
-            "ar": "قائمة الاعلانات",
-            "en": "Announcements List"
+            "ar": "تمكين التحريك",
+            "en": "Enable animation"
           },
-          "settings": [
-            {
-              "type": "image",
-              "id": "image",
-              "label": {
-                "ar": "الصورة",
-                "en": "Image"
-              }
-            },
-            {
-              "type": "text",
-              "id": "title",
-              "label": {
-                "ar": "نص الاعلان",
-                "en": "Text"
-              }
-            },
-            {
-              "type": "color",
-              "id": "text_color",
-              "label": {
-                "ar": "لون النص",
-                "en": "Text color"
-              }
-            },
-            {
-              "type": "url",
-              "id": "url",
-              "label": {
-                "ar": "الرابط",
-                "en": "Link"
-              }
-            }
-          ]
+          "default": false
+        },
+        {
+          "id": "animation_speed",
+          "type": "number",
+          "label": {
+            "ar": "سرعة التحريك",
+            "en": "Animation speed"
+          },
+          "default": 50
+        },
+        {
+          "id": "pause_on_hover",
+          "type": "checkbox",
+          "label": {
+            "ar": "ايقاف التحريك عند النقر",
+            "en": "Pause on hover"
+          },
+          "default": false
         }
       ]
     }
