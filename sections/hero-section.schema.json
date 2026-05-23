@@ -72,16 +72,34 @@
             }
         },
         {
+            "id": "home_heading",
+            "type": "text",
+            "label": {
+                "ar": "الرئيسية — العنوان فوق الفيديو",
+                "en": "Home — heading overlay"
+            },
+            "default": "مع ملاك"
+        },
+        {
+            "id": "home_heading_color",
+            "type": "color",
+            "label": {
+                "ar": "الرئيسية — لون العنوان",
+                "en": "Home — heading color"
+            },
+            "default": "#54c8e9"
+        },
+        {
             "id": "home_cards",
             "type": "list",
-            "max_items": 3,
+            "max_items": 6,
             "label": {
-                "ar": "الرئيسية — البطاقات (حد أقصى 3)",
-                "en": "Home — cards (max 3)"
+                "ar": "الرئيسية — البطاقات (حد أقصى 6)",
+                "en": "Home — cards (max 6)"
             },
             "info": {
-                "ar": "أضف حتى 3 بطاقات: صورة ورابط فقط.",
-                "en": "Add up to 3 cards: image and link only."
+                "ar": "أضف حتى 6 بطاقات: صورة كاملة للبطاقة ورابط.",
+                "en": "Add up to 6 cards: full card image and link."
             },
             "settings": [
                 {

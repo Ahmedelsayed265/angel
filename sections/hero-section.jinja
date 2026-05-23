@@ -1,46 +1,48 @@
 {% set tab_home = {
-  "title": settings.home_title | default("الرئيسية"),
-  "layout_type": "home",
-  "video": settings.home_video,
-  "display_video": settings.home_display_video | default(false),
-  "bg_image": settings.home_bg_image,
-  "home_video_url": settings.home_video_url,
-  "video_loop": settings.home_video_loop | default(true),
-  "accent_color": settings.home_accent_color,
-  "home_cards": safeget(settings, "home_cards", [])
+"title": settings.home_title | default("الرئيسية"),
+"layout_type": "home",
+"video": settings.home_video,
+"display_video": settings.home_display_video | default(false),
+"bg_image": settings.home_bg_image,
+"home_video_url": settings.home_video_url,
+"video_loop": settings.home_video_loop | default(true),
+"accent_color": settings.home_accent_color,
+"home_heading": settings.home_heading | default("مع ملاك"),
+"home_heading_color": settings.home_heading_color | default("#54c8e9"),
+"home_cards": safeget(settings, "home_cards", [])
 } %}
 {% set tab_discounts = {
-  "title": settings.discounts_title | default("التخفيضات"),
-  "layout_type": "discounts",
-  "video": settings.discounts_video,
-  "video_loop": settings.discounts_video_loop | default(true),
-  "heading": settings.discounts_heading,
-  "subtitle": settings.discounts_subtitle,
-  "button_text": settings.discounts_button_text,
-  "button_url": settings.discounts_button_url,
-  "button_icon": settings.discounts_button_icon,
-  "title_color": settings.discounts_title_color,
-  "subtitle_color": settings.discounts_subtitle_color,
-  "button_bg_color": settings.discounts_button_bg_color,
-  "button_text_color": settings.discounts_button_text_color,
-  "accent_color": settings.discounts_accent_color,
-  "overlay_opacity": settings.discounts_overlay_opacity,
-  "card_title_color": settings.discounts_card_title_color,
-  "card_btn_bg_color": settings.discounts_card_btn_bg_color,
-  "card_btn_text_color": settings.discounts_card_btn_text_color,
-  "cards": safeget(settings, "discounts_cards", [])
+"title": settings.discounts_title | default("التخفيضات"),
+"layout_type": "discounts",
+"video": settings.discounts_video,
+"video_loop": settings.discounts_video_loop | default(true),
+"heading": settings.discounts_heading,
+"subtitle": settings.discounts_subtitle,
+"button_text": settings.discounts_button_text,
+"button_url": settings.discounts_button_url,
+"button_icon": settings.discounts_button_icon,
+"title_color": settings.discounts_title_color,
+"subtitle_color": settings.discounts_subtitle_color,
+"button_bg_color": settings.discounts_button_bg_color,
+"button_text_color": settings.discounts_button_text_color,
+"accent_color": settings.discounts_accent_color,
+"overlay_opacity": settings.discounts_overlay_opacity,
+"card_title_color": settings.discounts_card_title_color,
+"card_btn_bg_color": settings.discounts_card_btn_bg_color,
+"card_btn_text_color": settings.discounts_card_btn_text_color,
+"cards": safeget(settings, "discounts_cards", [])
 } %}
 {% set tab_latest = {
-  "title": settings.latest_title | default("الأحدث"),
-  "layout_type": "swiper",
-  "bg_image": settings.latest_bg_image,
-  "accent_color": settings.latest_accent_color,
-  "space_between": settings.latest_space_between,
-  "content_direction": settings.latest_content_direction,
-  "content_justify": settings.latest_content_justify,
-  "content_align": settings.latest_content_align,
-  "image_style": settings.latest_image_style,
-  "slides": safeget(settings, "latest_slides", [])
+"title": settings.latest_title | default("الأحدث"),
+"layout_type": "swiper",
+"bg_image": settings.latest_bg_image,
+"accent_color": settings.latest_accent_color,
+"space_between": settings.latest_space_between,
+"content_direction": settings.latest_content_direction,
+"content_justify": settings.latest_content_justify,
+"content_align": settings.latest_content_align,
+"image_style": settings.latest_image_style,
+"slides": safeget(settings, "latest_slides", [])
 } %}
 {% set hero_tabs = [tab_home, tab_discounts, tab_latest] %}
 
@@ -50,86 +52,63 @@
 {% set hero_autoplay_delay = settings.autoplay_delay | default(6) %}
 
 {% macro hero_button(text, url, icon, bg_color, text_color, variant) %}
-  {% if text %}
-    <a
-      class="angel-hero-btn{% if variant %} angel-hero-btn--{{ variant }}{% endif %}"
-      href="{{ url if url else 'javascript:;' }}"
-      {% if bg_color or text_color %}
-        style="{% if bg_color %}background-color: {{ bg_color }};{% endif %}{% if text_color %}color: {{ text_color }};{% endif %}"
-      {% endif %}
-    >
-      <span class="angel-hero-btn-label">{{ text }}</span>
-      {% if icon %}
-        <span class="angel-hero-btn-icon-wrap">
-          <img class="angel-hero-btn-icon" src="{{ icon }}" alt="" loading="lazy" width="20" height="20">
-        </span>
-      {% elif variant == 'banner' %}
-        <span class="angel-hero-btn-plus" aria-hidden="true">+</span>
-      {% else %}
-        <span class="angel-hero-btn-arrow sicon-arrow-up-left" aria-hidden="true"></span>
-      {% endif %}
-    </a>
+{% if text %}
+<a class="angel-hero-btn{% if variant %} angel-hero-btn--{{ variant }}{% endif %}"
+  href="{{ url if url else 'javascript:;' }}" {% if bg_color or text_color %}
+  style="{% if bg_color %}background-color: {{ bg_color }};{% endif %}{% if text_color %}color: {{ text_color }};{% endif %}"
+  {% endif %}>
+  <span class="angel-hero-btn-label">{{ text }}</span>
+  {% if icon %}
+  <span class="angel-hero-btn-icon-wrap">
+    <img class="angel-hero-btn-icon" src="{{ icon }}" alt="" loading="lazy" width="20" height="20">
+  </span>
+  {% elif variant == 'banner' %}
+  <span class="angel-hero-btn-plus" aria-hidden="true">+</span>
+  {% else %}
+  <span class="angel-hero-btn-arrow sicon-arrow-up-left" aria-hidden="true"></span>
   {% endif %}
+</a>
+{% endif %}
 {% endmacro %}
 
 {% macro hero_bg_media(tab) %}
-  {% if tab.video %}
-    <video
-      class="angel-hero-bg-media"
-      autoplay
-      muted
-      playsinline
-      preload="auto"
-      {% if tab.video_loop | default(true) %}loop{% endif %}
-    >
-      <source src="{{ tab.video }}" type="video/mp4">
-    </video>
-  {% elif tab.bg_image %}
-    <img class="angel-hero-bg-media" src="{{ tab.bg_image }}" alt="" loading="lazy">
-  {% endif %}
+{% if tab.video %}
+<video class="angel-hero-bg-media" autoplay muted playsinline preload="auto" {% if tab.video_loop | default(true)
+  %}loop{% endif %}>
+  <source src="{{ tab.video }}" type="video/mp4">
+</video>
+{% elif tab.bg_image %}
+<img class="angel-hero-bg-media" src="{{ tab.bg_image }}" alt="" loading="lazy">
+{% endif %}
 {% endmacro %}
 
 {% if hero_tabs and hero_tabs | length > 0 %}
 <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
 
-<section
-  id="{{ sectionId }}"
-  section-id="{{ sectionId }}"
-  class="angel-hero-section"
-  data-autoplay="{{ 'true' if hero_autoplay else 'false' }}"
-  data-autoplay-delay="{{ hero_autoplay_delay }}"
+<section id="{{ sectionId }}" section-id="{{ sectionId }}" class="angel-hero-section"
+  data-autoplay="{{ 'true' if hero_autoplay else 'false' }}" data-autoplay-delay="{{ hero_autoplay_delay }}"
   data-show-arrows="{{ 'true' if show_arrows else 'false' }}"
-  data-show-pagination="{{ 'true' if show_pagination else 'false' }}"
->
+  data-show-pagination="{{ 'true' if show_pagination else 'false' }}">
   <div class="angel-hero-tabs" role="tablist" aria-label="{{ _('Hero slides') }}">
     {% for tab in hero_tabs %}
-      <button
-        type="button"
-        class="angel-hero-tab{% if loop.first %} is-active{% endif %}"
-        role="tab"
-        aria-selected="{{ 'true' if loop.first else 'false' }}"
-        aria-controls="{{ sectionId }}-panel-{{ loop.index }}"
-        data-hero-tab="{{ loop.index }}"
-        {% if tab.accent_color %}style="--hero-tab-accent: {{ tab.accent_color }};"{% endif %}
-      >
-        {{ tab.title if tab.title else loop.index }}
-      </button>
+    <button type="button" class="angel-hero-tab{% if loop.first %} is-active{% endif %}" role="tab"
+      aria-selected="{{ 'true' if loop.first else 'false' }}" aria-controls="{{ sectionId }}-panel-{{ loop.index }}"
+      data-hero-tab="{{ loop.index }}" {% if tab.accent_color %}style="--hero-tab-accent: {{ tab.accent_color }};" {%
+      endif %}>
+      {{ tab.title if tab.title else loop.index }}
+    </button>
     {% endfor %}
   </div>
 
   <div class="angel-hero-panels">
     {% for tab in hero_tabs %}
-      {% set layout = tab.layout_type | default('banner') %}
-      {% set slides = safeget(tab, 'slides', []) %}
-      {% set overlay = tab.overlay_opacity | default(35) %}
+    {% set layout = tab.layout_type | default('banner') %}
+    {% set slides = safeget(tab, 'slides', []) %}
+    {% set overlay = tab.overlay_opacity | default(35) %}
 
-      <div
-        id="{{ sectionId }}-panel-{{ loop.index }}"
-        class="angel-hero-panel angel-hero-panel--{{ layout }}{% if loop.first %} is-active{% endif %}"
-        role="tabpanel"
-        data-hero-panel="{{ loop.index }}"
-        data-layout="{{ layout }}"
-        style="
+    <div id="{{ sectionId }}-panel-{{ loop.index }}"
+      class="angel-hero-panel angel-hero-panel--{{ layout }}{% if loop.first %} is-active{% endif %}" role="tabpanel"
+      data-hero-panel="{{ loop.index }}" data-layout="{{ layout }}" style="
           {% if layout == 'discounts' %}
             --hero-card-title: {{ tab.card_title_color | default('#54c8e9') }};
             --hero-card-btn-bg: {{ tab.card_btn_bg_color | default('#54c8e9') }};
@@ -142,86 +121,77 @@
           --hero-accent: {{ tab.accent_color | default('#54c8e9') }};
           --hero-overlay: {{ overlay }}%;
           --hero-space-between: {{ tab.space_between | default(0) }}px;
-        "
-      >
-        <div class="angel-hero-loader" aria-hidden="true"></div>
+        ">
+      <div class="angel-hero-loader" aria-hidden="true"></div>
 
-        {% if layout == 'home' %}
-          {% set home_cards = safeget(tab, 'home_cards', []) %}
-          {% set home_video_url = tab.home_video_url | default(tab.button_url) %}
-          {% set show_home_video = tab.display_video and tab.video %}
-          <div class="angel-hero-panel-inner angel-hero-home">
-            <div class="angel-hero-home-layout">
-              {% if show_home_video or tab.bg_image %}
-                <div class="angel-hero-home-video-wrap">
-                  {% if home_video_url %}
-                    <a class="angel-hero-home-video-link" href="{{ home_video_url }}" aria-label="{{ tab.title | default('Video') }}">
-                  {% endif %}
-                  {% if show_home_video %}
-                    <video
-                      class="angel-hero-home-video"
-                      autoplay
-                      muted
-                      playsinline
-                      {% if tab.video_loop %}loop{% endif %}
-                      {% if tab.bg_image %}poster="{{ tab.bg_image }}"{% endif %}
-                    >
-                      <source src="{{ tab.video }}">
-                    </video>
-                  {% elif tab.bg_image %}
-                    <img
-                      class="angel-hero-home-video"
-                      src="{{ tab.bg_image }}"
-                      alt="{{ tab.title | default(store.name) }}"
-                      loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
-                    >
-                  {% endif %}
-                  {% if home_video_url %}
-                    </a>
-                  {% endif %}
-                </div>
+      {% if layout == 'home' %}
+      {% set home_cards = safeget(tab, 'home_cards', []) %}
+      {% set home_video_url = tab.home_video_url | default(tab.button_url) %}
+      {% set show_home_video = tab.display_video and tab.video %}
+      <div class="angel-hero-panel-inner angel-hero-home">
+        <div class="angel-hero-home-layout">
+          {% if show_home_video or tab.bg_image %}
+          <div class="angel-hero-home-video-wrap">
+            {% if home_video_url %}
+            <a class="angel-hero-home-video-link" href="{{ home_video_url }}"
+              aria-label="{{ tab.title | default('Video') }}">
               {% endif %}
+              {% if show_home_video %}
+              <video class="angel-hero-home-video" autoplay muted playsinline {% if tab.video_loop %}loop{% endif %} {%
+                if tab.bg_image %}poster="{{ tab.bg_image }}" {% endif %}>
+                <source src="{{ tab.video }}">
+              </video>
+              {% elif tab.bg_image %}
+              <img class="angel-hero-home-video" src="{{ tab.bg_image }}" alt="{{ tab.title | default(store.name) }}"
+                loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+              {% endif %}
+              {% if home_video_url %}
+            </a>
+            {% endif %}
+            {% if tab.home_heading %}
+            <div class="container angel-hero-home-heading-wrap">
+              <h2 class="angel-hero-home-heading"
+                style="--hero-home-heading-color: {{ tab.home_heading_color | default('#54c8e9') }};">{{
+                tab.home_heading }}</h2>
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
 
-              {% if home_cards | length > 0 %}
-                <div class="container angel-hero-home-cards-wrap">
-                  <div class="angel-hero-home-cards">
-                    {% for card in home_cards %}
-                      {% if card.image or card.url %}
-                        <a
-                          class="angel-hero-home-card"
-                          href="{{ card.url if card.url else 'javascript:;' }}"
-                        >
-                          {% if card.image %}
-                            <img
-                              class="angel-hero-home-card-img"
-                              src="{{ card.image }}"
-                              alt=""
-                              loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
-                            >
-                          {% endif %}
-                        </a>
-                      {% endif %}
-                    {% endfor %}
-                  </div>
-                </div>
+          {% if home_cards | length > 0 %}
+          <div class="container angel-hero-home-cards-wrap">
+            <div class="angel-hero-home-cards">
+              {% for card in home_cards %}
+              {% if card.image or card.url %}
+              <a class="angel-hero-home-card" href="{{ card.url if card.url else 'javascript:;' }}">
+                {% if card.image %}
+                <img class="angel-hero-home-card-img" src="{{ card.image }}" alt=""
+                  loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+                {% endif %}
+              </a>
               {% endif %}
+              {% endfor %}
             </div>
           </div>
+          {% endif %}
+        </div>
+      </div>
 
-        {% elif layout == 'swiper' and slides | length > 0 %}
-          <div class="angel-hero-panel-inner angel-hero-swiper-wrap">
-            <div class="swiper angel-hero-swiper angel-hero-latest-swiper">
-              <div class="swiper-wrapper">
-                {% for slide in slides %}
-                  {% set slide_dir = slide.content_direction if slide.content_direction else tab.content_direction | default('row') %}
-                  {% set slide_justify = slide.content_justify if slide.content_justify else tab.content_justify | default('center') %}
-                  {% set slide_align = slide.content_align if slide.content_align else tab.content_align | default('center') %}
-                  {% set slide_bg = slide.bg_image if slide.bg_image else tab.bg_image %}
-                  {% set slide_img_style = slide.image_style if slide.image_style else tab.image_style | default('default') %}
-                  <div class="swiper-slide">
-                    <div
-                      class="angel-hero-slide{% if slide_dir == 'column' %} angel-hero-slide--column{% endif %}"
-                      style="
+      {% elif layout == 'swiper' and slides | length > 0 %}
+      <div class="angel-hero-panel-inner angel-hero-swiper-wrap">
+        <div class="swiper angel-hero-swiper angel-hero-latest-swiper">
+          <div class="swiper-wrapper">
+            {% for slide in slides %}
+            {% set slide_dir = slide.content_direction if slide.content_direction else tab.content_direction |
+            default('row') %}
+            {% set slide_justify = slide.content_justify if slide.content_justify else tab.content_justify |
+            default('center') %}
+            {% set slide_align = slide.content_align if slide.content_align else tab.content_align | default('center')
+            %}
+            {% set slide_bg = slide.bg_image if slide.bg_image else tab.bg_image %}
+            {% set slide_img_style = slide.image_style if slide.image_style else tab.image_style | default('default') %}
+            <div class="swiper-slide">
+              <div class="angel-hero-slide{% if slide_dir == 'column' %} angel-hero-slide--column{% endif %}" style="
                         --slide-flex-dir: {{ slide_dir }};
                         --slide-flex-justify: {{ slide_justify }};
                         --slide-flex-align: {{ slide_align }};
@@ -229,126 +199,112 @@
                         {% if slide.subtitle_color %}--hero-subtitle-color: {{ slide.subtitle_color }};{% endif %}
                         {% if slide.button_bg_color %}--hero-btn-bg: {{ slide.button_bg_color }};{% endif %}
                         {% if slide.button_text_color %}--hero-btn-color: {{ slide.button_text_color }};{% endif %}
-                      "
-                    >
-                      <div class="angel-hero-slide-bg">
-                        {% if slide_bg %}
-                          <img
-                            class="angel-hero-slide-bg-img"
-                            src="{{ slide_bg }}"
-                            alt=""
-                            loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
-                          >
-                        {% endif %}
-                        <span class="angel-hero-slide-bg-fade" aria-hidden="true"></span>
-                      </div>
-                      <div class="container angel-hero-slide-body">
-                        <div class="angel-hero-slide-content angel-hero-slide-foreground{% if slide_dir != 'column' %} angel-hero-slide-foreground--image-left{% endif %}">
-                          {% if slide.image %}
-                            <div class="angel-hero-slide-media">
-                              <img
-                                class="angel-hero-slide-product angel-hero-slide-product--{{ slide_img_style }}"
-                                src="{{ slide.image }}"
-                                alt="{{ slide.heading if slide.heading else '' }}"
-                                loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
-                              >
-                            </div>
-                          {% endif %}
-                          <div class="angel-hero-slide-text">
-                            {% if slide.subtitle %}
-                              <p class="angel-hero-subtitle angel-hero-slide-subtitle">{{ slide.subtitle }}</p>
-                            {% endif %}
-                            {% if slide.heading %}
-                              <h2 class="angel-hero-heading angel-hero-slide-heading">{{ slide.heading }}</h2>
-                            {% endif %}
-                            {% if slide.button_text %}
-                              <div class="angel-hero-slide-btn-wrap">
-                                <span class="angel-hero-slide-btn-fade" aria-hidden="true"></span>
-                                {{ hero_button(slide.button_text, slide.button_url, slide.button_icon, slide.button_bg_color, slide.button_text_color) }}
-                              </div>
-                            {% endif %}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-              {% if show_pagination %}
-                <div class="swiper-pagination angel-hero-pagination"></div>
-              {% endif %}
-              {% if show_arrows %}
-                <button type="button" class="swiper-button-prev angel-hero-nav angel-hero-nav--prev" aria-label="{{ _('Previous') }}"></button>
-                <button type="button" class="swiper-button-next angel-hero-nav angel-hero-nav--next" aria-label="{{ _('Next') }}"></button>
-              {% endif %}
-            </div>
-          </div>
-
-        {% elif layout == 'discounts' %}
-          {% set discount_cards = safeget(tab, 'cards', []) %}
-          {% set show_discounts_video = tab.video %}
-          <div class="angel-hero-panel-inner angel-hero-home">
-            <div class="angel-hero-home-layout">
-              {% if show_discounts_video %}
-                <div class="angel-hero-home-video-wrap angel-hero-discounts-video-wrap">
-                  <video
-                    class="angel-hero-home-video"
-                    autoplay
-                    muted
-                    playsinline
-                    preload="auto"
-                    {% if tab.video_loop %}loop{% endif %}
-                  >
-                    <source src="{{ tab.video }}" type="video/mp4">
-                  </video>
-                  <span class="angel-hero-discounts-video-fade" aria-hidden="true"></span>
-                  {% if tab.heading or tab.subtitle or tab.button_text %}
-                    <div class="container angel-hero-discounts-intro">
-                      {% if tab.heading %}
-                        <h2 class="angel-hero-heading">{{ tab.heading }}</h2>
-                      {% endif %}
-                      {% if tab.subtitle %}
-                        <p class="angel-hero-subtitle">{{ tab.subtitle }}</p>
-                      {% endif %}
-                      {{ hero_button(tab.button_text, tab.button_url, tab.button_icon, tab.button_bg_color, tab.button_text_color, 'banner') }}
-                    </div>
+                      ">
+                <div class="angel-hero-slide-bg">
+                  {% if slide_bg %}
+                  <img class="angel-hero-slide-bg-img" src="{{ slide_bg }}" alt=""
+                    loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
                   {% endif %}
+                  <span class="angel-hero-slide-bg-fade" aria-hidden="true"></span>
                 </div>
-              {% endif %}
-              {% if discount_cards | length > 0 %}
-                <div class="container angel-hero-home-cards-wrap angel-hero-discounts-cards-wrap">
-                  <div class="angel-hero-home-cards angel-hero-discounts-cards-row">
-                    {% for card in discount_cards %}
-                      {% if card.image or card.title or card.url %}
-                        <a
-                          class="angel-hero-home-card angel-hero-discount-card"
-                          href="{{ card.url if card.url else 'javascript:;' }}"
-                        >
-                          {% if card.image %}
-                            <img
-                              class="angel-hero-home-card-img angel-hero-discount-card-img"
-                              src="{{ card.image }}"
-                              alt="{{ card.title if card.title else '' }}"
-                              loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
-                            >
-                          {% endif %}
-                          <span class="angel-hero-discount-card-shade" aria-hidden="true"></span>
-                          {% if card.title %}
-                            <span class="angel-hero-discount-card-title">{{ card.title }}</span>
-                          {% endif %}
-                          <span class="angel-hero-discount-card-cta">
-                            {{ card.button_text if card.button_text else 'تسوق الآن' }}
-                          </span>
-                        </a>
+                <div class="container angel-hero-slide-body">
+                  <div
+                    class="angel-hero-slide-content angel-hero-slide-foreground{% if slide_dir != 'column' %} angel-hero-slide-foreground--image-left{% endif %}">
+                    {% if slide.image %}
+                    <div class="angel-hero-slide-media">
+                      <img class="angel-hero-slide-product angel-hero-slide-product--{{ slide_img_style }}"
+                        src="{{ slide.image }}" alt="{{ slide.heading if slide.heading else '' }}"
+                        loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+                    </div>
+                    {% endif %}
+                    <div class="angel-hero-slide-text">
+                      {% if slide.subtitle %}
+                      <p class="angel-hero-subtitle angel-hero-slide-subtitle">{{ slide.subtitle }}</p>
                       {% endif %}
-                    {% endfor %}
+                      {% if slide.heading %}
+                      <h2 class="angel-hero-heading angel-hero-slide-heading">{{ slide.heading }}</h2>
+                      {% endif %}
+                      {% if slide.button_text %}
+                      <div class="angel-hero-slide-btn-wrap">
+                        <span class="angel-hero-slide-btn-fade" aria-hidden="true"></span>
+                        {{ hero_button(slide.button_text, slide.button_url, slide.button_icon, slide.button_bg_color,
+                        slide.button_text_color) }}
+                      </div>
+                      {% endif %}
+                    </div>
                   </div>
                 </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% if show_pagination %}
+          <div class="swiper-pagination angel-hero-pagination"></div>
+          {% endif %}
+          {% if show_arrows %}
+          <button type="button" class="swiper-button-prev angel-hero-nav angel-hero-nav--prev"
+            aria-label="{{ _('Previous') }}"></button>
+          <button type="button" class="swiper-button-next angel-hero-nav angel-hero-nav--next"
+            aria-label="{{ _('Next') }}"></button>
+          {% endif %}
+        </div>
+      </div>
+
+      {% elif layout == 'discounts' %}
+      {% set discount_cards = safeget(tab, 'cards', []) %}
+      {% set show_discounts_video = tab.video %}
+      <div class="angel-hero-panel-inner angel-hero-home">
+        <div class="angel-hero-home-layout">
+          {% if show_discounts_video %}
+          <div class="angel-hero-home-video-wrap angel-hero-discounts-video-wrap">
+            <video class="angel-hero-home-video" autoplay muted playsinline preload="auto" {% if tab.video_loop %}loop{%
+              endif %}>
+              <source src="{{ tab.video }}" type="video/mp4">
+            </video>
+            <span class="angel-hero-discounts-video-fade" aria-hidden="true"></span>
+            {% if tab.heading or tab.subtitle or tab.button_text %}
+            <div class="container angel-hero-discounts-intro">
+              {% if tab.heading %}
+              <h2 class="angel-hero-heading">{{ tab.heading }}</h2>
               {% endif %}
+              {% if tab.subtitle %}
+              <p class="angel-hero-subtitle">{{ tab.subtitle }}</p>
+              {% endif %}
+              {{ hero_button(tab.button_text, tab.button_url, tab.button_icon, tab.button_bg_color,
+              tab.button_text_color, 'banner') }}
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+          {% if discount_cards | length > 0 %}
+          <div class="container angel-hero-home-cards-wrap angel-hero-discounts-cards-wrap">
+            <div class="angel-hero-home-cards angel-hero-discounts-cards-row">
+              {% for card in discount_cards %}
+              {% if card.image or card.title or card.url %}
+              <a class="angel-hero-home-card angel-hero-discount-card"
+                href="{{ card.url if card.url else 'javascript:;' }}">
+                {% if card.image %}
+                <img class="angel-hero-home-card-img angel-hero-discount-card-img" src="{{ card.image }}"
+                  alt="{{ card.title if card.title else '' }}"
+                  loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+                {% endif %}
+                <span class="angel-hero-discount-card-shade" aria-hidden="true"></span>
+                {% if card.title %}
+                <span class="angel-hero-discount-card-title">{{ card.title }}</span>
+                {% endif %}
+                <span class="angel-hero-discount-card-cta">
+                  {{ card.button_text if card.button_text else 'تسوق الآن' }}
+                </span>
+              </a>
+              {% endif %}
+              {% endfor %}
             </div>
           </div>
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
+      {% endif %}
+    </div>
     {% endfor %}
   </div>
 </section>
@@ -472,7 +428,7 @@
         if (video.tagName !== 'VIDEO') return;
         if (shouldPlay) {
           var playPromise = video.play();
-          if (playPromise && playPromise.catch) playPromise.catch(function () {});
+          if (playPromise && playPromise.catch) playPromise.catch(function () { });
         } else {
           video.pause();
         }

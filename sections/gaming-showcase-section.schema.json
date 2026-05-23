@@ -1,0 +1,99 @@
+{
+    "section_id": "angel-gaming-showcase-section",
+    "template": "sections/gaming-showcase-section.jinja",
+    "icon": "fa fa-gamepad",
+    "name": {
+        "ar": "بانر الألعاب",
+        "en": "Gaming showcase"
+    },
+    "settings": [
+        {
+            "id": "heading",
+            "type": "text",
+            "label": {
+                "ar": "العنوان",
+                "en": "Heading"
+            },
+            "default": "مع ملاك"
+        },
+        {
+            "id": "heading_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان",
+                "en": "Heading color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "video",
+            "type": "video",
+            "label": {
+                "ar": "فيديو الخلفية",
+                "en": "Background video"
+            }
+        },
+        {
+            "id": "show_video",
+            "type": "checkbox",
+            "label": {
+                "ar": "عرض الفيديو",
+                "en": "Show video"
+            },
+            "default": true
+        },
+        {
+            "id": "video_loop",
+            "type": "checkbox",
+            "label": {
+                "ar": "تكرار الفيديو",
+                "en": "Loop video"
+            },
+            "default": true
+        },
+        {
+            "id": "bg_image",
+            "type": "image",
+            "label": {
+                "ar": "صورة الخلفية / غلاف الفيديو",
+                "en": "Background image / poster"
+            }
+        },
+        {
+            "id": "section_bg",
+            "type": "color",
+            "label": {
+                "ar": "لون الخلفية السفلية",
+                "en": "Bottom section color"
+            },
+            "default": "#1a1a1a"
+        },
+        {
+            "id": "cards",
+            "type": "list",
+            "max_items": 6,
+            "label": {
+                "ar": "بطاقات الألعاب (حتى 6)",
+                "en": "Game cards (up to 6)"
+            },
+            "settings": [
+                {
+                    "id": "image",
+                    "type": "image",
+                    "label": {
+                        "ar": "صورة البطاقة",
+                        "en": "Card image"
+                    }
+                },
+                {
+                    "id": "url",
+                    "type": "url",
+                    "label": {
+                        "ar": "الرابط",
+                        "en": "Link"
+                    }
+                }
+            ]
+        }
+    ]
+}

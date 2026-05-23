@@ -172,9 +172,10 @@ select {
   line-height: 1;
 }
 
-/* Home tab — video 100vh + 3 floating cards */
+/* Home tab — cinematic video + 6 overlapping cards */
 .angel-hero-section .angel-hero-panel--home {
   min-height: auto;
+  padding-bottom: clamp(100px, 12vw, 130px);
 }
 
 .angel-hero-section .angel-hero-panel--home .angel-hero-panel-inner {
@@ -190,9 +191,25 @@ select {
 }
 
 .angel-hero-section .angel-hero-home-video-wrap {
+  height: clamp(520px, 72vh, 820px);
+  min-height: 520px;
   overflow: hidden;
   position: relative;
   width: 100%;
+}
+
+.angel-hero-section .angel-hero-home-video-wrap::after {
+  background: linear-gradient(
+    180deg,
+    transparent 55%,
+    rgba(0, 0, 0, 0.35) 78%,
+    rgba(20, 20, 20, 0.95) 100%
+  );
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
 }
 
 .angel-hero-section .angel-hero-home-video-link {
@@ -204,46 +221,84 @@ select {
 }
 
 .angel-hero-section .angel-hero-home-video {
+  aspect-ratio: auto;
   display: block;
-  aspect-ratio: 16 / 9;
+  height: 100%;
+  min-height: 100%;
   object-fit: cover;
+  object-position: center center;
   width: 100%;
 }
 
+.angel-hero-section .angel-hero-home-heading-wrap {
+  inset-inline: 0;
+  pointer-events: none;
+  position: absolute;
+  top: clamp(88px, 12vh, 128px);
+  z-index: 3;
+}
+
+.angel-hero-section .angel-hero-home-heading {
+  color: var(--hero-home-heading-color, #54c8e9);
+  font-size: clamp(34px, 5vw, 58px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+  max-width: min(520px, 70vw);
+  text-align: start;
+  text-shadow:
+    0 0 18px rgba(84, 200, 233, 0.9),
+    0 0 42px rgba(84, 200, 233, 0.45),
+    0 2px 24px rgba(0, 0, 0, 0.55);
+}
+
 .angel-hero-section .angel-hero-home-cards-wrap {
-  margin-top: -110px;
-  padding-bottom: 48px;
-  position: relative;
-  z-index: 4;
+  inset-inline: 0;
+  margin-top: 0;
+  padding-inline: 10px;
+  pointer-events: none;
+  position: absolute;
+  top: 100%;
+  transform: translateY(-50%);
+  z-index: 5;
+}
+
+.angel-hero-section .angel-hero-home-cards-wrap .angel-hero-home-cards {
+  pointer-events: auto;
 }
 
 .angel-hero-section .angel-hero-home-cards {
-  display: grid;
-  gap: 14px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
+  gap: clamp(10px, 1.4vw, 18px);
+  justify-content: center;
 }
 
 .angel-hero-section .angel-hero-home-card {
   aspect-ratio: 3 / 4;
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
   display: block;
-  min-height: 220px;
+  flex: 0 1 calc((100% - 5 * 16px) / 6);
+  max-width: 196px;
+  min-height: 0;
+  min-width: 108px;
   overflow: hidden;
   position: relative;
   text-decoration: none;
 }
 
 .angel-hero-section .angel-hero-home-card-img {
+  display: block;
   height: 100%;
-  left: 0;
   object-fit: cover;
-  position: absolute;
-  top: 0;
+  object-position: center top;
   transition: transform 0.35s ease;
   width: 100%;
 }
 
 .angel-hero-section .angel-hero-home-card:hover .angel-hero-home-card-img {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 .angel-hero-section .angel-hero-home-card-overlay {
@@ -905,21 +960,27 @@ select {
 }
 
 @media (max-width: 992px) {
-  .angel-hero-section .angel-hero-home-cards-wrap {
-    margin-top: -72px;
+  .angel-hero-section .angel-hero-home-video-wrap {
+    height: clamp(420px, 58vh, 620px);
+    min-height: 420px;
   }
 
   .angel-hero-section .angel-hero-home-cards {
-    grid-template-columns: 1fr;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    scroll-snap-type: x proximity;
   }
 
   .angel-hero-section .angel-hero-home-card {
-    min-height: 200px;
+    flex: 0 0 clamp(128px, 38vw, 160px);
+    max-width: none;
+    scroll-snap-align: start;
   }
 
-  .angel-hero-section .angel-hero-home-video-wrap,
-  .angel-hero-section .angel-hero-home-video {
-    height: min(100vh, 640px);
+  .angel-hero-section .angel-hero-panel--home {
+    padding-bottom: 88px;
   }
 }
 
@@ -5107,5 +5168,137 @@ section:has(.angel-category-products) a.more-button.btn-outline-primary,
 
   .angel-category-products__nav-wrap {
     align-self: center;
+  }
+}
+
+/* Gaming showcase — بانر سينمائي + 6 بطاقات عائمة */
+.angel-gaming-showcase {
+  background: var(--ags-section-bg, #1a1a1a);
+  overflow: hidden;
+  position: relative;
+}
+
+.angel-gaming-showcase__stage {
+  padding-bottom: clamp(100px, 11vw, 128px);
+  position: relative;
+}
+
+.angel-gaming-showcase__media {
+  height: clamp(520px, 72vh, 820px);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.angel-gaming-showcase__video,
+.angel-gaming-showcase__img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
+.angel-gaming-showcase__fade {
+  background: linear-gradient(
+    180deg,
+    transparent 52%,
+    rgba(0, 0, 0, 0.35) 76%,
+    var(--ags-section-bg, #1a1a1a) 100%
+  );
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.angel-gaming-showcase__heading-wrap {
+  inset-inline: 0;
+  pointer-events: none;
+  position: absolute;
+  top: clamp(88px, 11vh, 132px);
+  z-index: 3;
+}
+
+.angel-gaming-showcase__heading {
+  color: var(--ags-heading, #54c8e9);
+  font-size: clamp(34px, 5vw, 58px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+  max-width: min(560px, 72vw);
+  text-align: start;
+  text-shadow:
+    0 0 18px rgba(84, 200, 233, 0.9),
+    0 0 40px rgba(84, 200, 233, 0.45),
+    0 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+.angel-gaming-showcase__cards-outer {
+  inset-inline: 0;
+  inset-block-end: clamp(100px, 11vw, 128px);
+  pointer-events: none;
+  position: absolute;
+  transform: translateY(50%);
+  z-index: 4;
+}
+
+.angel-gaming-showcase__cards {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: clamp(10px, 1.4vw, 18px);
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.angel-gaming-showcase__card {
+  aspect-ratio: 3 / 4;
+  border-radius: 14px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5);
+  display: block;
+  flex: 0 1 calc((100% - 5 * 16px) / 6);
+  max-width: 196px;
+  min-width: 108px;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.angel-gaming-showcase__card-img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.35s ease;
+  width: 100%;
+}
+
+.angel-gaming-showcase__card:hover .angel-gaming-showcase__card-img {
+  transform: scale(1.05);
+}
+
+@media (max-width: 992px) {
+  .angel-gaming-showcase__media {
+    height: clamp(400px, 56vh, 600px);
+  }
+
+  .angel-gaming-showcase__cards {
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+
+  .angel-gaming-showcase__card {
+    flex: 0 0 clamp(128px, 36vw, 158px);
+    max-width: none;
+    scroll-snap-align: start;
+  }
+
+  .angel-gaming-showcase__stage {
+    padding-bottom: 88px;
+  }
+
+  .angel-gaming-showcase__cards-outer {
+    inset-block-end: 88px;
   }
 }
