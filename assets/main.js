@@ -178,40 +178,63 @@ function removeFromCartProducts(res, product_id) {
 }
 
 function productCartAddToCart(elm, product_id) {
-  if (!$('.add-to-cart-progress', elm).hasClass('d-none')) return;
+  var $elm = $(elm);
+  var $progress = $elm.find('.add-to-cart-progress, .angel-grouped-card__btn-progress');
+  if ($progress.length && !$progress.hasClass('d-none')) {
+    return;
+  }
 
-  $('.add-to-cart-progress', elm).removeClass('d-none');
+  $progress.removeClass('d-none');
+  $elm.find('.angel-grouped-card__btn-content').addClass('d-none');
 
   addToCart(product_id, 1, function () {
-    $('.add-to-cart-progress', elm).addClass('d-none');
-
-    if (elm) {
-      var getParentDiv = $(elm).parent().parent();
-
-      var image = $('#product-card-img-' + product_id, getParentDiv);
-      var cart = $('.a-shopping-cart');
-
-      addToCartAnimation(cart, image);
-    }
-  });
+    $progress.addClass('d-none');
+    $elm.find('.angel-grouped-card__btn-content').removeClass('d-none');
+  }, elm);
 }
 
-function addToCart(product_id, quantity, onCompleted) {
-  zid.cart
-    .addProduct({
-      product_id: product_id,
-      quantity: quantity,
-    }, { showErrorNotification: true })
-    .then(function (response) {
-      if (response) {
-        setCartTotalAndBadge(response);
-        fetchCart();
+function addToCart(product_id, quantity, onCompleted, triggerElm) {
+  var options = {
+    product_id: product_id,
+    quantity: quantity || 1,
+  };
 
+  function finish(response) {
+    if (response) {
+      if (typeof setCartTotalAndBadge === 'function') {
+        setCartTotalAndBadge(response);
+      }
+      if (typeof fetchCart === 'function') {
+        fetchCart();
+      }
+    }
+    if (onCompleted) {
+      onCompleted();
+    }
+  }
+
+  if (window.AngelCartToast && typeof window.AngelCartToast.addToCart === 'function') {
+    return window.AngelCartToast
+      .addToCart(options, {}, triggerElm || null)
+      .then(finish)
+      .catch(function (error) {
         if (onCompleted) {
           onCompleted();
         }
-      }
-    });
+        throw error;
+      });
+  }
+
+  if (!window.zid || !window.zid.cart || !window.zid.cart.addProduct) {
+    if (onCompleted) {
+      onCompleted();
+    }
+    return Promise.resolve();
+  }
+
+  return window.zid.cart
+    .addProduct(options, { showErrorNotification: false })
+    .then(finish);
 }
 
 function removeFromCart(product_id) {
@@ -249,7 +272,7 @@ function addToWishlist(elm, productId) {
   const container = $(elm).closest('.add-to-wishlist');
 
   // Hide ALL heart buttons and show loader
-  container.find('.icon-heart-mask').each(function() {
+  container.find('.icon-heart-mask, .angel-grouped-card__action-btn--wishlist').each(function() {
     this.style.setProperty('display', 'none', 'important');
   });
   container.find('.loader').removeClass('d-none');
@@ -294,7 +317,7 @@ function removeFromWishlist(elm, productId) {
   const container = $(elm).closest('.add-to-wishlist');
 
   // Hide ALL heart buttons and show loader
-  container.find('.icon-heart-mask').each(function() {
+  container.find('.icon-heart-mask, .angel-grouped-card__action-btn--wishlist').each(function() {
     this.style.setProperty('display', 'none', 'important');
   });
   container.find('.loader').removeClass('d-none');
@@ -1092,6 +1115,11 @@ function updateUIAfterLogin(customer) {
 }
 
 window.addEventListener('vitrin:auth:success', async event => {
+    var redirectTo = new URLSearchParams(window.location.search).get('redirect_to');
+    if (redirectTo && getAngelReviewDraft()) {
+      window.location.href = redirectTo;
+      return;
+    }
 
     if (window.zid?.account?.get) {
       try {
@@ -1109,3 +1137,113 @@ window.addEventListener('vitrin:auth:success', async event => {
   // Fallback to page reload if zid account get fails
   window.location.reload();
 });
+
+var ANGEL_REVIEW_DRAFT_KEY = 'angel_product_review_draft';
+
+function getAngelReviewDraft() {
+  try {
+    var raw = sessionStorage.getItem(ANGEL_REVIEW_DRAFT_KEY);
+    if (!raw) {
+      return null;
+    }
+    var draft = JSON.parse(raw);
+    if (!draft || !draft.comment) {
+      return null;
+    }
+    if (draft.savedAt && Date.now() - draft.savedAt > 3600000) {
+      sessionStorage.removeItem(ANGEL_REVIEW_DRAFT_KEY);
+      return null;
+    }
+    return draft;
+  } catch (error) {
+    return null;
+  }
+}
+
+function isAngelReviewDraftPage(draft) {
+  var path = window.location.pathname.toLowerCase();
+  var href = window.location.href.toLowerCase();
+
+  if (draft.targetUrl) {
+    try {
+      var targetPath = new URL(draft.targetUrl, window.location.origin).pathname.toLowerCase();
+      if (path === targetPath || href.indexOf(targetPath) !== -1) {
+        return true;
+      }
+    } catch (error) {
+      if (href.indexOf(String(draft.targetUrl).toLowerCase()) !== -1) {
+        return true;
+      }
+    }
+  }
+
+  if (draft.productSlug && path.indexOf(String(draft.productSlug).toLowerCase()) !== -1) {
+    return /review|ratings|comment/.test(path);
+  }
+
+  if (draft.productId && path.indexOf(String(draft.productId)) !== -1) {
+    return /review|ratings|comment/.test(path);
+  }
+
+  return /review/.test(path) && /(add|new|create|write)/.test(path);
+}
+
+function findAngelReviewTextarea() {
+  var selectors = [
+    'textarea[name="comment"]',
+    'textarea[name="review"]',
+    'textarea[name="content"]',
+    'textarea[name="description"]',
+    '#comment',
+    '#review-comment',
+    '.review-form textarea',
+    '.add-review-form textarea',
+    'form[id*="review"] textarea',
+    'form[class*="review"] textarea',
+  ];
+
+  for (var i = 0; i < selectors.length; i++) {
+    var elements = document.querySelectorAll(selectors[i]);
+    for (var j = 0; j < elements.length; j++) {
+      var el = elements[j];
+      if (el && el.offsetParent !== null && !el.disabled && !el.readOnly) {
+        return el;
+      }
+    }
+  }
+
+  return null;
+}
+
+function restoreAngelReviewDraft() {
+  var draft = getAngelReviewDraft();
+  if (!draft || !isAngelReviewDraftPage(draft)) {
+    return false;
+  }
+
+  var textarea = findAngelReviewTextarea();
+  if (!textarea) {
+    return false;
+  }
+
+  if (!textarea.value || !textarea.value.trim()) {
+    textarea.value = draft.comment;
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    textarea.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  sessionStorage.removeItem(ANGEL_REVIEW_DRAFT_KEY);
+  return true;
+}
+
+function scheduleAngelReviewDraftRestore() {
+  var delays = [0, 250, 750, 1500, 3000];
+  delays.forEach(function (delay) {
+    window.setTimeout(function () {
+      restoreAngelReviewDraft();
+    }, delay);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', scheduleAngelReviewDraftRestore);
+window.addEventListener('load', scheduleAngelReviewDraftRestore);

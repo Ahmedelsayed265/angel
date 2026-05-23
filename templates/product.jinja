@@ -5,15 +5,16 @@
 {% block top_links %}
     <link rel="stylesheet" type="text/css" href="{{ 'toastr.min.css' | asset_url }}" />
     <link rel="stylesheet" type="text/css" href="{{ 'ekko-lightbox.css' | asset_url }}" />
-
-    <link rel="stylesheet" type="text/css" href="{{ ('product-details.css?v=' ~ ver)  | asset_url }}" />
-
+    <link rel="stylesheet" type="text/css" href="{{ 'swiper-bundle.min.css' | asset_url }}" />
+    <link rel="stylesheet" type="text/css" href="{{ ('product-details.css?v=' ~ ver) | asset_url }}" />
+    <link rel="stylesheet" type="text/css" href="{{ ('angel-product.css?v=' ~ ver) | asset_url }}" />
 {% endblock %}
 
 
 {% block main_content %}
 
     {% if product %}
+        {% set page_product = product %}
         {% set selected_product = selected_product if selected_product is defined else product.selected_product %}
         {% set has_preorder = product.effective_preorder_campaign is not none %}
         {% set can_preorder = product.can_be_preordered %}
@@ -26,124 +27,56 @@
         {% set can_buy = false %}
     {% endif %}
 
-    <section class="product products-details-page"
+    <section class="product products-details-page angel-product-page"
              data-has-preorder="{{ 'true' if has_preorder else 'false' }}"
              data-can-preorder="{{ 'true' if can_preorder else 'false' }}"
              data-stock-behavior="{{ preorder_stock_behavior or '' }}">
         <div class="container pb-5">
             <section class="products-details mb-5">
                 <div>
-                    <div class="row">
+                    <div class="row angel-product-details-wrapper">
+                        {% if product %}
 
-                        <div class="col-lg-6">
-
-                            <!--GALLERY-->
-                            <div id="wrap">
-                                <div class="row">
-                                    <div class="col-12 col-product-image-wrapper">
-
-                                        <!-- Carousel -->
-                                        <div class="box-1-1 product-images-carousel product-images-carousel-init {% if product.selected_product.media | length <= 0 %}d-none{% endif %}">
-                                            <div class="content">
-                                                <div id="product-images" class="product-images slide gallery">
-                                                    <div id="product-images-slick">
-                                                        {% for image in product.selected_product.media %}
-                                                            <div>
-                                                                <div class="box-1-1">
-                                                                    <div class="content">
-                                                                        <a class="image-link"
-                                                                           style="display:block; width: 100%; height: 100%;">
-                                                                            <img src="{{ image.image.full_size }}" class="carousel-img" alt="{{ image.alt_text }}">
-                                                                            {% if image.provider and image.link %}
-                                                                                <img id="main-video-icon"
-                                                                                  class="play-icon"
-                                                                                  src="{{ 'video-play.svg' | asset_url }}"
-                                                                                  alt="play"
-                                                                                  width="25"
-                                                                                  onClick="showIframe(this, '{{ image.link }}')"
-                                                                                />
-                                                                            {% endif %}
-                                                                        </a>
-                                                                        {% if image.provider and image.link %}
-                                                                            <div class="iframe-video pt-1 d-none">
-                                                                                <a
-                                                                                  id="iframe-close-btn"
-                                                                                  type="button"
-                                                                                  class="text-white btn btn-none grow"
-                                                                                  onClick="hideIframe(this)"
-                                                                                >
-                                                                                  X
-                                                                                </a>
-                                                                                <iframe
-                                                                                  width="100%"
-                                                                                  height="100%"
-                                                                                  src=""
-                                                                                  frameborder="0"
-                                                                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                                                                  allowfullscreen
-                                                                                  style="max-width: 100%"
-                                                                                >
-                                                                                </iframe>
-                                                                            </div>
-                                                                        {% endif %}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        {% endfor %}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row lg-thumbs d-lg-flex product-images-carousel-thumbs {% if product.selected_product.media | length <= 1 %}d-none-important{% endif %}">
-                                            {% for image in product.selected_product.media %}
-                                                <div class="col-3">
-                                                    <div class="box-1-1">
-                                                        <div class="content">
-                                                            <a class="d-flex align-items-center justify-content-center thumb-image-a" data-index="{{ loop.index0 }}"
-                                                               style="width: 100%; height: 100%;" >
-                                                                <img src="{{ image.image.medium }}" data-index="{{ loop.index0 }}">
-                                                                {% if image.provider and image.link %}
-                                                                  <img id="video-play-icon" class="play-icon"
-                                                                    src="{{ 'video-play.svg' | asset_url }}" alt="play"
-                                                                    data-index="{{ loop.index0 }}"
-                                                                  />
-                                                                {% endif %}
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-
-                                        <!-- No image -->
-                                        <div class="box-1-1 product-images-empty {% if product.selected_product.media | length > 0 %}d-none{% endif %}">
-                                            <div class="content">
-                                                <div class="d-flex" style="width: 100%; height: 100%;">
-                                                    <img src="{{ 'product-img.svg' | asset_url }}" width="100%" height="auto" />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
+                        <div class="col-product-image-wrapper">
+                            {% include 'components/angel-product-gallery.jinja' %}
                         </div>
 
-                        <div class="col-lg-6  col-product-info {% if product.selected_product.media | length <= 1 %}col-product-info-single-image{% endif %}">
+                        <div class="col-product-info angel-product-info {% if product.selected_product.media | length <= 1 %}col-product-info-single-image{% endif %}">
 
-
-
-                            <section>
+                            <section class="angel-product-info-main">
                                 {% if product.badge %}
                                    {% include 'vitrin:products/badge.jinja' %}
                                 {% endif %}
                                 {% if product.preorder_campaign %}
                                     {% include 'vitrin:products/preorder_badge.jinja' %}
                                 {% endif %}
-                                <h1>{{ product.name | safe }}</h1>
-                                <div class="d-flex flex-column flex-lg-row product-features">
+
+                            {% if product.categories and product.categories | length > 0 %}
+                                {% set brand_cat = product.categories[0] %}
+                                {% set brand_cat_url = (brand_cat.url | default('', true)) | trim or url_for('category_details', category_id=brand_cat.id, slug=brand_cat.slug or brand_cat.id) %}
+                                <div class="angel-product-brand">
+                                    <a href="{{ brand_cat_url }}" class="angel-product-brand__logo" aria-label="{{ brand_cat.name }}">
+                                        {% if brand_cat.cover_image %}
+                                            <img src="{{ image_url(brand_cat.cover_image, w=160, q=90, f='auto') }}" alt="" loading="lazy" width="64" height="64" />
+                                        {% elif brand_cat.image %}
+                                            <img src="{{ image_url(brand_cat.image, w=160, q=90, f='auto') }}" alt="" loading="lazy" width="64" height="64" />
+                                        {% else %}
+                                            <span class="angel-product-brand__placeholder" aria-hidden="true">{{ (brand_cat.name | default('', true))[:1] }}</span>
+                                        {% endif %}
+                                    </a>
+                                    <div class="angel-product-brand__meta">
+                                        <p class="angel-product-brand__authentic">{{ _("100% authentic product") }}</p>
+                                        <p class="angel-product-brand__more">
+                                            {{ _("Click for more from brand") }}
+                                            <a href="{{ brand_cat_url }}">{{ brand_cat.name }}</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                                <h1 class="angel-product-title">{{ product.name | safe }}</h1>
+
+                                {# <div class="d-flex flex-column flex-lg-row product-features angel-product-meta-strip angel-product-rating-below-title">
                                     {% if product.rating %}
                                         <div>
                                             {% set rating=product.rating.average %}{% include 'components/rating-stars.jinja' %}
@@ -162,40 +95,107 @@
                                         </div>
                                     {% endif %}
 
-
-                                    {% if product.low_stock_quantity %}
-                                        <div class="low-quantity-section d-inline-block">
-                                            <span class="icon-flag_black" style="color: #EC5550; font-size: 16px"></span>&nbsp;
-                                            <span class="low-quantity">{{ product.low_stock_quantity }}</span>
-                                        </div>
-                                    {% endif %}
-
                                     {% if product.bundle_offer %}
                                     <div class="bundle-offer-section">
                                         <span class="icon-gift" style="color: red; font-size: 14px"></span>&nbsp;
                                         <span class="bundle-offer-title" style="unicode-bidi: isolate">{{ product.bundle_offer.name }}</span>
                                     </div>
                                     {% endif %}
-
-
-                                </div>
+                                </div> #}
 
                                 {% if product.short_description %}
-                                    <p class="text-short-description">
-                                        {{ product.short_description | safe }}
-                                        &nbsp;<a id="product-description-a" href="#product-description" class="text-color-primary">{{ _("more information") }}</a>
-                                    </p>
+                                    <div class="text-short-description">{{ product.short_description | safe }}...
+                                        <a id="product-description-a" href="#product-tabs" class="angel-product-read-more">{{ _("Read more") }}</a>
+                                    </div>
                                 {% endif %}
-                                <div class="d-flex">
-                                    <div>
-                                        <h2 class="product-formatted-price theme-text-primary">{% if product.selected_product.formatted_sale_price %}{{ product.selected_product.formatted_sale_price }}{% else %}{{ product.selected_product.formatted_price }}{% endif %}</h2>
-                                        <p>
-                                            <del class="product-formatted-price-old">{% if product.selected_product.formatted_sale_price %} {{ product.selected_product.formatted_price }}{% endif %}</del>
-                                            <span class="product-formatted-price-discount" style="color:#f25f5f;">{% if product.selected_product.formatted_sale_price %}  &nbsp;  &nbsp;{{ _("Discount") }}&nbsp;{{ product.discount_percentage }}%{% endif %}</span>
+
+                                {% if not (product.has_variants or product.has_options) %}
+                                <div class="angel-product-price-block angel-product-price-stack">
+                                    <div class="angel-product-price-stack__row">
+                                        <h2 class="product-formatted-price theme-text-primary {% if product.selected_product.formatted_sale_price %}angel-product-price--sale{% endif %}">{% if product.selected_product.formatted_sale_price %}{{ product.selected_product.formatted_sale_price }}{% else %}{{ product.selected_product.formatted_price }}{% endif %}</h2>
+                                        <p class="angel-product-price-stack__oldwrap mb-0">
+                                            <del class="product-formatted-price-old">{% if product.selected_product.formatted_sale_price %}{{ product.selected_product.formatted_price }}{% endif %}</del>
                                         </p>
                                     </div>
-
                                 </div>
+                                {% endif %}
+
+                                <div class="angel-product-stock-rows">
+                                    {% if not can_buy %}
+                                    <div class="angel-product-stock angel-product-stock--depleted is-unavailable">
+                                        <span class="angel-product-stock__label">{{ _("Quantity depleted") }}</span>
+                                    </div>
+                                    {% endif %}
+                                    <div class="angel-product-stock {% if can_buy %}is-available{% else %}is-unavailable{% endif %}">
+                                        {% if can_buy %}<span class="angel-product-stock__dot" aria-hidden="true"></span>{% endif %}
+                                        <span class="angel-product-stock__label angel-product-stock__label--strong">{% if can_buy %}{{ _("Available") }}{% else %}{{ _("Out of stock") }}{% endif %}</span>
+                                    </div>
+                                </div>
+
+                                {% if can_buy and not safeget(store, 'settings.general.availability.closed_now') and not product.preorder_campaign %}
+                                {% set sale_ends_at = (
+                                    product.selected_product.sale_price_date_to
+                                    | default(product.selected_product.sale_price_end_date, true)
+                                    | default(product.selected_product.discount_end_date, true)
+                                    | default(product.sale_price_date_to, true)
+                                    | default(product.discount_end_date, true)
+                                    | default('', true)
+                                ) | trim %}
+                                {% set show_sale_urgency = product.selected_product.formatted_sale_price or product.discount_percentage %}
+                                {% if show_sale_urgency %}
+                                <section class="angel-product-urgency"{% if sale_ends_at %} data-sale-ends="{{ sale_ends_at | e }}"{% endif %}>
+                                    <p class="angel-product-urgency__countdown{% if not sale_ends_at %} angel-product-urgency__countdown--no-timer{% endif %}">
+                                        <i class="sicon-time align-middle"></i>
+                                        <span class="angel-product-urgency__countdown-text">{{ _("Remaining until the discount ends:") }}</span>
+                                        <span class="angel-product-urgency__timer" data-urgency-countdown{% if sale_ends_at %} data-countdown-end="{{ sale_ends_at | e }}"{% endif %} aria-live="polite"></span>
+                                    </p>
+                                    <div class="angel-product-urgency__box">
+                                        <div class="angel-product-urgency__copy">
+                                            <h3 class="angel-product-urgency__title">{{ _("Why wait?") }}</h3>
+                                            <p class="angel-product-urgency__sub">{{ _("Get the product directly now") }}</p>
+                                        </div>
+                                        <button type="button" class="angel-product-urgency__buy" onclick="zidProductBuyNow()">
+                                            <span>{{ _("Order it now") }}</span>
+                                            <img class="angel-product-urgency__buy-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="18" height="18" alt="" />
+                                        </button>
+                                    </div>
+                                </section>
+                                {% endif %}
+                                {% endif %}
+
+                                {% if product.categories and product.categories | length > 0 %}
+                                {% set class_cat = product.categories[0] %}
+                                {% set class_cat_url = (class_cat.url | default('', true)) | trim or url_for('category_details', category_id=class_cat.id, slug=class_cat.slug or class_cat.id) %}
+                                <div class="angel-product-classification">
+                                    <span class="angel-product-classification__label">{{ _("Product classification:") }}</span>
+                                    <a href="{{ class_cat_url }}">{{ class_cat.name }}</a>
+                                </div>
+                                {% endif %}
+
+                                {% if product.keywords and product.keywords | length > 0 %}
+                                <div class="angel-product-tags">
+                                    {% for kw in product.keywords %}
+                                        {% if kw.url is defined and kw.url %}
+                                            <a class="angel-product-tags__pill" href="{{ kw.url }}">#{{ kw.name | default(kw, true) }}</a>
+                                        {% else %}
+                                            <a class="angel-product-tags__pill" href="/products?search={{ kw | urlencode }}">#{{ kw }}</a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                {% if product.discount_percentage %}
+                                <div class="angel-product-order-offer">
+                                    <h2 class="angel-product-order-offer__title">{{ _("%(pct)s%% discount on order") | format(pct=product.discount_percentage) }}</h2>
+                                    <p class="angel-product-order-offer__sub">{{ _("Do not miss this exclusive order discount.") }}</p>
+                                    <div class="angel-product-order-offer__box">
+                                        <div class="angel-product-coupon-row">
+                                            <input type="text" class="angel-product-coupon-row__input" placeholder="{{ _('Enter discount coupon') }}" autocomplete="off" />
+                                            <button type="button" class="angel-product-coupon-row__btn" onclick="window.location.href='/cart'">{{ _("Apply") }}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
 
                                 <div>
                                     {% include 'vitrin:products/loyalty_points_widget.jinja' %}
@@ -210,27 +210,50 @@
                             </section>
 
 
-                            <div class="border-product"></div>
+                            {# <div class="border-product"></div>
                             <div style="margin-bottom: 25px" class="div-product-sku {% if not product.selected_product.sku %}d-none{% endif %}">
                                 <h4 class="product-title">{{ _("product sku") }}</h4>
                                 <div class="product-sku">
                                     {{ product.selected_product.sku }}
                                 </div>
-                            </div>
+                            </div> #}
 
-                            <div style="margin-bottom: 25px" class="div-product-weight {% if not product.selected_product.weight.value %}d-none{% endif %}">
+                            <div style="margin-bottom: 25px" class="div-product-weight {% if not (product.selected_product.weight and product.selected_product.weight.value) %}d-none{% endif %}">
                                 <h4 class="product-title">{{ _("Weight") }}</h4>
                                 <div class="product-weight">
                                     {{ product.selected_product.weight.value }}&nbsp;{{ product.selected_product.weight.unit }}
                                 </div>
                             </div>
 
-                            <form id="product-form">
+                            <form id="product-form"{% if product.custom_input_fields %} data-has-custom-fields="true"{% endif %}{% if product.product_class == 'dynamic_bundle' %} data-is-bundle="true"{% endif %}>
                                 <input id="product-id" type="hidden" value="{{ product.selected_product.id }}">
 
                                 <div class="size-box">
-
+                                    {% if product.has_variants or product.has_options %}
+                                    <div class="angel-variant-panel" data-select-label="{{ _('Select') | e }}">
+                                        <script type="application/json" id="angel-product-variant-data">{{ {
+                                            'id': product.id,
+                                            'options': product.options,
+                                            'variants': product.variants,
+                                            'selected_product': product.selected_product
+                                        } | tojson }}</script>
+                                        {% include 'vitrin:products/variants_list.jinja' %}
+                                        <div class="angel-variant-price-box">
+                                            <div class="angel-variant-price-box__label-wrap">
+                                                <span class="angel-variant-price-box__label">
+                                                    <i class="sicon-dollar-cash text-xs" aria-hidden="true"></i>
+                                                    {{ _("Price") }}
+                                                </span>
+                                            </div>
+                                            <div class="angel-variant-price-box__values">
+                                                <span class="product-formatted-price theme-text-primary angel-variant-price-box__current {% if product.selected_product.formatted_sale_price %}angel-product-price--sale{% endif %}">{% if product.selected_product.formatted_sale_price %}{{ product.selected_product.formatted_sale_price }}{% else %}{{ product.selected_product.formatted_price }}{% endif %}</span>
+                                                <del class="product-formatted-price-old angel-variant-price-box__old">{% if product.selected_product.formatted_sale_price %}{{ product.selected_product.formatted_price }}{% endif %}</del>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% else %}
                                     {% include 'vitrin:products/variants_list.jinja' %}
+                                    {% endif %}
 
                                     <!-- new custom fields update -->
                                     {% if product.custom_input_fields  %}
@@ -238,26 +261,166 @@
                                         {% include 'vitrin:products/custom_input_fields.jinja' %}
                                     {% endif %}
                                 </div>
-
-                                {% if product.selected_product.is_infinite or product.selected_product.quantity > 0 %}
-                                    <div class="border-product" style="margin-top: 15px"></div>
-                                    <div class="select-quantity-div">
-                                        <h4 class="product-title">{{ _("Quantity") }}</h4>
-                                        <div class="form-group">
-                                            <div>
-                                                <select  id="product-quantity" name="quantity" class="select-quantity">
-                                                    {% if product.selected_product.is_infinite or product.selected_product.quantity > 100 %}
-                                                        {% set maxQuantity = 100 %}
-                                                    {% else %}
-                                                        {% set maxQuantity = product.selected_product.quantity %}
-                                                    {% endif %}
-
-                                                    {% for n in range(1, maxQuantity + 1) %}
-                                                        <option value="{{ n }}" {% if n == 1 %}selected{% endif %}>{{ n }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
+                                
+                                <section class="angel-product-tabs-section" id="product-tabs" data-product-id="{{ product.id }}">
+                                        <div class="angel-product-tabs__nav" role="tablist">
+                                            <button type="button" class="angel-product-tabs__btn is-active" role="tab" aria-selected="true" data-tab="details">
+                                                <i class="sicon-newspaper-alt text-xs ltr:mr-1 rtl:ml-1"></i>
+                                                <span class="angel-product-tabs__btn-label">{{ _("Details") }}</span>
+                                            </button>
+                                            {% if store.settings.products.reviews_enabled or store.settings.products.questions_enabled %}
+                                            <button type="button" class="angel-product-tabs__btn" role="tab" aria-selected="false" data-tab="ratings">
+                                                <i class="sicon-star text-xs ltr:mr-1 rtl:ml-1"></i>
+                                                <span class="angel-product-tabs__btn-label">{{ _("Ratings") }}</span>
+                                            </button>
+                                            {% endif %}
                                         </div>
+                                        <div class="angel-product-tabs__body">
+                                        <div class="angel-product-tabs__panel is-active" role="tabpanel" data-panel="details" id="product-description">
+
+
+                                    {% if product.metafields %}
+                                            <div class="description-paragrah text-justify description-text-clear mb-4">
+                                                {% set entity = product %}
+                                                {% include 'vitrin:shared/metafields.jinja' %}
+                                            </div>
+                                    {% endif %}
+
+                                    {% if product.description %}
+                                            {% autoescape false %}
+                                                <div class="description-paragrah text-justify description-text-clear">
+                                                    {{ product.description }}
+                                                </div>
+                                            {% endautoescape %}
+                                    {% endif %}
+
+                                {# {% if product.has_variants %}
+                                    <section class="product-selection mt-5">
+                                        <div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="description-icon">
+                                                    <span class="icon-format_list_bulleted"></span>
+                                                </div>
+                                                <div class="description-title">
+                                                    {{ _("product description") }}
+                                                </div>
+                                            </div>
+
+                                            <div class="card-table d-none d-lg-block">
+                                                <div class="card">
+                                                    <div class="card-body card-table-header">
+                                                        <div class="row">
+                                                            {% for option in product.options %}
+                                                                <div class="col">{{option.name}}</div>
+                                                            {% endfor %}
+                                                            <div class="col col-price">{{ _("Product images") }}</div>
+                                                            <div class="col col-price">{{ _("price") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% for variant in product.variants %}
+                                                {% if variant.in_stock %}
+                                                    <div  class="card-table options-table">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <div class="row flex-column flex-lg-row align-items-start align-items-lg-center">
+
+
+                                                                    {% for attribute in variant.attributes %}
+                                                                        <div class="col m-col">
+                                                                            <span class="variant-name-sm d-inline-block d-lg-none">{{ product.options[loop.index0].name }}</span>
+                                                                            <span>{{ attribute.value }}</span>
+                                                                        </div>
+                                                                    {% endfor %}
+
+                                                                    <div class="col">
+                                                                        {% if variant.images | length > 0 %}
+                                                                            <div class="d-flex m-col">
+                                                                                {% for image in variant.images %}
+                                                                                    <div class="variant-image-wrapper" data-var-id="{{ variant.id }}">
+                                                                                        <div class="box-1-1">
+                                                                                            <div class="content">
+                                                                                                <a data-index="{{ loop.index0 }}" data-link-var-id="{{ variant.id }}" class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;" >
+                                                                                                    <img src="{{ image.image.medium }}" data-image-url="{{ image.image.full_size }}">
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                {% endfor %}
+                                                                            </div>
+                                                                        {% else %}
+                                                                            <span class="d-none d-lg-inline">{{ _("No images") }}</span>
+                                                                        {% endif %}
+                                                                    </div>
+
+                                                                    <div class="col m-col">
+                                                                        <span class="variant-name-sm d-inline-block d-lg-none">{{ _("price") }}</span>
+                                                                        {% if variant.formatted_sale_price %}
+                                                                            <h4 style="font-size: 1.2rem" class="price-detail d-inline-block">{{ variant.formatted_sale_price }}
+                                                                                <del>{{ variant.formatted_price }}</del>
+                                                                            </h4>
+                                                                        {% else %}
+                                                                            <h4 class="d-inline-block" style="font-size: 1.2rem">{{ variant.formatted_price }}</h4>
+                                                                        {% endif %}
+                                                                    </div>
+
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        </div>
+                                    </section>
+                                {% endif %} #}
+
+                                        </div>
+                                        {% if store.settings.products.reviews_enabled or store.settings.products.questions_enabled %}
+                                    <div class="angel-product-tabs__panel" role="tabpanel" data-panel="ratings">
+                                        {% include 'components/angel-product-tab-ratings.jinja' %}
+                                    </div>
+                                    {% endif %}
+                                        </div>
+                                </section>
+
+                                <div class="angel-product-trust__grid">
+                                    <div class="angel-product-trust__item">
+                                        <i class="sicon-gold-badge text-lg"></i>
+                                        <h3 class="angel-product-trust__heading">{{ _("Exclusive brands") }}</h3>
+                                    </div>
+                                    <div class="angel-product-trust__item">
+                                        <i class="sicon-chat-bubbles text-lg"></i>
+                                        <h3 class="angel-product-trust__heading">{{ _("Technical support") }}</h3>
+                                    </div>
+                                    <div class="angel-product-trust__item">
+                                        <i class="sicon-star-o text-lg"></i>
+                                        <h3 class="angel-product-trust__heading">{{ _("Safe delivery") }}</h3>
+                                    </div>
+                                </div>
+
+                                <div class="angel-product-payments">
+                                    {% for payment_method in store.settings.checkout.payment_methods | default([]) %}
+                                        <img src="{{ image_url(payment_method.icon, h=80, q=100) }}" alt="" loading="lazy" height="24" />
+                                    {% endfor %}
+                                </div>
+
+                                {% if can_buy and (product.selected_product.is_infinite or product.selected_product.quantity > 0) %}
+                                    <div class="select-quantity-div d-none" aria-hidden="true">
+                                        <select id="product-quantity" name="quantity" class="select-quantity">
+                                            {% if product.selected_product.is_infinite or product.selected_product.quantity > 100 %}
+                                                {% set maxQuantity = 100 %}
+                                            {% else %}
+                                                {% set maxQuantity = product.selected_product.quantity %}
+                                            {% endif %}
+                                            {% for n in range(1, maxQuantity + 1) %}
+                                                <option value="{{ n }}" {% if n == 1 %}selected{% endif %}>{{ n }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                 {% endif %}
 
@@ -265,7 +428,7 @@
                                     <div class="border-product" style="margin-top: 15px"></div>
                                     <div>
                                         <h4 class="product-title">{{ _("This product is out of stock") }}</h4>
-                                        <form>
+                                        <div class="notify-me-form-wrapper">
                                             <input type="hidden" class="send-notify-product-id" value="{{ product.selected_product.id }}">
                                             <div class="form-group form-notify-me">
                                                 <h4>{{ _("Notify me when product is available") }}</h4>
@@ -286,7 +449,7 @@
                                                 </div>
                                             
                                             </div>
-                                        </form>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -298,94 +461,71 @@
                                 {% include 'vitrin:products/bundle-products.jinja' %}
                             {% endif %}
 
-                            <div class="product-buttons {% if can_preorder or product.selected_product.in_stock %}d-block{% else %}d-none{% endif %}">
+                            {# <div class="product-buttons {% if can_preorder or product.selected_product.in_stock %}d-block{% else %}d-none{% endif %}">
                                 <div class="border-product"></div>
-                                    <div class="d-flex align-center" style="gap: 10px;">
-                                            <button style="margin-bottom: 20px" class="btn btn-add-to-cart" type="button" onclick="productAddToCart()">
-                                                <div class="add-to-cart-icon fa fa-shopping-cart" style="mask: url({{ 'shopping-cart.svg' | asset_url }}) no-repeat center;"></div>
+                                <div class="angel-product-cta-row d-flex align-center flex-wrap" style="gap: 10px;">
+                                    <button class="btn btn-add-to-cart flex-grow-1" style="margin-bottom: 0" type="button" onclick="productAddToCart()">
+                                        <div class="add-to-cart-icon fa fa-shopping-cart" style="mask: url({{ 'shopping-cart.svg' | asset_url }}) no-repeat center;"></div>
+                                        <img class="add-to-cart-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="25" height="25" alt="" />
+                                        <span>{% if product.preorder_campaign %}{{ _("Preorder now") }}{% else %}{{ _("add to cart") }}{% endif %}</span>
+                                    </button>
 
-                                                <img class="add-to-cart-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="25" height="25"/>
+                                    {% include 'vitrin:checkout/checkout_dialog.jinja' %}
 
-                                        {% if product.preorder_campaign %}{{ _("Preorder now") }}{% else %}{{ _("add to cart") }}{% endif %}
-                                            </button>
+                                    {% if not safeget(store, 'settings.general.availability.closed_now') and not product.preorder_campaign %}
+                                    <button class="btn btn-buy-now flex-shrink-0 d-none" type="button" onclick="zidProductBuyNow()">
+                                        <div class="buy-now-icon" style="mask: url({{ 'buy-now.svg' | asset_url }}) no-repeat center;"></div>
+                                        <img class="buy-now-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="25" height="25" alt="" />
+                                        <span>{{ _("Buy now") }}</span>
+                                    </button>
+                                    {% endif %}
 
-                                        <!-- Checkout dialog -->
-                                        {% include 'vitrin:checkout/checkout_dialog.jinja' %}
-                                        
-                                        {% if not safeget(store, 'settings.general.availability.closed_now') and not product.preorder_campaign %}
-                                        <button class="btn btn-buy-now d-none" type="button" onclick="zidProductBuyNow()">
-                                            <div class="buy-now-icon" style="mask: url({{ 'buy-now.svg' | asset_url }}) no-repeat center;"></div>
-
-                                            <img class="buy-now-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="25" height="25" />
-
-                                            <span>{{ _("Buy now") }}</span>
-                                        </button>
-                                        {% endif %}
-
-                                        {% if store.settings.products.wishlist_enabled == true %}
-                                            <span class="add-to-wishlist position-relative my-2" data-wishlist-id="{{ product.id }}">
-                                                {% if not session.is_guest %}
-                                                <a class="icon-heart-mask" onclick="addToWishlist(this, '{{ product.id }}')"></a>
-                                                {% else %}
-                                                <a class="icon-heart-mask" href="{{ url_for('login_page', query_params={"redirect_to": session.path} ) }}"></a>
-                                                {% endif %}
-                                                <img class="loader d-none" src="{{ 'spinner.gif' | asset_url }}" width="20" height="20"/>
-                                            </span>
-                                        {% endif %}
+                                    {% if store.settings.products.wishlist_enabled == true %}
+                                        <span class="add-to-wishlist position-relative my-2" data-wishlist-id="{{ product.id }}">
+                                            {% if not session.is_guest %}
+                                            <a class="icon-heart-mask" onclick="addToWishlist(this, '{{ product.id }}')"></a>
+                                            {% else %}
+                                            <a class="icon-heart-mask" href="{{ url_for('login_page', query_params={"redirect_to": session.path} ) }}"></a>
+                                            {% endif %}
+                                            <img class="loader d-none" src="{{ 'spinner.gif' | asset_url }}" width="20" height="20"/>
+                                        </span>
+                                    {% endif %}
                                 </div>
 
                                 <div>
                                     {% include 'vitrin:checkout/apple-pay-quick-checkout.jinja' %}
                                 </div>
-
-                            </div>
-
-                            <div>
-                                <span id="product-view-add-to-cart"></span>
-                            </div>
-                            <div class="border-product"></div>
-                            <div class="border-product">
-                                <h4 class="product-title">{{ _("share product") }}</h4>
-                                <div class="product-icon">
-                                    <div class="product-social d-flex">
-                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ product.html_url }}" target="_blank"><i class="icon-facebook-f"></i></a>
-                                        <a href="https://www.pinterest.com/pin/create/button/?url={{ product.html_url }}" target="_blank"><i class="icon-pinterest"></i></a>
-                                        <a href="https://twitter.com/intent/tweet?text={{ product.name }}: {{ product.html_url }}" target="_blank"><i class="icon-twitter"></i></a>
-                                        <a href="https://api.whatsapp.com/send?text={{ _("Check Out this Product") }} :{{ product.name }} {{ product.html_url }}" target="_blank">
-                                            <i class="icon-whatsapp"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                            </div> #}
 
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </section>
 
 
-            {% if product.bundle_offer %}
+            {% if page_product is defined and page_product.bundle_offer %}
             <section class="bundle-offer-details-section mt-5">
                 <div class="d-flex align-items-center">
                     <div class="description-icon">
                         <span class="icon-gift"></span>
                     </div>
                     <div class="description-title">
-                        <div class="bundle-offer-title">{{ product.bundle_offer.name }}</div>
-                        <div class="bundle-offer-title-description">{{ product.bundle_offer.description }}</div>
+                        <div class="bundle-offer-title">{{ page_product.bundle_offer.name }}</div>
+                        <div class="bundle-offer-title-description">{{ page_product.bundle_offer.description }}</div>
                     </div>
                 </div>
                 <div class="description-paragrah">
                     <div class="bundle-offer-products">
                         <div class="row bundle-offer-details-products">
-                            {% for product in product.bundle_offer.products.results[:5] %}
+                            {% for bundle_item in (page_product.bundle_offer.products.results | default([]))[:5] %}
                                 <div class="prod-col prod-col-tb">
-                                    {% set product=product %}{% set index=loop.index0 %}{% include 'components/product-card.jinja' %}
+                                    {% set product=bundle_item %}{% set index=loop.index0 %}{% include 'components/product-card.jinja' %}
                                 </div>
                             {% endfor %}
                         </div>
                     </div>
-                    {% if product.bundle_offer and product.bundle_offer.products and product.bundle_offer.products.results | length > 5 %}
+                    {% if page_product.bundle_offer.products and (page_product.bundle_offer.products.results | default([])) | length > 5 %}
                     <div class="bundle-offer-more">
                         <a href="#" data-toggle="modal" data-target=".bd-example-modal-lg">{{ _("Display all products") }}</a>
                     </div>
@@ -393,235 +533,20 @@
                 </div>
             </section>
             {% endif %}
-
-            {% include 'vitrin:products/grouped-product.jinja' %}
-
-            {% if product.metafields %}
-                <section id="product-description" class="mt-5">
-                    <div class="d-flex align-items-center">
-                        <div class="description-icon">
-                            <span class="icon-fact_check_black"></span>
-                        </div>
-                        <div class="description-title">
-                           {{ _("product information") }}
-                        </div>
-                    </div>
-                    <div class="description-paragrah text-justify description-text-clear">
-                          {% set entity = product %}
-                          {% include 'vitrin:shared/metafields.jinja' %}
-                    </div>
-                </section>
+            {% if page_product is defined %}
+            {% set product = page_product %}
             {% endif %}
 
-            {% if product.description %}
-                <section id="product-description" class="mt-5">
-                    <div class="d-flex align-items-center">
-                        <div class="description-icon">
-                            <span class="icon-fact_check_black"></span>
-                        </div>
-                        <div class="description-title">
-                            {{ _("product description") }}
-                        </div>
-                    </div>
-                    {% autoescape false %}
-                        <div class="description-paragrah text-justify description-text-clear">
-                            {{ product.description }}
-                        </div>
-                    {% endautoescape %}
-                </section>
-            {% endif %}
+            <section class="angel-product-grouped-wrap">
+                <div class="container">
+                    <h2 class="angel-product-grouped-wrap__title">{{ _("Frequently bought together") }}</h2>
+                    {% include 'components/angel-product-grouped.jinja' %}
+                </div>
+            </section>
+            {% include 'components/angel-grouped-quick-view.jinja' %}
 
-            {% if product.has_variants %}
-                <section class="product-selection mt-5">
-                    <div>
-                        <div class="d-flex align-items-center">
-                            <div class="description-icon">
-                                <span class="icon-format_list_bulleted"></span>
-                            </div>
-                            <div class="description-title">
-                                {{ _("product description") }}
-                            </div>
-                        </div>
-
-                        <div class="card-table d-none d-lg-block">
-                            <div class="card">
-                                <div class="card-body card-table-header">
-                                    <div class="row">
-                                        {% for option in product.options %}
-                                            <div class="col">{{option.name}}</div>
-                                        {% endfor %}
-                                        <div class="col col-price">{{ _("Product images") }}</div>
-                                        <div class="col col-price">{{ _("price") }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% for variant in product.variants %}
-                            {% if variant.in_stock %}
-                                <div  class="card-table options-table">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row flex-column flex-lg-row align-items-start align-items-lg-center">
-
-
-                                                {% for attribute in variant.attributes %}
-                                                    <div class="col m-col">
-                                                        <span class="variant-name-sm d-inline-block d-lg-none">{{ product.options[loop.index0].name }}</span>
-                                                        <span>{{ attribute.value }}</span>
-                                                    </div>
-                                                {% endfor %}
-
-                                                <div class="col">
-                                                    {% if variant.images | length > 0 %}
-                                                        <div class="d-flex m-col">
-                                                            {% for image in variant.images %}
-                                                                <div class="variant-image-wrapper" data-var-id="{{ variant.id }}">
-                                                                    <div class="box-1-1">
-                                                                        <div class="content">
-                                                                            <a data-index="{{ loop.index0 }}" data-link-var-id="{{ variant.id }}" class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;" >
-                                                                                <img src="{{ image.image.medium }}" data-image-url="{{ image.image.full_size }}">
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-                                                            {% endfor %}
-                                                        </div>
-                                                    {% else %}
-                                                        <span class="d-none d-lg-inline">{{ _("No images") }}</span>
-                                                    {% endif %}
-                                                </div>
-
-                                                <div class="col m-col">
-                                                    <span class="variant-name-sm d-inline-block d-lg-none">{{ _("price") }}</span>
-                                                    {% if variant.formatted_sale_price %}
-                                                        <h4 style="font-size: 1.2rem" class="price-detail d-inline-block">{{ variant.formatted_sale_price }}
-                                                            <del>{{ variant.formatted_price }}</del>
-                                                        </h4>
-                                                    {% else %}
-                                                        <h4 class="d-inline-block" style="font-size: 1.2rem">{{ variant.formatted_price }}</h4>
-                                                    {% endif %}
-                                                </div>
-
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-
-                    </div>
-                </section>
-            {% endif %}
-
-            {% if store.settings.products.reviews_enabled %}
-                <section class="mt-5 review-details">
-                    <div>
-                        <div class="d-flex flex-wrap align-items-center" style="width: 100%">
-                            <div class="description-icon">
-                                <span class="icon-reviews_black"></span>
-                            </div>
-                            <div class="description-title">
-                                {{ _("Reviews") }}
-                            </div>
-                            {% if product.rating %}
-                            <div class="rating-section">
-                                    <div>
-                                        {% set rating=product.rating.average %}{% include 'components/rating-stars.jinja' %}
-                                        <span class="product-card-rating-count">({{ product.rating.total_count }})</span>
-                                    </div>
-                            </div>
-                            {% endif %}
-
-                            &nbsp;
-                            <!-- Button trigger modal -->
-                            {% if session.is_guest %}
-                            <a href="/auth/login?redirect_to={{ url_for('add_product_review', slug=product.id) }}" class="btn btn-primary add-review-btn" onclick="event.preventDefault(); handleLoginAction('{{ url_for('add_product_review', slug=product.id) }}'); return false;"><span class="icon-add_circle"></span>{{ _("Add Comment ") }} </a>
-                            {% else %}
-                            <a href="{{ url_for('add_product_review', slug=product.slug) }}" class="btn btn-primary add-review-btn" id="add-review-btn"><span class="icon-add_circle"></span>{{ _("Add Comment ") }}</a>
-                            {% endif %}
-                        </div>
-                        <div class="reviews-break-down-div description-paragrah">
-                            <div class="d-flex align-items-center mt-3 mb-4">
-                                {% if product.rating %}
-                                <h4 class="rating-average">{{ product.rating.average }}</h4>
-                                <div class="d-flex flex-column">
-
-
-                                    <div class="row card-rate">
-                                        <span class="rating_count_5">{{ product.rating['ratings_5'].count }}</span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1"></span> &nbsp;  &nbsp;
-                                        <span>{{ _("Great") }}</span>
-                                    </div>
-                                    <div class="row card-rate">
-                                        <span class="rating_count_4">{{ product.rating['ratings_4'].count }}</span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1 deactive"></span> &nbsp;  &nbsp;
-                                        <span>{{ _("Excellent") }}</span>
-                                    </div>
-                                    <div class="row card-rate">
-                                        <span class="rating_count_3">{{ product.rating['ratings_3'].count }}</span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1 deactive"></span>
-                                        <span class="icon-star1 deactive"></span> &nbsp;  &nbsp;
-                                        <span>{{ _("Good") }}</span>
-                                    </div>
-                                    <div class="row card-rate">
-                                        <span class="rating_count_2">{{ product.rating['ratings_2'].count }}</span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1 deactive"></span>
-                                        <span class="icon-star1 deactive"></span>
-                                        <span class="icon-star1 deactive"></span> &nbsp;  &nbsp;
-                                        <span>{{ _("Dislike") }}</span>
-                                    </div>
-                                    <div class="row card-rate">
-                                        <span class="rating_count_1">{{ product.rating['ratings_1'].count }}</span>
-                                        <span class="icon-star1"></span>
-                                        <span class="icon-star1 deactive"></span>
-                                        <span class="icon-star1 deactive"></span>
-                                        <span class="icon-star1 deactive"></span>
-                                        <span class="icon-star1 deactive"></span> &nbsp;  &nbsp;
-                                        <span>{{ _("Bad") }}</span>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="reviews-break-down-empty description-paragrah d-none">
-                            <div style="border: 1px solid #ccc; margin: 10px 0px; padding: 10px; border-radius: 3px">
-                                <span>{{ _("No reviews, add yours") }}</span>
-                            </div>
-                        </div>
-
-                        <div class="comment-section description-paragrah bg-transparent">
-                            {% set reviews=product.reviews.results %}{% include 'components/customer-reviews.jinja' %}
-
-                            {% if product.reviews.pages_count > 1 %}
-                            <div class="text-right">
-                                <a href="{{ url_for('product_reviews', slug=product.id) }} " type="button" class="btn all-reviews-btn">
-                                    {{ _("All reviews") }}
-                                </a>
-                            </div>
-                            {% endif %}
-                        </div>
-
-                    </div>
-                </section>
-            {% endif %}
-            {% if store.settings.products.questions_enabled %}
-            <section class="mt-5 review-details">
+            {# {% if store.settings.products.questions_enabled %}
+            <section class="mt-5 review-details angel-product-tabs-legacy-hidden">
                 <div>
                     <div class="d-flex flex-wrap align-items-center" style="width: 100%">
                         <div class="description-icon">
@@ -636,47 +561,48 @@
                 {% set questions=product.questions %}{% include 'components/product-questions.jinja' %}
                 {% set product=product %}{% include 'components/product-question-add.jinja' %}
             </section>
-             {% endif %}
+             {% endif %} #}
 
-            {% if (product.related_products | length) >  0 %}
-                <section class="mt-5 mb-5">
-                    <div class="d-flex align-items-center">
-                        <div class="description-icon" style="font-size: 24px; height: 24px">
-                            <span class="icon-uniE011"></span>
+            {% if page_product is defined and (page_product.related_products | default([])) | length > 0 %}
+                <section class="angel-product-related">
+                    <div class="container">
+                        <div class="angel-product-related__head">
+                            <h2 class="angel-product-related__title">{{ _("You may also like") }}</h2>
+                            <div class="angel-product-related__nav">
+                                <button type="button" class="angel-product-related__arrow" id="angel-related-products-prev" aria-label="{{ _('Previous') }}"><span class="icon-keyboard_arrow_right"></span></button>
+                                <button type="button" class="angel-product-related__arrow" id="angel-related-products-next" aria-label="{{ _('Next') }}"><span class="icon-keyboard_arrow_left"></span></button>
+                            </div>
                         </div>
-                        <div class="description-title">
-                            <div class="">{{ _("You may also like") }}</div>
-                        </div>
-                    </div>
-                    <div class="description-paragrah">
-                        <div class="">
-                            <div class="products-slider-wrapper" style="position: relative">
-
-                                <div id="related-products" class="products-slider s-slider d-block">
-                                    {% for rProduct in product.related_products %}
-                                        <div class="prod-col">
-                                            {% set product=rProduct %}{% set index=loop.index0 %}{% include 'components/product-card.jinja' %}
-                                        </div>
-                                    {% endfor %}
-                                </div>
-
+                        <div class="swiper" id="angel-related-products">
+                            <div class="swiper-wrapper">
+                                {% for rProduct in page_product.related_products | default([]) %}
+                                    <div class="swiper-slide">
+                                        {% set product=rProduct %}{% set index=loop.index0 %}{% include 'components/product-card.jinja' %}
+                                    </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
                 </section>
+            {% endif %}
+            {% if page_product is defined %}
+            {% set product = page_product %}
+            {% endif %}
 
-                <script>
-                    document.addEventListener("DOMContentLoaded", function(){
-                        if (typeof showRelatedProducts === 'function') {
-                            showRelatedProducts();
-                        }
-                    });
-                </script>
+            {% set wa_phone = (store.settings.contact.phone | default('', true)) | trim %}
+            {% if wa_phone and page_product is defined %}
+                {% set wa_digits = wa_phone | replace(' ', '') | replace('-', '') | replace('(', '') | replace(')', '') %}
+                {% if wa_digits[:1] == '+' %}
+                    {% set wa_digits = wa_digits[1:] %}
+                {% endif %}
+                <a class="angel-product-wa-fab" href="https://wa.me/{{ wa_digits }}?text={{ (_('Hello, I would like to inquire about') ~ ' ' ~ (page_product.name | e) ~ '\n' ~ page_product.html_url) | urlencode }}" target="_blank" rel="noopener noreferrer" aria-label="{{ _('Contact us on WhatsApp') }}">
+                    <i class="icon-whatsapp" aria-hidden="true"></i>
+                </a>
             {% endif %}
 
         </div>
 
-        {% if product.bundle_offer and product.bundle_offer.products.results | length > 5 %}
+        {% if page_product is defined and page_product.bundle_offer and page_product.bundle_offer.products and (page_product.bundle_offer.products.results | default([])) | length > 5 %}
         <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-scrollable bundle-offer-products-dialog">
                 <div class="modal-content">
@@ -688,9 +614,9 @@
                         <div class="bundle-offer-title-description"></div>
                         <div class="bundle-offer-products">
                             <div class="row bundle-offer-details-products-all">
-                                {% for product in product.bundle_offer.products.results %}
+                                {% for bundle_card in page_product.bundle_offer.products.results | default([]) %}
                                     <div class="prod-col prod-col-tb">
-                                        {% set product=product %}{% set index=loop.index0 %}{% include 'components/product-card.jinja' %}
+                                        {% set product=bundle_card %}{% set index=loop.index0 %}{% include 'components/product-card.jinja' %}
                                     </div>
                                 {% endfor %}
                             </div>
@@ -701,7 +627,61 @@
         </div>
         {% endif %}
     </section>
+
+    {% if product %}
+        {% include 'components/angel-product-lightbox.jinja' %}
+        {% include 'vitrin:checkout/checkout_dialog.jinja' %}
+    {% endif %}
 {% endblock %}
+
+{% block footer_sticky %}
+    {% if product %}
+    <div class="angel-product-sticky" id="angel-product-sticky-bar">
+        <div class="container">
+            <div class="angel-product-sticky__inner">
+                <div class="angel-product-sticky__info">
+                    {% if product.selected_product.media | length > 0 %}
+                        <img class="angel-product-sticky__thumb" src="{{ product.selected_product.media[0].image.medium }}" alt="" />
+                    {% endif %}
+                    <div class="angel-product-sticky__meta">
+                        <p class="angel-product-sticky__title">{{ product.name | safe }}</p>
+                        <div class="angel-product-sticky__prices">
+                            <p class="angel-product-sticky__price product-formatted-price{% if product.selected_product.formatted_sale_price %} angel-product-sticky__price--sale{% endif %}">{% if product.selected_product.formatted_sale_price %}{{ product.selected_product.formatted_sale_price }}{% else %}{{ product.selected_product.formatted_price }}{% endif %}</p>
+                            <del class="product-formatted-price-old angel-product-sticky__price-old">{% if product.selected_product.formatted_sale_price %}{{ product.selected_product.formatted_price }}{% endif %}</del>
+                        </div>
+                    </div>
+                </div>
+                <div class="angel-product-sticky__actions">
+                    {% if product.selected_product.is_infinite or product.selected_product.quantity > 0 %}
+                    <div class="angel-product-sticky__qty">
+                        <button type="button" data-qty-minus aria-label="{{ _('Decrease') }}">−</button>
+                        <input type="number" class="angel-product-sticky__qty-input" data-qty-value inputmode="numeric" min="1" step="1" value="1" aria-label="{{ _('Quantity') }}" />
+                        <button type="button" data-qty-plus aria-label="{{ _('Increase') }}">+</button>
+                    </div>
+                    {% endif %}
+                    <button type="button" class="angel-product-sticky__add" data-sticky-add>
+                        <img class="angel-product-sticky__add-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="18" height="18" alt="" />
+                        <span class="angel-product-sticky__add-content">{% if product.preorder_campaign %}{{ _("Preorder now") }}{% else %}<i class="sicon-add text-sm !leading-5" aria-hidden="true"></i>{{ _("add to cart") }}{% endif %}</span>
+                    </button>
+                    {% if not safeget(store, 'settings.general.availability.closed_now') and not product.preorder_campaign %}
+                    <button type="button" class="angel-product-sticky__buy" data-sticky-buy>
+                        <img class="angel-product-sticky__buy-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="18" height="18" alt="" />
+                        <span class="angel-product-sticky__buy-content">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32" aria-hidden="true">
+                                <title>{{ _("Buy now") }}</title>
+                                <path fill="var(--primary-color)" d="M29 12h-26c-0.668-0.008-1.284-0.226-1.787-0.59l0.009 0.006c-0.744-0.552-1.222-1.428-1.222-2.416 0-1.657 1.343-3 2.999-3h6c0.552 0 1 0.448 1 1s-0.448 1-1 1v0h-6c-0.552 0-1 0.448-1 1 0 0.326 0.156 0.616 0.397 0.798l0.002 0.002c0.167 0.12 0.374 0.194 0.599 0.2l0.001 0h26c0.552 0 1 0.448 1 1s-0.448 1-1 1v0zM27 12c-0.552 0-1-0.448-1-1v0-3h-3c-0.552 0-1-0.448-1-1s0.448-1 1-1v0h4c0.552 0 1 0.448 1 1v0 4c0 0.552-0.448 1-1 1v0zM29 30h-26c-1.657 0-3-1.343-3-3v0-18c0-0.552 0.448-1 1-1s1 0.448 1 1v0 18c0 0.552 0.448 1 1 1v0h25v-5c0-0.552 0.448-1 1-1s1 0.448 1 1v0 6c0 0.552-0.448 1-1 1v0zM29 18c-0.552 0-1-0.448-1-1v0-6c0-0.552 0.448-1 1-1s1 0.448 1 1v0 6c0 0.552-0.448 1-1 1v0zM31 24h-7c-2.209 0-4-1.791-4-4s1.791-4 4-4v0h7c0.552 0 1 0.448 1 1v0 6c0 0.552-0.448 1-1 1v0zM24 18c-1.105 0-2 0.895-2 2s0.895 2 2 2v0h6v-4zM25 12c-0.001 0-0.001 0-0.002 0-0.389 0-0.726-0.222-0.891-0.546l-0.003-0.006-3.552-7.106-2.306 1.152c-0.13 0.066-0.284 0.105-0.447 0.105-0.552 0-1-0.448-1-1 0-0.39 0.223-0.727 0.548-0.892l0.006-0.003 3.2-1.6c0.13-0.067 0.284-0.106 0.447-0.106 0.39 0 0.727 0.223 0.892 0.548l0.003 0.006 4 8c0.067 0.13 0.106 0.285 0.106 0.448 0 0.552-0.448 1-1 1v0zM21 12c-0.001 0-0.001 0-0.002 0-0.389 0-0.726-0.222-0.891-0.546l-0.003-0.006-3.552-7.106-15.104 7.552c-0.13 0.066-0.284 0.105-0.447 0.105-0.552 0-1-0.448-1-1 0-0.39 0.223-0.727 0.548-0.892l0.006-0.003 16-8c0.13-0.067 0.284-0.106 0.447-0.106 0.39 0 0.727 0.223 0.892 0.548l0.003 0.006 4 8c0.067 0.13 0.106 0.285 0.106 0.448 0 0.552-0.448 1-1 1-0.001 0-0.001 0-0.002 0h0z"></path>
+                            </svg>
+                            <span>{{ _("Buy now") }}</span>
+                        </span>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
+
 
 {% block footer %}
     {% include 'footer.jinja' %}
@@ -714,13 +694,14 @@
     <script type="text/javascript" src="{{ 'ekko-lightbox.min.js' | asset_url }}" defer></script>
     <script type="text/javascript" src="{{ 'product-details.js' | asset_url }}" defer></script>
     <script type="text/javascript" src="{{ 'toastr.min.js' | asset_url }}" defer></script>
+    <script type="text/javascript" src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
+    <script type="text/javascript" src="{{ ('angel-product.js?v=' ~ ver) | asset_url }}" defer></script>
     <script>
         var productImages = {{ product.selected_product.media | tojson }};
         var customerWishlistIds = {{ customer.wishlist | tojson if customer else '[]' }};
+        window.angelQuestionSuccessMessage = {{ _("Your question has been sent successfully. You will receive a notification if it is answered.") | tojson }};
+        window.angelGroupedQvAddedMessage = {{ _("Added to cart successfully") | tojson }};
 
-        // SDKs loaded later may replace window.$ / window.jQuery with a different instance
-        // that doesn't have Slick attached. Capture the original jQuery for carousel ops.
-        var $slick = (window.jQuery && window.jQuery.fn && window.jQuery.fn.slick) ? window.jQuery : null;
 
         $(window).on('load', function () {
             if (window.checkout_dialog) {
@@ -729,34 +710,47 @@
         });
 
         window.zidProductBuyNow = async () => {
-
-            const buyNowLoading = (isLoading) => {
-                const buttonElement = $('.btn-buy-now');
-                const loaderElement = $('.buy-now-progress');
-                const iconElement = $('.buy-now-icon');
-
-                buttonElement.prop('disabled', isLoading);
-                loaderElement.toggleClass('d-none', !isLoading);
-                iconElement.toggleClass('d-none', isLoading);
-            };
-            
-            const bundlePayload = window.bundleCartPayload;
-            const addProductOptions = bundlePayload ? { ...bundlePayload, form_id: 'product-form' } : { form_id: 'product-form' };
-
-            try {
-
-                buyNowLoading(true);
-
-                const response = await window.zid.cart.buyNow(addProductOptions, { showErrorNotification: true });
-
-                buyNowLoading(false);
-
-            } catch(error) {
-                console.error(error, 'Buy Now failed');
+            if (typeof $ !== 'undefined') {
+                var mainBuyLoader = $('.buy-now-progress');
+                var stickyBuyLoader = $('.angel-product-sticky__buy-progress');
+                var urgencyBuyLoader = $('.angel-product-urgency__buy-progress');
+                if ((mainBuyLoader.length && !mainBuyLoader.hasClass('d-none')) ||
+                    (stickyBuyLoader.length && !stickyBuyLoader.hasClass('d-none')) ||
+                    (urgencyBuyLoader.length && !urgencyBuyLoader.hasClass('d-none'))) {
+                    return;
+                }
             }
 
-            buyNowLoading(false);
+            const buyNowLoading = (isLoading) => {
+                $('.btn-buy-now').prop('disabled', isLoading);
+                $('.buy-now-progress').toggleClass('d-none', !isLoading);
+                $('.buy-now-icon').toggleClass('d-none', isLoading);
+                $('.angel-product-sticky__buy').prop('disabled', isLoading);
+                $('.angel-product-sticky__buy-progress').toggleClass('d-none', !isLoading);
+                $('.angel-product-sticky__buy-content').toggleClass('d-none', isLoading);
+                $('.angel-product-urgency__buy').prop('disabled', isLoading);
+                $('.angel-product-urgency__buy-progress').toggleClass('d-none', !isLoading);
+                $('.angel-product-urgency__buy > span').toggleClass('d-none', isLoading);
+            };
 
+            if (!window.zid?.cart?.buyNow) {
+                window.zid?.toaster?.showError('{{ _("Cart service not available") }}');
+                return;
+            }
+
+            const bundlePayload = window.bundleCartPayload;
+            const addProductOptions = bundlePayload
+                ? { ...bundlePayload, form_id: 'product-form' }
+                : { form_id: 'product-form' };
+
+            try {
+                buyNowLoading(true);
+                await window.zid.cart.buyNow(addProductOptions, { showErrorNotification: true });
+            } catch (error) {
+                console.error(error, 'Buy Now failed');
+            } finally {
+                buyNowLoading(false);
+            }
         }
 
         // Listen for bundle selection changes and update payload
@@ -770,91 +764,128 @@
 
             // cart button is initially disabled until bundle selections are valid
             const buyNowButton = $('.btn-buy-now');
-            const addToCartBtn = document.querySelector('.btn-add-to-cart');
-            
+            const addToCartBtn =
+                document.querySelector('.btn-add-to-cart') ||
+                document.querySelector('[data-sticky-add]');
 
             if (addToCartBtn) {
                 if (!isValid) {
                     addToCartBtn.classList.add('disabled');
                     addToCartBtn.disabled = true;
                     buyNowButton.prop('disabled', true);
+                    $('.angel-product-sticky__add').prop('disabled', true);
+                    $('.angel-product-sticky__buy').prop('disabled', true);
                 } else {
                     addToCartBtn.classList.remove('disabled');
                     addToCartBtn.disabled = false;
                     buyNowButton.disabled = false;
                     buyNowButton.prop('disabled', false);
+                    $('.angel-product-sticky__add').prop('disabled', false);
+                    $('.angel-product-sticky__buy').prop('disabled', false);
                 }
             }
         });
 
-        window.productAddToCart = function() {
-           const addToCartBtn = document.querySelector('.btn-add-to-cart');
+        function getProductAddToCartButton(triggerEl) {
+            if (triggerEl && (triggerEl.matches('.btn-add-to-cart, [data-sticky-add]') || triggerEl.closest('[data-sticky-add]'))) {
+                return triggerEl.closest('[data-sticky-add]') || triggerEl;
+            }
+            return (
+                document.querySelector('.btn-add-to-cart') ||
+                document.querySelector('[data-sticky-add]')
+            );
+        }
 
-          if(addToCartBtn.disabled) return;
+        window.productAddToCart = function(triggerEl) {
+          const addToCartBtn = getProductAddToCartButton(triggerEl);
+
+          if (!addToCartBtn || addToCartBtn.disabled) {
+              return;
+          }
 
           if (typeof $ === 'undefined') {
               return;
           }
-          
-          if (!$('.add-to-cart-progress').hasClass('d-none')) {
+
+          function setAddToCartLoading(loading) {
+              $('.add-to-cart-progress').toggleClass('d-none', !loading);
+              $('.add-to-cart-icon').toggleClass('d-none', loading);
+              $('.angel-product-sticky__add-progress').toggleClass('d-none', !loading);
+              $('.angel-product-sticky__add-content').toggleClass('d-none', loading);
+              if (loading) {
+                  $('.btn-add-to-cart').prop('disabled', true);
+                  $('.angel-product-sticky__add').prop('disabled', true);
+              } else {
+                  var mainAdd = document.querySelector('.btn-add-to-cart');
+                  var stickyAdd = document.querySelector('[data-sticky-add]');
+                  if (mainAdd) {
+                      mainAdd.disabled = mainAdd.classList.contains('disabled');
+                      $('.angel-product-sticky__add').prop('disabled', mainAdd.disabled);
+                  } else if (stickyAdd) {
+                      stickyAdd.disabled = stickyAdd.classList.contains('disabled');
+                  }
+              }
+          }
+
+          var mainAddLoader = $('.add-to-cart-progress');
+          var stickyAddLoader = $('.angel-product-sticky__add-progress');
+          if ((mainAddLoader.length && !mainAddLoader.hasClass('d-none')) ||
+              (stickyAddLoader.length && !stickyAddLoader.hasClass('d-none'))) {
               return;
           }
 
-          $('.add-to-cart-progress').removeClass('d-none');
-          $('.add-to-cart-icon').addClass('d-none');
+          setAddToCartLoading(true);
 
-          var quantity = parseInt($('#product-quantity').val()) || 1;
+          var stickyQty = parseInt($('[data-qty-value]').val(), 10);
+          var selectQty = parseInt($('#product-quantity').val(), 10);
+          var quantity = (stickyQty > 0 ? stickyQty : (selectQty > 0 ? selectQty : 1));
           var productId = $('#product-id').val() || '{{ product.selected_product.id }}';
 
+          if (window.AngelCartToast && typeof window.AngelCartToast.syncProductFormQuantity === 'function') {
+              quantity = window.AngelCartToast.syncProductFormQuantity(quantity);
+          } else {
+              var qtySelect = document.getElementById('product-quantity');
+              if (qtySelect) {
+                  qtySelect.value = String(quantity);
+              }
+          }
+
           if (!window.zid || !window.zid.cart || !window.zid.cart.addProduct) {
-               $('.add-to-cart-progress').addClass('d-none');
-               $('.add-to-cart-icon').removeClass('d-none');
+              setAddToCartLoading(false);
               window.zid?.toaster?.showError('{{ _("Cart service not available") }}');
               return;
           }
 
           const bundlePayload = window.bundleCartPayload;
-          const addProductOptions = bundlePayload ?
-            { ...bundlePayload, form_id: 'product-form' } :
-            { form_id: 'product-form' };
+          const needsFormId = !!bundlePayload ||
+            (document.getElementById('product-form') &&
+              (document.getElementById('product-form').getAttribute('data-is-bundle') === 'true' ||
+               document.getElementById('product-form').getAttribute('data-has-custom-fields') === 'true'));
 
-          window.zid.cart.addProduct(addProductOptions, { showErrorNotification: true }).then(function(response) {
-              if (response && response.item && response.cart_items_quantity) {
-                  
-                  if (response.cart_items_quantity) {
-                      $('.cart-badge').removeClass('d-none').text(response.cart_items_quantity);
-                  }
-                  
-                  if (typeof fetchCart === 'function') {
-                      fetchCart()
-                  }
+          const addProductOptions = bundlePayload
+            ? Object.assign({}, bundlePayload, {
+                form_id: 'product-form',
+                product_id: productId,
+                quantity: quantity
+              })
+            : (needsFormId
+              ? { form_id: 'product-form', product_id: productId, quantity: quantity }
+              : { product_id: productId, quantity: quantity });
 
-                  $('.added-notification').addClass("show");
-                  setTimeout(function() {
-                      $('.added-notification').removeClass("show");
-                  }, 5000);
+          const addPromise =
+            window.AngelCartToast && typeof window.AngelCartToast.addToCart === 'function'
+              ? window.AngelCartToast.addToCart(addProductOptions, {}, addToCartBtn)
+              : window.zid.cart.addProduct(addProductOptions, {
+                  showErrorNotification: false,
+                });
 
-                  window.zid?.toaster?.showSuccess('{{ _("Added to cart successfully") }}');
-
-                  var image = $('#product-images-slick .slick-slide.slick-active img');
-                  var cart = $('.a-shopping-cart');
-
-                  if (image.length && cart.length && typeof addToCartAnimation === 'function') {
-                      addToCartAnimation(cart, image);
-                  }
-
-              } else {
-                  var errorMessage = response && response.message ? response.message : '{{ _("Failed to add to cart") }}';
-                  window.zid?.toaster?.showError(errorMessage);
-              }
-
-              $('.add-to-cart-progress').addClass('d-none');
-              $('.add-to-cart-icon').removeClass('d-none');
-          }).catch(function(error) {
-
-              $('.add-to-cart-progress').addClass('d-none');
-              $('.add-to-cart-icon').removeClass('d-none');
-          });
+          addPromise
+              .then(function () {
+                  setAddToCartLoading(false);
+              })
+              .catch(function () {
+                  setAddToCartLoading(false);
+              });
       };
 
         async function sendProductNotifyMe() {
@@ -902,7 +933,7 @@
                   } else if (data && data.data && data.data.message) {
                       window.zid?.toaster?.showError(JSON.stringify(data.data.message));
                   } else {
-                      window.zid?.toaster?.showError('{{ _("failed to send") }}');
+                      window.zid?.toaster?.showError('{{ _("Failed to send alert request") }}');
                   }
               } else {
                   let errData = null;
@@ -950,10 +981,14 @@
                         $('.product-formatted-price').html(selected_product.formatted_sale_price);
                         $('.product-formatted-price-old').html(selected_product.formatted_price);
                         $('.product-formatted-price-discount').html('{{ _("Discount") }}' + ' ' + selected_product.discount_percentage + '%');
+                        $('.angel-variant-price-box__current').addClass('angel-product-price--sale');
+                        $('.angel-product-sticky__price').addClass('angel-product-sticky__price--sale');
                     } else {
                         $('.product-formatted-price').html(selected_product.formatted_price);
                         $('.product-formatted-price-old').html('');
                         $('.product-formatted-price-discount').html('');
+                        $('.angel-variant-price-box__current').removeClass('angel-product-price--sale');
+                        $('.angel-product-sticky__price').removeClass('angel-product-sticky__price--sale');
                     }
 
                     if (selected_product.weight && selected_product.weight.value) {
@@ -989,7 +1024,6 @@
                     }
 
                     if (selected_product.quantity > 0) {
-                        $('.select-quantity-div').removeClass('d-none');
                         var quantityMax;
                         if (selected_product.quantity > 100) {
                             quantityMax = 100;
@@ -1000,11 +1034,10 @@
                         for (var i = 2; i <= quantityMax; i++) {
                             selectQuantity += '<option value="' + i + '">' + i + '</option>';
                         }
-                    } else {
-                        $('.select-quantity-div').addClass('d-none');
                     }
 
                     $('.select-quantity').html(selectQuantity);
+                    $('#product-quantity').trigger('change');
 
                     $('.product-buttons').removeClass('d-none');
                     $('.section-out-of-stock-notify-me').addClass('d-none');
@@ -1018,12 +1051,17 @@
                         $('.product-formatted-price').html(selected_product.formatted_sale_price);
                         $('.product-formatted-price-old').html(selected_product.formatted_price);
                         $('.product-formatted-price-discount').html('{{ _("Discount") }}' + ' ' + selected_product.discount_percentage + '%');
+                        $('.angel-variant-price-box__current').addClass('angel-product-price--sale');
+                        $('.angel-product-sticky__price').addClass('angel-product-sticky__price--sale');
                     } else {
                         $('.product-formatted-price').html(selected_product.formatted_price);
                         $('.product-formatted-price-old').html('');
                         $('.product-formatted-price-discount').html('');
+                        $('.angel-variant-price-box__current').removeClass('angel-product-price--sale');
+                        $('.angel-product-sticky__price').removeClass('angel-product-sticky__price--sale');
                     }
-                    $('.select-quantity-div').addClass('d-none');
+                    $('.select-quantity').html('');
+                    $('#product-quantity').trigger('change');
 
                     $('.product-buttons').addClass('d-none');
                     $('.section-out-of-stock-notify-me').removeClass('d-none');
@@ -1039,7 +1077,8 @@
                 }
             } else {
                 // Variant doesn't exist.
-                $('.select-quantity-div').addClass('d-none');
+                $('.select-quantity').html('');
+                $('#product-quantity').trigger('change');
                 if (canPreorder) {
                     $('.product-buttons').removeClass('d-none');
                     $('.section-out-of-stock-notify-me').addClass('d-none');
@@ -1055,83 +1094,26 @@
         }
 
         function updateProductImages(selected_product) {
-            if (selected_product && selected_product.media && selected_product.media.length > 0) {
-                $('.product-images-carousel').removeClass('d-none');
-                $('.product-images-carousel-thumbs').removeClass('d-none-important');
-                $('.product-images-empty').addClass('d-none');
-
-                if ($slick && $slick('#product-images-slick').hasClass('slick-initialized')) {
-                    $slick('#product-images-slick').slick('unslick');
-                }
-
-                $('#product-images-slick').removeClass('slick-initialized slick-slider slick-dotted');
-
-                $('.product-images-carousel').addClass('product-images-carousel-init');
-
+            if (selected_product && selected_product.media) {
                 productImages = selected_product.media;
-
-                // Use native innerHTML to avoid jQuery.cleanData issues with Slick remnants in Safari.
-                // Also remove stale dots explicitly — appendDots places them in .product-images-carousel.
-                $('.product-images-carousel .slick-dots').remove();
-                var slickEl = document.getElementById('product-images-slick');
-                if (slickEl) { slickEl.innerHTML = ''; }
-                var thumbsEl = document.querySelector('.product-images-carousel-thumbs');
-                if (thumbsEl) { thumbsEl.innerHTML = ''; }
-
-                for (var z = 0; z < productImages.length; z++) {
-                    var prImage = productImages[z];
-                    var imageHtml = '<div>' +
-                        '<div class="box-1-1">' +
-                        '<div class="content">' +
-                        '<a class="image-link" style="display:block; width: 100%; height: 100%;">' +
-                        '<img src="' + (prImage.image && prImage.image.full_size ? prImage.image.full_size : '') + '" class="carousel-img" alt="' + (selected_product.name || '') + '">';
-                    
-                    if (prImage.provider && prImage.link) {
-                        imageHtml += '<img id="main-video-icon" class="play-icon" src="{{ "video-play.svg" | asset_url }}" alt="play" onclick="showIframe(this, \'' + prImage.link.replace(/'/g, '\\\'') + '\')"/>';
-                    }
-                    
-                    imageHtml += '</a>' +
-                        '<div class="iframe-video pt-1 d-none">' +
-                        '<a id="iframe-close-btn" type="button" class="text-white btn btn-none grow" onClick="hideIframe(this)">X</a>' +
-                        '<iframe width="100%" height="100%" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="max-width: 100%">' +
-                        '</iframe>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>';
-
-                    $('#product-images-slick').append(imageHtml);
-
-                    var thumbHtml = '<div class="col-3">' +
-                        '<div class="box-1-1">' +
-                        '<div class="content">' +
-                        '<a class="d-flex align-items-center justify-content-center thumb-image-a" data-index="' + z + '" style="width: 100%; height: 100%;">' +
-                        '<img src="' + (prImage.image && prImage.image.medium ? prImage.image.medium : '') + '" data-index="' + z + '">';
-                    
-                    if (prImage.provider && prImage.link) {
-                        thumbHtml += '<img id="video-play-icon" class="play-icon" src="{{ "video-play.svg" | asset_url }}" alt="play" data-index="' + z + '">';
-                    }
-                    
-                    thumbHtml += '</a>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>';
-
-                    $('.product-images-carousel-thumbs').append(thumbHtml);
+                if (window.AngelProductPage && typeof AngelProductPage.rebuildGallery === 'function') {
+                    var productTitle = document.querySelector('.angel-product-info h1');
+                    AngelProductPage.rebuildGallery(productImages, productTitle ? productTitle.textContent.trim() : '');
                 }
-
-                requestAnimationFrame(function() {
-                    initSlick(productImages);
-                });
-            } else {
-                $('.product-images-carousel').addClass('d-none');
-                $('.product-images-carousel-thumbs').addClass('d-none-important');
-                $('.product-images-empty').removeClass('d-none');
+                var stickyThumb = document.querySelector('.angel-product-sticky__thumb');
+                if (stickyThumb && productImages.length && productImages[0].image) {
+                    stickyThumb.src = productImages[0].image.medium || productImages[0].image.full_size || '';
+                }
             }
         }
 
         $('#product-description-a').click(function(event) {
             event.preventDefault();
+
+            var detailsTab = document.querySelector('.angel-product-tabs__btn[data-tab="details"]');
+            if (detailsTab && !detailsTab.classList.contains('is-active')) {
+                detailsTab.click();
+            }
 
             var scrollOffset;
             if (window.matchMedia('(max-width: 768px)').matches) {
@@ -1162,201 +1144,11 @@
         }
 
         $(document).ready(function() {
-            if (productImages && productImages.length > 0) {
-                initSlick(productImages);
-            }
             if (customerWishlistIds && Array.isArray(customerWishlistIds)) {
                 fillWishlistItems(customerWishlistIds.map(function(id) { return { id: id }; }));
             }
         });
 
-        $(document).on('click', '.thumb-image-a, #video-play-icon', function(event) {
-            var target = event.target;
-            var dataIndex = $(target).attr('data-index');
-            
-            if (dataIndex && $('#product-images-slick').hasClass('slick-initialized')) {
-                $('#product-images-slick').slick('slickGoTo', parseInt(dataIndex), true);
-            }
-        });
-
-        $(document).on('click', '#product-images-slick .image-link :not(#main-video-icon)', function(event) {
-            $('.pswp').removeClass('d-hide');
-            $('.app').addClass('d-hide');
-
-            var images = productImages.map(function(image) {
-                return image.image && image.image.full_size ? image.image.full_size : '';
-            }).filter(function(url) { return url; });
-
-            var currentIndex = $('#product-images-slick .slick-active').attr('data-slick-index');
-            if (typeof openPhotoSwiper === 'function') {
-                openPhotoSwiper(images, parseInt(currentIndex) || 0);
-            }
-        });
-
-        $(document).on('click', '.variant-image-wrapper a', function(event) {
-            $('.pswp').removeClass('d-hide');
-            $('.app').addClass('d-hide');
-            
-            var elm = event.currentTarget;
-            var varId = $(elm).attr('data-link-var-id');
-            var images = [];
-
-            $("div[data-var-id='" + varId + "'] img").each(function() {
-                var imageUrl = $(this).attr('data-image-url');
-                if (imageUrl) {
-                    images.push(imageUrl);
-                }
-            });
-
-            var index = parseInt($(elm).attr('data-index')) || 0;
-            if (typeof openPhotoSwiper === 'function') {
-                openPhotoSwiper(images, index);
-            }
-        });
-
-        var initSlickTimer = null;
-
-        function initSlick(productImages, retryCount) {
-            if (initSlickTimer) {
-                clearTimeout(initSlickTimer);
-                initSlickTimer = null;
-            }
-
-            if (!productImages || !Array.isArray(productImages)) {
-                return;
-            }
-
-            // slick may not be loaded yet; retry for up to ~10s
-            if (!$slick) {
-                if (!retryCount || retryCount < 50) {
-                    initSlickTimer = setTimeout(function() {
-                        $slick = (window.jQuery && window.jQuery.fn && window.jQuery.fn.slick) ? window.jQuery : null;
-                        initSlick(productImages, (retryCount || 0) + 1);
-                    }, 200);
-                }
-                return;
-            }
-
-            if ($slick('#product-images-slick').hasClass('slick-initialized')) {
-                return;
-            }
-
-            var arrowNextClass, arrowPrevClass;
-            if (window.appDirection === 'ltr') {
-                arrowNextClass = 'icon-keyboard_arrow_right';
-                arrowPrevClass = 'icon-keyboard_arrow_left';
-            } else {
-                arrowNextClass = 'icon-keyboard_arrow_left';
-                arrowPrevClass = 'icon-keyboard_arrow_right';
-            }
-
-            $slick('#product-images-slick').slick({
-                infinite: false,
-                autoplay: false,
-                arrows: (productImages.length > 1),
-                dots: (productImages.length > 1),
-                appendDots: $slick('.product-images-carousel'),
-                rtl: !(window.appDirection === 'ltr'),
-                nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="' + arrowNextClass + '"></span></button>',
-                prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="' + arrowPrevClass + '"></span></button>'
-            });
-        }
-
-        $('#product-images-slick').on('init', function(event, slick) {
-            $('.product-images-carousel').removeClass('product-images-carousel-init');
-            if (window.matchMedia('(max-width: 768px)').matches) {
-                var $dots = $('#product-images-slick .slick-dots');
-                const $hiddenItems = $dots.find('li').filter(function () {
-                    return $(this).css('display') === 'none';
-                });
-
-                if ($dots.length && $hiddenItems.length) {
-                    $hiddenItems.each(function () {
-                        this.style.setProperty('display', 'inline-block', 'important');
-                    });
-                }
-            }
-        });
-
-        function openPhotoSwipe(productImages, index) {
-            if (!productImages || !Array.isArray(productImages) || productImages.length === 0) {
-                return;
-            }
-
-            var pswpElement = document.querySelectorAll('.pswp')[0];
-            if (!pswpElement) {
-                return;
-            }
-
-            // build items array
-            var items = productImages.map(function(image) {
-                return {
-                    src: image,
-                    w: 1200,
-                    h: 900
-                };
-            });
-
-            var options = {
-                history: false,
-                focus: false,
-                showAnimationDuration: 0,
-                hideAnimationDuration: 0,
-                index: parseInt(index) || 0
-            };
-
-            if (typeof PhotoSwipe !== 'undefined' && typeof PhotoSwipeUI_Default !== 'undefined') {
-                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
-
-                gallery.listen('close', function() {
-                    $('.pswp').addClass('d-hide');
-                    $('.app').removeClass('d-hide');
-                });
-
-                gallery.init();
-            }
-        }
-
-        function showRelatedProducts() {
-            var arrowNextClass, arrowPrevClass;
-            if (window.appDirection === 'ltr') {
-                arrowNextClass = 'icon-keyboard_arrow_right';
-                arrowPrevClass = 'icon-keyboard_arrow_left';
-            } else {
-                arrowNextClass = 'icon-keyboard_arrow_left';
-                arrowPrevClass = 'icon-keyboard_arrow_right';
-            }
-
-            var screenWidth = window.screen.width;
-            var editingMode = {% if store.editing_mode %}true{% else %}false{% endif %};
-
-            if (screenWidth >= 768 || editingMode) {
-                $('#related-products.products-slider').slick({
-                    slidesToShow: 5,
-                    slidesToScroll: 5,
-                    infinite: false,
-                    autoplay: false,
-                    arrows: true,
-                    dots: false,
-                    rtl: !(window.appDirection === 'ltr'),
-                    nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="' + arrowNextClass + '"></span></button>',
-                    prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="' + arrowPrevClass + '"></span></button>',
-                    responsive: [
-                        {
-                            breakpoint: 992,
-                            settings: {
-                                slidesToShow: 5,
-                                slidesToScroll: 5
-                            }
-                        },
-                        {
-                            breakpoint: 768,
-                            settings: "unslick"
-                        }
-                    ]
-                });
-            }
-        }
 
         document.addEventListener('zid-customer-fetched', function(event) {
             var customer = event.detail.customer;
@@ -1413,36 +1205,24 @@
             $(elm).siblings("iframe").attr("src", "");
         }
 
-        $('#product-images-slick').on('beforeChange', function(event, slick, currentSlide, nextSlide) {
-            if (slick && slick.$slides && slick.$slides[currentSlide]) {
-                const iframeContainers = slick.$slides[currentSlide].querySelector(".iframe-video");
-                if (iframeContainers) {
-                    $(iframeContainers).addClass("d-none");
-                    $(iframeContainers).children("iframe").attr("src", "");
-                }
-            }
-        });
+        $(document).on('click', '.variant-image-wrapper a', function(event) {
+            event.preventDefault();
 
-        $('#product-images-slick').on('afterChange', function(event, slick, currentSlide, nextSlide) {
-            if (slick && slick.$slides && slick.$slides[currentSlide]) {
-                const iframeContainers = slick.$slides[currentSlide].querySelector(".iframe-video");
-                if (iframeContainers) {
-                    const playIcon = $(iframeContainers).siblings(".image-link").children("#main-video-icon");
-                    if (playIcon.length) {
-                        playIcon.click();
-                    }
-                }
-            }
-        });
+            var elm = event.currentTarget;
+            var varId = $(elm).attr('data-link-var-id');
+            var images = [];
 
-        document.addEventListener("DOMContentLoaded", function() {
-            setTimeout(function() {
-                const activeSlide = $("#product-images-slick .slick-slide.slick-active .image-link");
-                const playIcon = $(activeSlide).children("#main-video-icon");
-                if (playIcon.length) {
-                    playIcon.click();
+            $("div[data-var-id='" + varId + "'] img").each(function() {
+                var imageUrl = $(this).attr('data-image-url');
+                if (imageUrl) {
+                    images.push(imageUrl);
                 }
-            }, 250);
+            });
+
+            var slideIndex = parseInt($(elm).attr('data-index'), 10) || 0;
+            if (typeof openPhotoSwiper === 'function') {
+                openPhotoSwiper(images, slideIndex);
+            }
         });
     </script>
 

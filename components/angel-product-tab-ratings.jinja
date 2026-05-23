@@ -1,0 +1,95 @@
+<div class="angel-product-tabs__ratings angel-reviews-section">
+    {% if store.settings.products.questions_enabled %}
+    <form class="angel-product-tabs__form-card" id="angel-product-question-inline" novalidate data-product-id="{{ product.id }}">
+        <div class="angel-product-tabs__form-actions">
+            <textarea
+                class="angel-product-tabs__textarea"
+                name="question"
+                rows="5"
+                placeholder="{{ _('Enter your question here') }}"
+                aria-label="{{ _('Enter your question here') }}"
+            ></textarea>
+            <button type="button" class="angel-product-tabs__send" data-angel-question-submit>
+                <img class="angel-product-tabs__send-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="16" height="16" alt="" />
+                <span>{{ _("Send") }}</span>
+            </button>
+        </div>
+        <p class="angel-product-tabs__field-error d-none" data-error="question">{{ _("This field is required") }}</p>
+        <input type="hidden" name="name" value="" />
+        <input type="hidden" name="email" value="" /> 
+    </form>
+
+    {% if product.questions is defined and product.questions.results is defined and product.questions.results | length > 0 %}
+    <div class="angel-product-tabs__questions-list">
+        {% set questions = product.questions %}{% include 'components/product-questions.jinja' %}
+    </div>
+    {% endif %}
+
+    {% elif store.settings.products.reviews_enabled %}
+    {% set review_page_url = url_for('add_product_review', slug=product.slug or product.id) %}
+    {% set has_reviews = product.reviews is defined and product.reviews.results is defined and product.reviews.results | length > 0 %}
+
+    <form
+        class="angel-product-tabs__form-card angel-reviews-section__composer"
+        id="angel-product-rating-inline"
+        data-product-id="{{ product.id }}"
+        data-product-slug="{{ product.slug | default(product.id, true) }}"
+        data-review-url="{{ review_page_url }}"
+    >
+        <div class="angel-product-tabs__composer">
+            <textarea
+                class="angel-product-tabs__textarea"
+                name="review"
+                placeholder="{{ _('Write your review here') }}"
+                aria-label="{{ _('Write your review here') }}"
+            ></textarea>
+            {% if session.is_guest %}
+            <a
+                href="{{ review_page_url }}"
+                class="angel-product-tabs__send"
+                data-angel-review-send
+                data-review-target="{{ review_page_url }}"
+                data-requires-login="true"
+            >{{ _("Send") }}</a>
+            {% else %}
+            <a
+                href="{{ review_page_url }}"
+                class="angel-product-tabs__send"
+                data-angel-review-send
+                data-review-target="{{ review_page_url }}"
+            >{{ _("Send") }}</a>
+            {% endif %}
+        </div>
+    </form>
+
+    {% if has_reviews %}
+    <div class="angel-reviews-section__body">
+        {% include 'components/angel-reviews-summary.jinja' %}
+
+        <div class="angel-reviews-sort">
+            <label class="angel-reviews-sort__label" for="angel-reviews-sort-select">{{ _("Sort by:") }}</label>
+            <div class="angel-reviews-sort__select-wrap">
+                <select id="angel-reviews-sort-select" class="angel-reviews-sort__select" data-angel-reviews-sort>
+                    <option value="newest">{{ _("Newest") }}</option>
+                    <option value="oldest">{{ _("Oldest") }}</option>
+                    <option value="highest">{{ _("Highest rating") }}</option>
+                    <option value="lowest">{{ _("Lowest rating") }}</option>
+                </select>
+                <span class="angel-reviews-sort__chevron sicon-keyboard_arrow_down" aria-hidden="true"></span>
+            </div>
+        </div>
+
+        <div class="angel-product-tabs__reviews-wrap review-details">
+            {% set reviews = product.reviews.results %}{% include 'components/angel-customer-reviews.jinja' %}
+            {% if product.reviews.pages_count > 1 %}
+            <div class="angel-reviews-all">
+                <a href="{{ url_for('product_reviews', slug=product.id) }}" class="angel-reviews-all__link">{{ _("All reviews") }}</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <p class="angel-reviews-empty">{{ _("No reviews yet. Be the first to add yours.") }}</p>
+    {% endif %}
+    {% endif %}
+</div>

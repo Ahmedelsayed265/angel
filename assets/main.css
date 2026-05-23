@@ -948,51 +948,26 @@ a.more-button {
 
 /* home-products-section */
 
-.product-item {
-  width: 100%;
-  max-width: 200px;
-}
-
-.product-item .product-title {
-  color: #494949;
-  font-size: 1.286rem;
-  white-space: break-spaces;
-  min-height: 46px;
-}
-
-.product-item .product-title > span {
-  height: 48px;
+.product-card-low-stock {
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  z-index: 5;
+  max-width: 88%;
+  padding: 7px 16px;
+  background: #a33643;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  border-start-start-radius: 10px;
+  border-end-start-radius: 10px;
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.product-item .section-product-price {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-.product-item .product-price {
-  font-weight: bold;
-  font-size: 1.286rem;
-}
-
-.product-item .product-prev-price {
-  font-size: 0.929rem;
-  text-decoration: line-through;
-}
-
-.product-item small {
-  font-size: 1rem;
-  color: #8b8b8b;
-}
-
-.product-item img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  pointer-events: none;
 }
 
 .products-title-section {
@@ -1378,18 +1353,28 @@ ul.main-nav > li ul.sub-menu-lists > li > a {
 }
 /* breadCrumb-twig */
 .breadcrumb-section {
-  background-color: var(--secondary-color);
+  padding: 24px 16px;
+  background-color: #353535;
+}
+
+.breadcrumb {
+  margin: 0 !important;
 }
 
 .breadcrumb-item a {
-  color: var(--primary-color);
+  color: #fff;
+  font-size: 1.167rem;
+  font-weight: var(--font-weight-sizeOne);
+  text-decoration: none;
+}
+.breadcrumb-item {
+  color: #fff;
   font-size: 1.167rem;
   font-weight: var(--font-weight-sizeOne);
 }
-.breadcrumb-item {
-  color: var(--secondary-color-alt4);
-  font-size: 1.167rem;
-  font-weight: var(--font-weight-sizeOne);
+
+.breadcrumb-item + .breadcrumb-item::before {
+  display: none;
 }
 /* breadCrumb-subTitle-detail-twig */
 .subTitle-detail {
@@ -2071,13 +2056,6 @@ hr {
 }
 
 /* Stack bundle offer below badge if badge exists */
-.product-item
-  .box-1-1
-  .content
-  > [class*="badge"]:first-child
-  ~ .product-card-bundle-offer {
-  top: 45px;
-}
 
 .product-card-bundle-offer.bundle-offer-product-tag {
   display: inline-block;

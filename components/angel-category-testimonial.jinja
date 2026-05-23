@@ -1,0 +1,96 @@
+{# Category testimonials — layout schema + product reviews (SSR/API) #}
+{% if settings.category_testimonials_enabled | default(true) %}
+{% set store_logo_src = image_url(store.logo, w=192, q=90, f='auto') if store.logo else '' %}
+{% set source = settings.category_testimonials_source | default('both') %}
+{% set max_slides = settings.category_testimonials_max_slides | default(8) | int %}
+{% set max_api_products = settings.category_testimonials_api_max_products | default(12) | int %}
+{% set ns = namespace(items=[]) %}
+
+{# 1) Layout schema (manual) #}
+{% if source in ['manual', 'both'] and settings.category_testimonials %}
+    {% for item in settings.category_testimonials %}
+        {% set comment_text = (item.comment | default('') | striptags) | trim %}
+        {% if comment_text %}
+            {% set avatar_src = '' %}
+            {% if item.image %}
+                {% set avatar_src = image_url(item.image, w=192, h=192, q=90, f='auto') %}
+            {% elif store_logo_src %}
+                {% set avatar_src = store_logo_src %}
+            {% endif %}
+            {% set ns.items = ns.items + [{
+                'name': item.name | default(_("Customer")) | trim,
+                'comment': comment_text,
+                'rating': item.rating | default(5),
+                'image_src': avatar_src
+            }] %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{# 2) Reviews embedded on category products (SSR when API includes them) #}
+{% if source in ['api', 'both'] %}
+    {% for product in products.results | default([]) %}
+        {% if product.reviews is defined and product.reviews.results and product.reviews.results | length > 0 %}
+            {% for review in product.reviews.results[:2] %}
+                {% set comment_text = (review.comment | default('') | striptags) | trim %}
+                {% if comment_text %}
+                    {% set avatar_src = '' %}
+                    {% if review.customer and review.customer.image %}
+                        {% set avatar_src = review.customer.image %}
+                    {% elif store_logo_src %}
+                        {% set avatar_src = store_logo_src %}
+                    {% endif %}
+                    {% set ns.items = ns.items + [{
+                        'name': review.customer.name | default(_("Customer")) if review.customer else _("Customer"),
+                        'comment': comment_text,
+                        'rating': review.rating | default(5),
+                        'image_src': avatar_src
+                    }] %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        {% if ns.items | length >= max_slides %}
+            {% break %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% set category_product_ids = [] %}
+{% if source in ['api', 'both'] %}
+    {% for product in products.results | default([]) %}
+        {% if loop.index0 < max_api_products %}
+            {% set category_product_ids = category_product_ids + [product.id] %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% set needs_api_fetch = source in ['api', 'both'] and category_product_ids | length > 0 and store.settings.products.reviews_enabled %}
+
+<section
+    class="angel-category-testimonials{% if ns.items | length == 0 and not needs_api_fetch %} angel-category-testimonials--empty{% endif %}"
+    aria-label="{{ _('Customer reviews') }}"
+    data-angel-category-testimonials
+    data-source="{{ source }}"
+    data-max-slides="{{ max_slides }}"
+    data-needs-api="{{ 'true' if needs_api_fetch else 'false' }}"
+    {% if store_logo_src %}data-store-logo="{{ store_logo_src | e }}"{% endif %}
+    {% if ns.items | length == 0 and not needs_api_fetch %}hidden{% endif %}
+>
+    <script type="application/json" id="angel-category-testimonials-product-ids">{{ category_product_ids | tojson }}</script>
+
+    <div class="swiper angel-category-testimonials__swiper" id="angel-category-testimonials-swiper">
+        <div class="swiper-wrapper" id="angel-category-testimonials-wrapper">
+            {% for review_item in ns.items[:max_slides] %}
+                <div class="swiper-slide">
+                    {% include 'components/angel-category-testimonial-card.jinja' %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="angel-category-testimonials__loader" data-angel-category-testimonials-loader {% if not needs_api_fetch or ns.items | length > 0 %}hidden{% endif %} role="status">
+        <span class="angel-category-testimonials__spinner" aria-hidden="true"></span>
+        <span class="sr-only">{{ _("Loading") }}</span>
+    </div>
+</section>
+{% endif %}

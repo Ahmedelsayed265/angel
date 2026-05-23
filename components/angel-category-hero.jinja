@@ -1,0 +1,44 @@
+{# Category hero — title, badge, description, image (category page only) #}
+{% set cat_image_src = '' %}
+{% if category.cover_image %}
+    {% set cat_image_src = image_url(category.cover_image, w=160, h=160, q=90, f='auto') %}
+{% elif category.image %}
+    {% set cat_image_src = image_url(category.image, w=160, h=160, q=90, f='auto') %}
+{% endif %}
+
+<header class="angel-category-hero">
+    <div class="container">
+        <div class="angel-category-hero__inner">
+            <div class="angel-category-hero__media" aria-hidden="true">
+                {% if cat_image_src %}
+                    <img class="angel-category-hero__img" src="{{ cat_image_src }}" alt="" loading="lazy" width="88" height="88" />
+                {% else %}
+                    <span class="angel-category-hero__img-placeholder">
+                        <i class="sicon-store" aria-hidden="true"></i>
+                    </span>
+                {% endif %}
+            </div>
+            <div class="angel-category-hero__content">
+                <div class="angel-category-hero__title-row">
+                    <h1 class="angel-category-hero__title">{{ category.name }}</h1>
+                    <span class="angel-category-hero__badge">{{ _("New") }}</span>
+                </div>
+
+                {% if category.description %}
+                    <p class="angel-category-hero__desc">{{ category.description | striptags }}</p>
+                {% endif %}
+
+                <nav class="angel-category-hero__breadcrumb" aria-label="{{ _('breadcrumb') }}">
+                    <a href="/">{{ _("Home") }}</a>
+                    <span class="angel-category-hero__breadcrumb-sep" aria-hidden="true">/</span>
+                    {% if category.parent_category %}
+                        <a href="{{ category.parent_category.url }}">{{ category.parent_category.name }}</a>
+                        <span class="angel-category-hero__breadcrumb-sep" aria-hidden="true">/</span>
+                    {% endif %}
+                    <span class="angel-category-hero__breadcrumb-current">{{ category.name }}</span>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+</header>

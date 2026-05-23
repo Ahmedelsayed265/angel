@@ -1,0 +1,28 @@
+{% set grouped_products_list = product.grouped_products | default(product.frequently_bought_together | default([])) %}
+{% set use_custom_cards = grouped_products_list | length > 0 %}
+
+{% if use_custom_cards %}
+    <div class="angel-product-grouped__grid row">
+        {% for grouped_product in grouped_products_list %}
+            <div class="angel-product-grouped__col">
+                {% set product = grouped_product %}
+                {% include 'components/angel-grouped-product-card.jinja' %}
+            </div>
+        {% endfor %}
+    </div>
+{% elif product.group_products is defined and product.group_products | length > 0 %}
+    <div class="angel-product-grouped__grid row">
+        {% for grouped_item in product.group_products %}
+            {% set product = grouped_item.item | default(grouped_item) %}
+            {% if product and product.name is defined %}
+                <div class="angel-product-grouped__col">
+                    {% include 'components/angel-grouped-product-card.jinja' %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="angel-product-grouped__vitrin">
+        {% include 'vitrin:products/grouped-product.jinja' %}
+    </div>
+{% endif %}
