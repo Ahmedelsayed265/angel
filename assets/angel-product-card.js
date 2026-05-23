@@ -25,11 +25,34 @@
     purple: "#a855f7",
   };
 
+  function isArabicStore() {
+    var lang = String(
+      window.angelStoreLang ||
+        document.documentElement.getAttribute("lang") ||
+        "",
+    )
+      .toLowerCase()
+      .split(/[-_]/)[0];
+    if (lang === "ar") {
+      return true;
+    }
+    var dir = String(
+      window.appDirection ||
+        document.documentElement.getAttribute("dir") ||
+        "",
+    ).toLowerCase();
+    return dir === "rtl";
+  }
+
   function labels() {
-    return (
-      window.angelProductCardLabels || {
-        chooseOptions: "Please choose product options first",
-      }
+    var fallback = isArabicStore()
+      ? { chooseOptions: "يجب اختيار المتغيرات أولاً" }
+      : { chooseOptions: "Please choose product options first" };
+    return Object.assign(
+      {},
+      fallback,
+      window.angelProductCardLabels || {},
+      window.angelCartToastLabels || {},
     );
   }
 
@@ -976,6 +999,17 @@
     var selectedId = card.getAttribute("data-selected-variant-id");
 
     if (needsOptions && !selectedId) {
+      if (
+        window.AngelCartToast &&
+        typeof window.AngelCartToast.addToCart === "function"
+      ) {
+        window.AngelCartToast.addToCart(
+          { product_id: card.getAttribute("data-product-id"), quantity: 1 },
+          {},
+          btn,
+        );
+        return;
+      }
       card.classList.add("angel-product-card--needs-variant");
       var variantsWrap = card.querySelector("[data-product-card-variants]");
       if (variantsWrap) {

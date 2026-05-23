@@ -4,7 +4,7 @@
   position: fixed;
   inset-block-start: 20px;
   inset-inline-end: 20px;
-  z-index: 1085;
+  z-index: 10051;
   width: min(400px, calc(100vw - 32px));
   pointer-events: none;
 }

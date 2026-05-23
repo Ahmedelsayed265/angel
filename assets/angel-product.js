@@ -3236,6 +3236,56 @@
         var progress = root.querySelector(".angel-grouped-quick-view__add-progress");
         var label = root.querySelector("[data-grouped-qv-add-label]");
         var qty = parseInt(qtyInput && qtyInput.value, 10) || 1;
+        var qvProduct = groupedQuickViewState.product;
+        if (
+          qvProduct &&
+          groupedProductNeedsOptions(qvProduct)
+        ) {
+          var qvOptions = qvProduct.options || [];
+          var qvSelections = groupedQuickViewState.optionSelections || {};
+          var qvSelectedCount = Object.keys(qvSelections).filter(function (key) {
+            return qvSelections[key];
+          }).length;
+          if (
+            !groupedQuickViewState.selectedProductId ||
+            (qvOptions.length > 0 && qvSelectedCount < qvOptions.length)
+          ) {
+            var chooseMsg = "";
+            if (
+              window.angelCartToastLabels &&
+              window.angelCartToastLabels.chooseOptions
+            ) {
+              chooseMsg = window.angelCartToastLabels.chooseOptions;
+            } else if (
+              window.angelProductCardLabels &&
+              window.angelProductCardLabels.chooseOptions
+            ) {
+              chooseMsg = window.angelProductCardLabels.chooseOptions;
+            } else {
+              var lang = String(
+                window.angelStoreLang ||
+                  document.documentElement.getAttribute("lang") ||
+                  "",
+              )
+                .toLowerCase()
+                .split(/[-_]/)[0];
+              chooseMsg =
+                lang === "ar" ||
+                String(window.appDirection || "").toLowerCase() === "rtl"
+                  ? "يجب اختيار المتغيرات أولاً"
+                  : "Please choose product options first";
+            }
+            if (
+              window.AngelCartToast &&
+              typeof window.AngelCartToast.showError === "function"
+            ) {
+              window.AngelCartToast.showError(chooseMsg);
+            } else {
+              window.zid?.toaster?.showError(chooseMsg);
+            }
+            return;
+          }
+        }
         var productId =
           groupedQuickViewState.selectedProductId ||
           groupedQuickViewState.productId;
