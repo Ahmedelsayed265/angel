@@ -1,17 +1,23 @@
-/* Side filters — category & products (vitrin markup, design-only) */
+/* Side filters — stacked accordion cards (category & products) */
 
 .angel-side-filters-panel__inner,
 .angel-side-filters.angel-side-filters--panel {
-  --af-bg: #333333;
+  --af-card-bg: #333333;
+  --af-page-bg: transparent;
   --af-input-bg: #262626;
   --af-border: #4a4a4a;
   --af-text: #ffffff;
-  --af-muted: #a3a3a3;
+  --af-muted: #9ca3af;
   --af-accent: var(--primary-color, #67c7e8);
   --af-radius: 8px;
-  background: var(--af-bg) !important;
-  border-radius: var(--af-radius) !important;
-  padding: 20px 16px !important;
+  --af-card-gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--af-card-gap);
+  background: var(--af-page-bg) !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
   color: var(--af-text);
   font-size: 14px;
   width: 100%;
@@ -24,6 +30,9 @@
 .angel-side-filters .product-attributes,
 .angel-side-filters > div:first-child,
 .angel-side-filters > form:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: var(--af-card-gap);
   min-width: auto !important;
   width: 100% !important;
   margin: 0 !important;
@@ -39,21 +48,17 @@
   margin-top: 0 !important;
 }
 
+/* Each filter group = one accordion card */
 .angel-side-filters-panel__inner .attribute,
 .angel-side-filters .attribute,
-.angel-category-page__sidebar .angel-side-filters .attribute {
-  background: transparent !important;
+.angel-side-filters-panel__inner .angel-category-filter-section,
+.angel-side-filters .angel-category-filter-section {
+  background: var(--af-card-bg) !important;
   border: none !important;
-  margin: 0 0 18px !important;
-  padding: 0 0 18px !important;
-  border-bottom: 1px solid var(--af-border) !important;
-}
-
-.angel-side-filters-panel__inner .attribute:last-child,
-.angel-side-filters .attribute:last-child {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-  border-bottom: none !important;
+  border-radius: var(--af-radius) !important;
+  margin: 0 !important;
+  padding: 14px 16px !important;
+  box-sizing: border-box;
 }
 
 .angel-side-filters-panel__inner .attribute .attribute-group,
@@ -64,15 +69,16 @@
   text-align: start !important;
 }
 
-/* Section header: title (right) + plus/minus (left in RTL) */
+/* Accordion header row */
 .angel-side-filters-panel__inner .attribute-header,
 .angel-side-filters .attribute-header,
-.angel-category-page__sidebar .attribute-header {
+.angel-side-filters-panel__inner .angel-category-filter-section__head,
+.angel-side-filters .angel-category-filter-section__head {
   display: flex !important;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin: 0 0 14px !important;
+  margin: 0 !important;
   padding: 0 !important;
   background: transparent !important;
   border: none !important;
@@ -86,12 +92,18 @@
 .angel-side-filters .attribute-header .attribute-label,
 .angel-side-filters .attribute-header h2,
 .angel-side-filters .attribute-header h3,
-.angel-side-filters .attribute-header h4 {
+.angel-side-filters .attribute-header h4,
+.angel-side-filters-panel__inner .angel-category-filter-section__head h3,
+.angel-side-filters-panel__inner .angel-category-filter-section__head h4,
+.angel-side-filters legend,
+.angel-side-filters h3,
+.angel-side-filters h4,
+.angel-side-filters .product-filter__title {
   margin: 0 !important;
   font-size: 16px !important;
   font-weight: 700 !important;
   color: var(--af-text) !important;
-  line-height: 1.3;
+  line-height: 1.35;
   flex: 1;
   text-align: start;
 }
@@ -116,7 +128,7 @@
   color: var(--af-text) !important;
   font-size: 16px !important;
   font-weight: 700 !important;
-  line-height: 1.3;
+  line-height: 1.35;
   text-align: start;
   text-decoration: none;
   cursor: pointer;
@@ -129,7 +141,6 @@
   text-decoration: none;
 }
 
-/* Hide default vitrin chevrons — use s-filters-widget-plusminus */
 .angel-side-filters-panel__inner .attribute-header i:not(.s-filters-widget-plusminus),
 .angel-side-filters .attribute-header i:not(.s-filters-widget-plusminus),
 .angel-side-filters-panel__inner .attribute-header svg,
@@ -139,7 +150,7 @@
   display: none !important;
 }
 
-/* Plus / minus accordion icon */
+/* Plus / minus — white */
 .angel-side-filters-panel__inner .s-filters-widget-plusminus,
 .angel-side-filters .s-filters-widget-plusminus {
   position: relative;
@@ -156,7 +167,7 @@
 .angel-side-filters .s-filters-widget-plusminus::after {
   content: "";
   position: absolute;
-  background: #9ca3af;
+  background: #ffffff;
   border-radius: 1px;
 }
 
@@ -183,9 +194,11 @@
   display: none;
 }
 
+/* Expanded body inside card */
 .angel-side-filters-panel__inner .attribute-body,
 .angel-side-filters .attribute-body {
-  padding: 0 !important;
+  padding: 12px 0 0 !important;
+  margin: 0 !important;
 }
 
 .angel-side-filters-panel__inner .attribute .form-row,
@@ -193,7 +206,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  margin-top: 8px;
+  margin-top: 0;
 }
 
 .angel-side-filters-panel__inner .attribute .form-row label,
@@ -211,11 +224,6 @@
   cursor: default;
 }
 
-.angel-side-filters-panel__inner .attribute-body.attribute-price-body .form-row,
-.angel-side-filters .attribute-body.attribute-price-body .form-row {
-  margin-top: 4px;
-}
-
 .angel-side-filters-panel__inner .attribute-body.attribute-price-body input,
 .angel-side-filters .attribute-body.attribute-price-body input,
 .angel-side-filters-panel__inner .attribute .form-row input,
@@ -224,7 +232,7 @@
   text-align: center;
 }
 
-/* Search & inputs */
+/* Search & text inputs inside cards */
 .angel-side-filters-panel__inner input[type="search"],
 .angel-side-filters-panel__inner input[type="text"],
 .angel-side-filters-panel__inner input[type="number"],
@@ -234,7 +242,7 @@
 .angel-side-filters input[type="number"],
 .angel-side-filters .form-control {
   width: 100% !important;
-  margin: 0 0 14px !important;
+  margin: 0 0 12px !important;
   padding: 10px 12px !important;
   border: 1px solid var(--af-border) !important;
   border-radius: 5px !important;
@@ -243,6 +251,13 @@
   font-size: 13px;
   text-align: start;
   box-shadow: none !important;
+}
+
+.angel-side-filters-panel__inner .attribute-body input:last-child,
+.angel-side-filters .attribute-body input:last-child,
+.angel-side-filters-panel__inner .attribute-body .form-control:last-child,
+.angel-side-filters .attribute-body .form-control:last-child {
+  margin-bottom: 0 !important;
 }
 
 .angel-side-filters-panel__inner input::placeholder,
@@ -268,7 +283,7 @@
   margin-bottom: 0;
 }
 
-/* Option rows — radio/checkbox on the right (RTL) */
+/* Options — label right, control on far right (RTL) */
 .angel-side-filters-panel__inner label:not(.attribute .form-row label):not(.attribute-body.attribute-price-body label),
 .angel-side-filters label:not(.attribute .form-row label):not(.attribute-body.attribute-price-body label) {
   display: flex;
@@ -278,7 +293,7 @@
   gap: 12px;
   width: 100%;
   margin: 0;
-  padding: 4px 0;
+  padding: 5px 0;
   font-size: 14px;
   font-weight: 400;
   color: var(--af-text) !important;
@@ -286,25 +301,7 @@
   line-height: 1.4;
 }
 
-.angel-side-filters-panel__inner legend,
-.angel-side-filters-panel__inner h3,
-.angel-side-filters-panel__inner h4,
-.angel-side-filters-panel__inner .product-filter__title,
-.angel-side-filters legend,
-.angel-side-filters h3,
-.angel-side-filters h4,
-.angel-side-filters .product-filter__title,
-.angel-side-filters .angel-category-filter-section__head {
-  margin: 0 0 12px;
-  padding: 0;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--af-text);
-  border: 0;
-  width: 100%;
-}
-
-/* Custom checkbox (vitrin) */
+/* Custom checkbox */
 .angel-side-filters-panel__inner .checkbox-container,
 .angel-side-filters .checkbox-container {
   position: relative;
@@ -329,18 +326,18 @@
   display: block;
   width: 16px;
   height: 16px;
-  border-radius: 2px;
-  background: #ffffff;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
   pointer-events: none;
 }
 
 .angel-side-filters-panel__inner .custom-checkbox-input:checked + .custom-checkmark,
 .angel-side-filters .custom-checkbox-input:checked + .custom-checkmark {
   background: var(--af-accent);
-  box-shadow: inset 0 0 0 2px var(--af-bg);
+  box-shadow: inset 0 0 0 3px var(--af-card-bg);
 }
 
-/* Radios — circular (categories filter) */
+/* Radios — light circles */
 .angel-side-filters-panel__inner input[type="radio"],
 .angel-side-filters input[type="radio"] {
   appearance: none;
@@ -349,16 +346,16 @@
   width: 18px;
   height: 18px;
   margin: 0 !important;
-  border: 2px solid #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.9);
   border-radius: 50%;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.95);
   cursor: pointer;
 }
 
 .angel-side-filters-panel__inner input[type="radio"]:checked,
 .angel-side-filters input[type="radio"]:checked {
   border-color: var(--af-accent);
-  background: var(--af-input-bg);
+  background: var(--af-card-bg);
   box-shadow: inset 0 0 0 4px var(--af-accent);
 }
 
@@ -371,15 +368,15 @@
   height: 16px;
   margin: 0 !important;
   border: none;
-  border-radius: 2px;
-  background: #ffffff;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
   cursor: pointer;
 }
 
 .angel-side-filters-panel__inner input[type="checkbox"]:not(.custom-checkbox-input):checked,
 .angel-side-filters input[type="checkbox"]:not(.custom-checkbox-input):checked {
   background: var(--af-accent);
-  box-shadow: inset 0 0 0 2px var(--af-bg);
+  box-shadow: inset 0 0 0 3px var(--af-card-bg);
 }
 
 /* المزيد */
@@ -388,8 +385,8 @@
 .angel-side-filters #show-more,
 .angel-side-filters a#show-more {
   display: inline-block !important;
-  margin-top: 8px;
-  padding: 4px 0 0;
+  margin-top: 6px;
+  padding: 2px 0 0;
   border: none !important;
   background: none !important;
   color: var(--af-accent) !important;
@@ -434,36 +431,34 @@
   transition: height 0.28s ease;
 }
 
-.angel-side-filters-panel__inner .angel-category-filter-section,
-.angel-side-filters .angel-category-filter-section {
-  margin: 0 0 14px;
-  padding: 0;
-  border: 0;
-}
-
-/* Clear filter inside panel */
+/* Clear filters — separate card-style button at bottom */
 .angel-side-filters-panel__inner .angel-category-filters__clear {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 16px;
-  padding: 10px 24px;
-  border: 1px solid rgba(255, 255, 255, 0.55) !important;
-  border-radius: 5px;
+  margin: 0;
+  padding: 12px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-radius: var(--af-radius);
   background: transparent !important;
-  color: #ffffff !important;
+  color: var(--af-muted) !important;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .angel-side-filters-panel__inner .angel-category-filters__clear:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  color: #ffffff !important;
 }
 
-/* Products page */
+/* Products page sidebar */
 .container.d-flex > .angel-side-filters.angel-side-filters--panel {
   flex-shrink: 0;
   max-width: 288px;

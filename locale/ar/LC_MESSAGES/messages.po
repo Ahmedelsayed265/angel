@@ -795,7 +795,7 @@ msgid "Our suggestions"
 msgstr "مقترحاتنا"
 
 msgid "Clear filter"
-msgstr "مسح الفلتر"
+msgstr "مسح الفلاتر"
 
 msgid "New"
 msgstr "جديد"
