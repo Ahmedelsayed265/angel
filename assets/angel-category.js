@@ -215,6 +215,9 @@
       if (block.classList.contains("angel-category-filter-section")) {
         return;
       }
+      if (block.classList.contains("attribute") || block.closest(".attribute")) {
+        return;
+      }
       block.classList.add("angel-category-filter-section");
 
       var heading = block.querySelector(

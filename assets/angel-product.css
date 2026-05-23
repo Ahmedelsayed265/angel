@@ -1695,6 +1695,7 @@
   border-radius: 12px;
   display: flex;
   overflow: hidden;
+  height: fit-content;
 }
 
 .angel-grouped-quick-view__stage {
