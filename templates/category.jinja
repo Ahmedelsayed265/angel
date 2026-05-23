@@ -83,6 +83,9 @@
     <script type="text/javascript" src="{{ ('angel-side-filters.js?v=0.1.2') | asset_url }}" defer></script>
     <script type="text/javascript" src="{{ ('angel-category.js?v=0.1.048') | asset_url }}" defer></script>
     <script>
+        window.angelProductCardLabels = {
+            chooseOptions: {{ _("Please choose product options first") | tojson }}
+        };
         window.onProductAttributesTriggered = function () {
             var list = document.getElementById('products-list');
             var pagination = document.getElementById('product-pagination');

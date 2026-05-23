@@ -1,4 +1,4 @@
-{% set ver = '0.1.063' %}
+{% set ver = '0.1.043' %}
 
 <!doctype html>
 <html class="no-js" lang="{{ session.lang }}" dir="{{ session.locale.language.direction }}">
@@ -161,6 +161,7 @@
       {% if settings.colors_header_text_color %}--header-text-color-primary-bg: {{settings.colors_header_text_color}};{% endif %}
       {% if settings.colors_footer_background_color %}--footer-primary-color: {{settings.colors_footer_background_color}};{% endif %}
       {% if settings.colors_footer_text_color %}--footer-text-color-primary-bg: {{settings.colors_footer_text_color}};{% endif %}
+      {% if settings.colors_background_color %}--page-background-color: {{ settings.colors_background_color }};{% endif %}
     {% endif %}
   }
 </style>
@@ -170,7 +171,7 @@
 <div class="app d-flex flex-column visible">
     {% block header %}{% endblock %}
     
-    <div class="main flex-grow-1 app-content" {% if settings.colors_background_image %} style="background-repeat: repeat; background-image: url('{{ settings.colors_background_image }}');" {% endif %}>
+    <div class="main flex-grow-1 app-content"{% if settings.colors_background_color %} style="background-color: {{ settings.colors_background_color }};"{% endif %}>
         {% block main_content %}{% endblock %}
     </div>
 

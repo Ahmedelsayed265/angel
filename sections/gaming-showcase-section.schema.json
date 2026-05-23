@@ -8,55 +8,11 @@
     },
     "settings": [
         {
-            "id": "heading",
-            "type": "text",
-            "label": {
-                "ar": "العنوان",
-                "en": "Heading"
-            },
-            "default": "مع ملاك"
-        },
-        {
-            "id": "heading_color",
-            "type": "color",
-            "label": {
-                "ar": "لون العنوان",
-                "en": "Heading color"
-            },
-            "default": "#54c8e9"
-        },
-        {
-            "id": "video",
-            "type": "video",
-            "label": {
-                "ar": "فيديو الخلفية",
-                "en": "Background video"
-            }
-        },
-        {
-            "id": "show_video",
-            "type": "checkbox",
-            "label": {
-                "ar": "عرض الفيديو",
-                "en": "Show video"
-            },
-            "default": true
-        },
-        {
-            "id": "video_loop",
-            "type": "checkbox",
-            "label": {
-                "ar": "تكرار الفيديو",
-                "en": "Loop video"
-            },
-            "default": true
-        },
-        {
             "id": "bg_image",
             "type": "image",
             "label": {
-                "ar": "صورة الخلفية / غلاف الفيديو",
-                "en": "Background image / poster"
+                "ar": "صورة الخلفية",
+                "en": "Background image"
             }
         },
         {
@@ -64,7 +20,7 @@
             "type": "color",
             "label": {
                 "ar": "لون الخلفية السفلية",
-                "en": "Bottom section color"
+                "en": "Bottom fade color"
             },
             "default": "#1a1a1a"
         },

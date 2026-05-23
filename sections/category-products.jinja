@@ -13,6 +13,8 @@
 
 {% if products and products | length > 0 %}
 <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
+<link rel="stylesheet" href="{{ ('angel-product.css?v=0.1.044') | asset_url }}">
+<link rel="stylesheet" href="{{ ('angel-category-products.css?v=0.1.044') | asset_url }}">
 
 <section
   id="{{ sectionId }}"
@@ -67,7 +69,7 @@
         <div class="swiper-wrapper">
           {% for product in products %}
             <div class="swiper-slide">
-              {% include 'components/angel-category-product-card.jinja' %}
+              {% include 'components/product-card.jinja' %}
             </div>
           {% endfor %}
         </div>
@@ -97,9 +99,18 @@
 
       var isRtl = window.appDirection === 'rtl';
       var showArrows = {{ 'true' if show_arrows else 'false' }};
+      var productCount = parseInt(section.getAttribute('data-product-count'), 10) || 0;
+      var slidesDesktop = parseInt(section.getAttribute('data-slides-desktop'), 10) || 6;
 
-      new Swiper(el, {
-        slidesPerView: 'auto',
+      function effectiveSlides(desired) {
+        if (!productCount) {
+          return desired;
+        }
+        return Math.min(desired, productCount);
+      }
+
+      var swiper = new Swiper(el, {
+        slidesPerView: effectiveSlides(2),
         slidesPerGroup: 1,
         spaceBetween: 0,
         speed: 500,
@@ -108,10 +119,23 @@
         watchOverflow: true,
         observer: true,
         observeParents: true,
+        breakpoints: {
+          576: { slidesPerView: effectiveSlides(3) },
+          768: { slidesPerView: effectiveSlides(4) },
+          992: { slidesPerView: effectiveSlides(5) },
+          1200: { slidesPerView: effectiveSlides(slidesDesktop) }
+        },
         navigation: showArrows ? {
           nextEl: section.querySelector('.angel-category-products__nav--next'),
           prevEl: section.querySelector('.angel-category-products__nav--prev')
         } : false
+      });
+
+      window.requestAnimationFrame(function () {
+        swiper.update();
+        if (window.AngelProductCard && window.AngelProductCard.init) {
+          window.AngelProductCard.init(section);
+        }
       });
 
       return true;
@@ -119,6 +143,8 @@
 
     if (!initSwiper()) {
       window.addEventListener('load', initSwiper);
+    } else if (window.AngelProductCard && window.AngelProductCard.init) {
+      window.AngelProductCard.init(section);
     }
   })();
 </script>

@@ -1,72 +1,47 @@
-{% set heading = settings.heading | default("مع ملاك") %}
-{% set heading_color = settings.heading_color | default("#54c8e9") %}
-{% set show_video = settings.show_video | default(true) %}
-{% set video_loop = settings.video_loop | default(true) %}
 {% set cards = safeget(settings, "cards", []) %}
 {% set section_bg = settings.section_bg | default("#1a1a1a") %}
-{% set has_media = (show_video and settings.video) or settings.bg_image %}
 
-{% if has_media or cards | length > 0 %}
+{% if settings.bg_image or cards | length > 0 %}
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
   class="angel-gaming-showcase"
-  style="--ags-heading: {{ heading_color }}; --ags-section-bg: {{ section_bg }};"
+  style="--ags-section-bg: {{ section_bg }};"
 >
   <div class="angel-gaming-showcase__stage">
-  {% if has_media %}
-    <div class="angel-gaming-showcase__media">
-      {% if show_video and settings.video %}
-        <video
-          class="angel-gaming-showcase__video"
-          autoplay
-          muted
-          playsinline
-          preload="auto"
-          {% if video_loop %}loop{% endif %}
-          {% if settings.bg_image %}poster="{{ settings.bg_image }}"{% endif %}
-        >
-          <source src="{{ settings.video }}" type="video/mp4">
-        </video>
-      {% elif settings.bg_image %}
+    {% if settings.bg_image %}
+      <div class="angel-gaming-showcase__media">
         <img
           class="angel-gaming-showcase__img"
           src="{{ settings.bg_image }}"
-          alt="{{ heading }}"
+          alt=""
           loading="eager"
         >
-      {% endif %}
-      <span class="angel-gaming-showcase__fade" aria-hidden="true"></span>
-    </div>
-  {% endif %}
-
-  {% if heading %}
-    <div class="container angel-gaming-showcase__heading-wrap">
-      <h2 class="angel-gaming-showcase__heading">{{ heading }}</h2>
-    </div>
-  {% endif %}
-
-  {% if cards | length > 0 %}
-    <div class="container angel-gaming-showcase__cards-outer">
-      <div class="angel-gaming-showcase__cards">
-        {% for card in cards %}
-          {% if card.image %}
-            <a
-              class="angel-gaming-showcase__card"
-              href="{{ card.url if card.url else 'javascript:;' }}"
-            >
-              <img
-                class="angel-gaming-showcase__card-img"
-                src="{{ card.image }}"
-                alt=""
-                loading="{% if loop.index <= 3 %}eager{% else %}lazy{% endif %}"
-              >
-            </a>
-          {% endif %}
-        {% endfor %}
+        <span class="angel-gaming-showcase__fade" aria-hidden="true"></span>
       </div>
-    </div>
-  {% endif %}
+    {% endif %}
+
+    {% if cards | length > 0 %}
+      <div class="container angel-gaming-showcase__cards-outer">
+        <div class="angel-gaming-showcase__cards">
+          {% for card in cards %}
+            {% if card.image %}
+              <a
+                class="angel-gaming-showcase__card"
+                href="{{ card.url if card.url else 'javascript:;' }}"
+              >
+                <img
+                  class="angel-gaming-showcase__card-img"
+                  src="{{ card.image }}"
+                  alt=""
+                  loading="{% if loop.index <= 3 %}eager{% else %}lazy{% endif %}"
+                >
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
   </div>
 </section>
 {% endif %}

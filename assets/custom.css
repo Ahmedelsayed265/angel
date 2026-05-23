@@ -176,10 +176,9 @@ body {
   line-height: 1;
 }
 
-/* Home tab — cinematic video + 6 overlapping cards */
+/* Home tab — video 100vh + 3 floating cards */
 .angel-hero-section .angel-hero-panel--home {
   min-height: auto;
-  padding-bottom: clamp(100px, 12vw, 130px);
 }
 
 .angel-hero-section .angel-hero-panel--home .angel-hero-panel-inner {
@@ -195,25 +194,9 @@ body {
 }
 
 .angel-hero-section .angel-hero-home-video-wrap {
-  height: clamp(520px, 72vh, 820px);
-  min-height: 520px;
   overflow: hidden;
   position: relative;
   width: 100%;
-}
-
-.angel-hero-section .angel-hero-home-video-wrap::after {
-  background: linear-gradient(
-    180deg,
-    transparent 55%,
-    rgba(0, 0, 0, 0.35) 78%,
-    rgba(20, 20, 20, 0.95) 100%
-  );
-  content: "";
-  inset: 0;
-  pointer-events: none;
-  position: absolute;
-  z-index: 2;
 }
 
 .angel-hero-section .angel-hero-home-video-link {
@@ -225,84 +208,50 @@ body {
 }
 
 .angel-hero-section .angel-hero-home-video {
-  aspect-ratio: auto;
   display: block;
-  height: 100%;
-  min-height: 100%;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
-  object-position: center center;
   width: 100%;
 }
 
-.angel-hero-section .angel-hero-home-heading-wrap {
-  inset-inline: 0;
-  pointer-events: none;
-  position: absolute;
-  top: clamp(88px, 12vh, 128px);
-  z-index: 3;
-}
-
-.angel-hero-section .angel-hero-home-heading {
-  color: var(--hero-home-heading-color, #54c8e9);
-  font-size: clamp(34px, 5vw, 58px);
-  font-weight: 700;
-  line-height: 1.15;
-  margin: 0;
-  max-width: min(520px, 70vw);
-  text-align: start;
-  text-shadow:
-    0 0 18px rgba(84, 200, 233, 0.9),
-    0 0 42px rgba(84, 200, 233, 0.45),
-    0 2px 24px rgba(0, 0, 0, 0.55);
-}
-
 .angel-hero-section .angel-hero-home-cards-wrap {
-  inset-inline: 0;
-  margin-top: 0;
-  padding-inline: 10px;
-  pointer-events: none;
-  position: absolute;
-  top: 100%;
-  transform: translateY(-50%);
-  z-index: 5;
-}
-
-.angel-hero-section .angel-hero-home-cards-wrap .angel-hero-home-cards {
-  pointer-events: auto;
+  margin-top: -110px;
+  padding-bottom: 48px;
+  position: relative;
+  z-index: 4;
 }
 
 .angel-hero-section .angel-hero-home-cards {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: clamp(10px, 1.4vw, 18px);
-  justify-content: center;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .angel-hero-section .angel-hero-home-card {
   aspect-ratio: 3 / 4;
-  border-radius: 14px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
   display: block;
-  flex: 0 1 calc((100% - 5 * 16px) / 6);
-  max-width: 196px;
-  min-height: 0;
-  min-width: 108px;
+  min-height: 220px;
   overflow: hidden;
   position: relative;
   text-decoration: none;
+
+  @media (max-width: 768px) {
+    aspect-ratio: unset;
+  }
 }
 
 .angel-hero-section .angel-hero-home-card-img {
-  display: block;
   height: 100%;
+  left: 0;
   object-fit: cover;
-  object-position: center top;
+  position: absolute;
+  top: 0;
   transition: transform 0.35s ease;
   width: 100%;
 }
 
 .angel-hero-section .angel-hero-home-card:hover .angel-hero-home-card-img {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 .angel-hero-section .angel-hero-home-card-overlay {
@@ -964,27 +913,17 @@ body {
 }
 
 @media (max-width: 992px) {
-  .angel-hero-section .angel-hero-home-video-wrap {
-    height: clamp(420px, 58vh, 620px);
-    min-height: 420px;
-  }
-
-  .angel-hero-section .angel-hero-home-cards {
-    justify-content: flex-start;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
-    scroll-snap-type: x proximity;
+  .angel-hero-section .angel-hero-home-cards-wrap {
+    margin-top: -72px;
   }
 
   .angel-hero-section .angel-hero-home-card {
-    flex: 0 0 clamp(128px, 38vw, 160px);
-    max-width: none;
-    scroll-snap-align: start;
+    min-height: 200px;
   }
 
-  .angel-hero-section .angel-hero-panel--home {
-    padding-bottom: 88px;
+  .angel-hero-section .angel-hero-home-video-wrap,
+  .angel-hero-section .angel-hero-home-video {
+    height: min(100vh, 640px);
   }
 }
 
@@ -2078,10 +2017,6 @@ body.search-popup-open {
   cursor: pointer;
   color: inherit;
   display: block;
-}
-
-.product-crd-spec {
-  min-height: 81px;
 }
 
 .gallery-section + .gallery-section {
@@ -4145,6 +4080,7 @@ body.angel-stories-modal-open {
 .angel-testimonials-section {
   background: var(--testimonials-bg, #141414);
   color: #fff;
+  position: relative;
   overflow: hidden;
   padding: clamp(44px, 5vw, 60px) 0;
 }
@@ -4619,7 +4555,6 @@ body.angel-stories-modal-open {
 @media (max-width: 576px) {
   .angel-image-title-grid__grid {
     gap: 28px;
-    grid-template-columns: 1fr;
   }
 }
 
@@ -4922,9 +4857,17 @@ section:has(.angel-category-products) a.more-button.btn-outline-primary,
 .angel-category-products-swiper .swiper-slide {
   border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   flex-shrink: 0;
   height: auto;
-  width: 46%;
+  overflow: hidden;
+}
+
+.angel-category-products-swiper:not(.swiper-initialized) .swiper-slide {
+  flex: 0 0 calc(100% / 2);
+  max-width: calc(100% / 2);
+  width: calc(100% / 2);
 }
 
 .angel-category-products-swiper .swiper-slide:first-child {
@@ -4932,27 +4875,34 @@ section:has(.angel-category-products) a.more-button.btn-outline-primary,
 }
 
 @media (min-width: 576px) {
-  .angel-category-products-swiper .swiper-slide {
+  .angel-category-products-swiper:not(.swiper-initialized) .swiper-slide {
+    flex-basis: calc(100% / 3);
+    max-width: calc(100% / 3);
     width: calc(100% / 3);
   }
 }
 
 @media (min-width: 768px) {
-  .angel-category-products-swiper .swiper-slide {
+  .angel-category-products-swiper:not(.swiper-initialized) .swiper-slide {
+    flex-basis: calc(100% / 4);
+    max-width: calc(100% / 4);
     width: calc(100% / 4);
   }
 }
 
 @media (min-width: 992px) {
-  .angel-category-products-swiper .swiper-slide {
+  .angel-category-products-swiper:not(.swiper-initialized) .swiper-slide {
+    flex-basis: calc(100% / 5);
+    max-width: calc(100% / 5);
     width: calc(100% / 5);
   }
 }
 
 @media (min-width: 1200px) {
-  .angel-category-products-swiper .swiper-slide {
+  .angel-category-products-swiper:not(.swiper-initialized) .swiper-slide {
+    flex-basis: calc(100% / var(--cp-slides, 6));
+    max-width: calc(100% / var(--cp-slides, 6));
     width: calc(100% / var(--cp-slides, 6));
-    max-width: 200px;
   }
 }
 
@@ -5179,7 +5129,7 @@ section:has(.angel-category-products) a.more-button.btn-outline-primary,
   }
 }
 
-/* Gaming showcase — بانر سينمائي + 6 بطاقات عائمة */
+/* Gaming showcase — background image + image-only cards */
 .angel-gaming-showcase {
   background: var(--ags-section-bg, #1a1a1a);
   overflow: hidden;
@@ -5198,7 +5148,6 @@ section:has(.angel-category-products) a.more-button.btn-outline-primary,
   width: 100%;
 }
 
-.angel-gaming-showcase__video,
 .angel-gaming-showcase__img {
   display: block;
   height: 100%;
@@ -5218,28 +5167,6 @@ section:has(.angel-category-products) a.more-button.btn-outline-primary,
   pointer-events: none;
   position: absolute;
   z-index: 1;
-}
-
-.angel-gaming-showcase__heading-wrap {
-  inset-inline: 0;
-  pointer-events: none;
-  position: absolute;
-  top: clamp(88px, 11vh, 132px);
-  z-index: 3;
-}
-
-.angel-gaming-showcase__heading {
-  color: var(--ags-heading, #54c8e9);
-  font-size: clamp(34px, 5vw, 58px);
-  font-weight: 700;
-  line-height: 1.15;
-  margin: 0;
-  max-width: min(560px, 72vw);
-  text-align: start;
-  text-shadow:
-    0 0 18px rgba(84, 200, 233, 0.9),
-    0 0 40px rgba(84, 200, 233, 0.45),
-    0 2px 20px rgba(0, 0, 0, 0.5);
 }
 
 .angel-gaming-showcase__cards-outer {
@@ -5273,14 +5200,18 @@ section:has(.angel-category-products) a.more-button.btn-outline-primary,
 
 .angel-gaming-showcase__card-img {
   display: block;
+  filter: grayscale(100%);
   height: 100%;
   object-fit: cover;
   object-position: center top;
-  transition: transform 0.35s ease;
+  transition:
+    filter 0.35s ease,
+    transform 0.35s ease;
   width: 100%;
 }
 
 .angel-gaming-showcase__card:hover .angel-gaming-showcase__card-img {
+  filter: grayscale(0);
   transform: scale(1.05);
 }
 

@@ -1,0 +1,91 @@
+/* Category products swiper — load after angel-product.css */
+
+.angel-category-products-swiper .swiper-slide .product-item.angel-product-card {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.angel-category-products-swiper .swiper-slide .angel-product-card__inner {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+}
+
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__media {
+  aspect-ratio: 1 / 0.82;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__media-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+}
+
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__img {
+  position: relative;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 88%;
+  max-height: 88%;
+  object-fit: contain;
+  object-position: center center;
+}
+
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__body {
+  flex: 1 1 auto;
+  gap: 6px;
+  padding: 8px 8px 6px;
+}
+
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__title,
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__title a {
+  display: -webkit-box;
+  font-size: 13px;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__prices {
+  font-size: 13px;
+}
+
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding: 0 8px 8px;
+}
+
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__btn {
+  min-height: 40px;
+  width: 100%;
+}
+
+.angel-category-products-swiper .swiper-slide .angel-product-card__variants {
+  max-width: 100%;
+}
+
+.angel-category-products-swiper .swiper-slide .angel-product-card__option--color .angel-text-option__choices {
+  justify-content: center;
+}
