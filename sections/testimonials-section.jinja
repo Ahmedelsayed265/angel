@@ -77,7 +77,7 @@
         </div>
       </div>
 
-      <div class="angel-testimonials-scroll swiper-pagination" aria-hidden="true"></div>
+      <div class="angel-testimonials-scrollbar swiper-scrollbar" aria-hidden="true"></div>
     </div>
   </div>
 </section>
@@ -91,15 +91,14 @@
     var el = section.querySelector('.angel-testimonials-swiper');
     if (!el) return;
 
-    var scrollEl = section.querySelector('.angel-testimonials-scroll');
+    var scrollbarEl = section.querySelector('.angel-testimonials-scrollbar');
     var autoplayEnabled = section.getAttribute('data-autoplay') === 'true';
     var autoplayDelay = (parseInt(section.getAttribute('data-autoplay-delay'), 10) || 6) * 1000;
     var isRtl = window.appDirection === 'rtl';
 
-    function updateTestimonialsScroll(sw) {
-      if (!scrollEl) return;
-      var pages = sw.snapGrid ? sw.snapGrid.length : 0;
-      scrollEl.style.display = pages <= 1 ? 'none' : '';
+    function updateTestimonialsScrollbar(sw) {
+      if (!scrollbarEl) return;
+      scrollbarEl.style.display = sw.isLocked ? 'none' : '';
     }
 
     var config = {
@@ -112,19 +111,19 @@
       watchOverflow: true,
       observer: true,
       observeParents: true,
-      pagination: scrollEl ? {
-        el: scrollEl,
-        clickable: true,
-        type: 'bullets'
+      scrollbar: scrollbarEl ? {
+        el: scrollbarEl,
+        draggable: true,
+        hide: false
       } : false,
       breakpoints: {
-        768: { slidesPerView: 2, slidesPerGroup: 2, spaceBetween: 18 },
-        1200: { slidesPerView: 3, slidesPerGroup: 3, spaceBetween: 20 }
+        768: { slidesPerView: 2, slidesPerGroup: 1, spaceBetween: 18 },
+        1200: { slidesPerView: 3, slidesPerGroup: 1, spaceBetween: 20 }
       },
       on: {
-        init: function () { updateTestimonialsScroll(this); },
-        resize: function () { updateTestimonialsScroll(this); },
-        breakpoint: function () { updateTestimonialsScroll(this); }
+        init: function () { updateTestimonialsScrollbar(this); },
+        resize: function () { updateTestimonialsScrollbar(this); },
+        breakpoint: function () { updateTestimonialsScrollbar(this); }
       }
     };
 

@@ -1,0 +1,182 @@
+{% set product = settings.product | default(none) %}
+{% if not product %}
+  {% set products_data = safeget(settings, "products", {}) %}
+  {% set product_list = products_data.results if products_data.results else [] %}
+  {% set product = product_list[0] if product_list | length > 0 else none %}
+{% endif %}
+{% set features = safeget(settings, "features", []) %}
+
+{% set section_title = settings.title | default("امتلك القوة من إيه إم دي") %}
+{% set subtitle = settings.subtitle | default("عرض خاص على معالج ryzen 9550x") %}
+{% set custom_image = settings.image | default("") %}
+{% set video_src = settings.video | default("") %}
+{% set video_loop = settings.video_loop | default(true) %}
+{% set show_timer_label = settings.show_timer_label | default(true) %}
+{% set timer_label = settings.timer_label | default("متبقي على انتهاء الخصم:") %}
+{% set feature_heading = settings.feature_heading | default("") %}
+{% set feature_text = settings.feature_text | default("") %}
+{% set add_to_cart_text = settings.add_to_cart_text | default("أضف للسلة") %}
+{% set cart_btn_text = settings.cart_btn_text | default("سلة المشتريات") %}
+{% set cart_btn_url = settings.cart_btn_url | default("/cart") %}
+
+{% set title_color = settings.title_color | default("#54c8e9") %}
+{% set subtitle_color = settings.subtitle_color | default("#ffffff") %}
+{% set bg_color = settings.bg_color | default("#1a1a1a") %}
+{% set accent = settings.accent_color | default("#54c8e9") %}
+{% set sale_price_color = settings.sale_price_color | default("#e53935") %}
+{% set add_btn_bg = settings.add_btn_bg | default("#e53935") %}
+{% set cart_btn_bg = settings.cart_btn_bg | default("#54c8e9") %}
+
+{% set poster_src = custom_image %}
+{% if not poster_src and product and product.main_image and product.main_image.image %}
+  {% set poster_src = product.main_image.image.large | default(product.main_image.image.medium, true) %}
+{% endif %}
+
+{% set image_src = "" %}
+{% if not video_src %}
+  {% set image_src = poster_src %}
+{% endif %}
+
+{% set product_id = product.id if product else "" %}
+{% set product_slug = product.slug if product else "" %}
+{% set has_sale = product and product.formatted_sale_price is not none %}
+{% set has_options = product and (product.has_options or product.has_fields or product.product_class == 'dynamic_bundle') %}
+{% set is_out_of_stock = product and (product.is_infinite == false and product.quantity <= 0) and not (product.can_be_preordered | default(false)) %}
+{% set media_alt = product.name if product else section_title %}
+
+{% if section_title or product or video_src or image_src %}
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-product-spotlight"
+  style="
+    --ps-bg: {{ bg_color }};
+    --ps-title: {{ title_color }};
+    --ps-subtitle: {{ subtitle_color }};
+    --ps-accent: {{ accent }};
+    --ps-sale: {{ sale_price_color }};
+    --ps-add-bg: {{ add_btn_bg }};
+    --ps-cart-bg: {{ cart_btn_bg }};
+  "
+>
+  <div class="container angel-product-spotlight__inner">
+    <div class="angel-product-spotlight__grid">
+     {% if video_src or image_src %}
+        <div class="angel-product-spotlight__media">
+          <div class="angel-product-spotlight__media-frame">
+            {% if video_src %}
+              <video
+                class="angel-product-spotlight__video"
+                autoplay
+                muted
+                playsinline
+                preload="auto"
+                {% if video_loop %}loop{% endif %}
+                {% if poster_src %}poster="{{ poster_src }}"{% endif %}
+                aria-label="{{ media_alt }}"
+              >
+                <source src="{{ video_src }}">
+              </video>
+            {% else %}
+              <img
+                class="angel-product-spotlight__img"
+                src="{{ image_src }}"
+                alt="{{ media_alt }}"
+                loading="eager"
+                width="640"
+                height="480"
+              >
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+      
+      <div class="angel-product-spotlight__content">
+        {% if section_title %}
+          <h2 class="angel-product-spotlight__title">{{ section_title }}</h2>
+        {% endif %}
+        {% if subtitle %}
+          <p class="angel-product-spotlight__subtitle">{{ subtitle }}</p>
+        {% endif %}
+
+        {% if product %}
+          <div class="angel-product-spotlight__prices">
+            {% if has_sale %}
+              <span class="angel-product-spotlight__price-sale">{{ product.formatted_sale_price }}</span>
+              <span class="angel-product-spotlight__price-prefix">بدلاً من</span>
+              <span class="angel-product-spotlight__price-old">{{ product.formatted_price }}</span>
+            {% else %}
+              <span class="angel-product-spotlight__price-sale">{{ product.formatted_price }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if show_timer_label and timer_label %}
+          <p class="angel-product-spotlight__timer-label">
+            <span class="angel-product-spotlight__timer-icon" aria-hidden="true">⏱</span>
+            {{ timer_label }}
+          </p>
+        {% endif %}
+
+        {% if features | length > 0 %}
+          <div class="angel-product-spotlight__pills" role="list">
+            {% for item in features %}
+              {% if item.icon %}
+                <span
+                  class="angel-product-spotlight__pill{% if loop.first %} is-active{% endif %}"
+                  role="listitem"
+                >
+                  <img src="{{ item.icon }}" alt="{{ item.label if item.label else '' }}" width="22" height="22" loading="lazy">
+                </span>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if feature_heading or feature_text %}
+          <div class="angel-product-spotlight__feature-copy">
+            {% if feature_heading %}
+              <h3 class="angel-product-spotlight__feature-title">{{ feature_heading }}</h3>
+            {% endif %}
+            {% if feature_text %}
+              <p class="angel-product-spotlight__feature-desc">{{ feature_text }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        <div class="angel-product-spotlight__actions">
+          {% if product and not is_out_of_stock %}
+            {% if has_options %}
+              <a class="angel-product-spotlight__btn angel-product-spotlight__btn--add" href="/products/{{ product_slug }}">
+                <i class="sicon-cart angel-product-spotlight__btn-icon" aria-hidden="true"></i>
+                {{ add_to_cart_text }}
+              </a>
+            {% else %}
+              <button
+                type="button"
+                class="angel-product-spotlight__btn angel-product-spotlight__btn--add product-card-add-to-cart"
+                onclick="event.preventDefault(); productCartAddToCart(this, '{{ product_id }}')"
+              >
+                <img class="add-to-cart-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="18" height="18" alt="">
+                <i class="sicon-cart angel-product-spotlight__btn-icon" aria-hidden="true"></i>
+                {{ add_to_cart_text }}
+              </button>
+            {% endif %}
+          {% elif product_slug %}
+            <a class="angel-product-spotlight__btn angel-product-spotlight__btn--add" href="/products/{{ product_slug }}">
+              {{ _("Notify me when available") }}
+            </a>
+          {% endif %}
+
+          {% if cart_btn_text %}
+            <a class="angel-product-spotlight__btn angel-product-spotlight__btn--cart" href="{{ cart_btn_url if cart_btn_url else '/cart' }}">
+              {{ cart_btn_text }}
+              <span class="sicon-arrow-left angel-product-spotlight__btn-arrow" aria-hidden="true"></span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}

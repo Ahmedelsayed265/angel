@@ -1,0 +1,140 @@
+{
+    "section_id": "angel-discover-cards-section",
+    "template": "sections/discover-cards-section.jinja",
+    "icon": "fa fa-th-large",
+    "name": {
+        "ar": "اكتشف — بطاقات",
+        "en": "Discover cards"
+    },
+    "settings": [
+        {
+            "id": "title",
+            "type": "text",
+            "label": {
+                "ar": "العنوان",
+                "en": "Title"
+            },
+            "default": "اكتشف Xiaomi"
+        },
+        {
+            "id": "title_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان",
+                "en": "Title color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون الخلفية",
+                "en": "Background color"
+            },
+            "default": "#141414"
+        },
+        {
+            "id": "card_bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون البطاقة",
+                "en": "Card background"
+            },
+            "default": "#2b2b2b"
+        },
+        {
+            "id": "accent_color",
+            "type": "color",
+            "label": {
+                "ar": "لون مقبض شريط التمرير",
+                "en": "Scrollbar drag color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "button_bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون زر البطاقة",
+                "en": "Button background"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "button_text_color",
+            "type": "color",
+            "label": {
+                "ar": "لون نص الزر",
+                "en": "Button text color"
+            },
+            "default": "#0f172a"
+        },
+        {
+            "id": "slides_desktop",
+            "type": "select",
+            "label": {
+                "ar": "عدد البطاقات على الشاشة الكبيرة",
+                "en": "Cards per view (desktop)"
+            },
+            "options": [
+                { "value": "2", "label": { "ar": "2", "en": "2" } },
+                { "value": "3", "label": { "ar": "3", "en": "3" } },
+                { "value": "4", "label": { "ar": "4", "en": "4" } }
+            ],
+            "default": "3"
+        },
+        {
+            "id": "cards",
+            "type": "list",
+            "max_items": 12,
+            "label": {
+                "ar": "البطاقات",
+                "en": "Cards"
+            },
+            "settings": [
+                {
+                    "id": "image",
+                    "type": "image",
+                    "label": {
+                        "ar": "الصورة",
+                        "en": "Image"
+                    }
+                },
+                {
+                    "id": "title",
+                    "type": "text",
+                    "label": {
+                        "ar": "العنوان",
+                        "en": "Title"
+                    }
+                },
+                {
+                    "id": "description",
+                    "type": "textarea",
+                    "label": {
+                        "ar": "الوصف",
+                        "en": "Description"
+                    }
+                },
+                {
+                    "id": "button_text",
+                    "type": "text",
+                    "label": {
+                        "ar": "نص الزر",
+                        "en": "Button text"
+                    },
+                    "default": "اعرف أكثر"
+                },
+                {
+                    "id": "url",
+                    "type": "url",
+                    "label": {
+                        "ar": "رابط الزر",
+                        "en": "Button link"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -71,6 +71,24 @@
             "default": "#9ca3af"
         },
         {
+            "id": "enable_count_up",
+            "type": "checkbox",
+            "label": {
+                "ar": "تفعيل عدّاد الأرقام",
+                "en": "Enable count-up animation"
+            },
+            "default": true
+        },
+        {
+            "id": "count_duration",
+            "type": "text",
+            "label": {
+                "ar": "مدة العدّ بالميلي ثانية (مثال: 2000)",
+                "en": "Count duration in ms"
+            },
+            "default": "2000"
+        },
+        {
             "id": "features",
             "type": "list",
             "max_items": 6,
@@ -91,16 +109,16 @@
                     "id": "value",
                     "type": "text",
                     "label": {
-                        "ar": "النص الرئيسي",
-                        "en": "Primary text"
+                        "ar": "النص الرئيسي (مثال: + 399 تقييم)",
+                        "en": "Primary text (e.g. + 399 ratings)"
                     }
                 },
                 {
                     "id": "label",
                     "type": "text",
                     "label": {
-                        "ar": "النص الثانوي",
-                        "en": "Secondary text"
+                        "ar": "النص الثانوي تحت الرقم (مثال: عدد التقييمات)",
+                        "en": "Secondary text below"
                     }
                 }
             ]

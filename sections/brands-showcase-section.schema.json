@@ -1,0 +1,133 @@
+{
+    "section_id": "angel-brands-showcase-section",
+    "template": "sections/brands-showcase-section.jinja",
+    "icon": "fa fa-heart",
+    "name": {
+        "ar": "ماركات ستحبها",
+        "en": "Brands you'll love"
+    },
+    "settings": [
+        {
+            "id": "title",
+            "type": "text",
+            "label": {
+                "ar": "العنوان",
+                "en": "Title"
+            },
+            "default": "ماركات ستحبها"
+        },
+        {
+            "id": "subtitle",
+            "type": "text",
+            "label": {
+                "ar": "العنوان الفرعي",
+                "en": "Subtitle"
+            },
+            "default": "أفضل الماركات العالمية"
+        },
+        {
+            "id": "title_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان",
+                "en": "Title color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "subtitle_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان الفرعي",
+                "en": "Subtitle color"
+            },
+            "default": "#ffffff"
+        },
+        {
+            "id": "name_color",
+            "type": "color",
+            "label": {
+                "ar": "لون اسم الماركة",
+                "en": "Brand name color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون الخلفية",
+                "en": "Background color"
+            },
+            "default": "#141414"
+        },
+        {
+            "id": "accent_color",
+            "type": "color",
+            "label": {
+                "ar": "لون شريط التمرير",
+                "en": "Scrollbar color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "slides_desktop",
+            "type": "select",
+            "label": {
+                "ar": "عدد الماركات على الشاشة الكبيرة",
+                "en": "Brands per view (desktop)"
+            },
+            "options": [
+                { "value": "5", "label": { "ar": "5", "en": "5" } },
+                { "value": "6", "label": { "ar": "6", "en": "6" } },
+                { "value": "7", "label": { "ar": "7", "en": "7" } },
+                { "value": "8", "label": { "ar": "8", "en": "8" } }
+            ],
+            "default": "6"
+        },
+        {
+            "id": "brands",
+            "type": "list",
+            "max_items": 24,
+            "label": {
+                "ar": "الماركات",
+                "en": "Brands"
+            },
+            "settings": [
+                {
+                    "id": "logo",
+                    "type": "image",
+                    "label": {
+                        "ar": "شعار الماركة (يفضّل PNG شفاف)",
+                        "en": "Brand logo (transparent PNG preferred)"
+                    }
+                },
+                {
+                    "id": "circle_bg",
+                    "type": "color",
+                    "label": {
+                        "ar": "لون الدائرة",
+                        "en": "Circle background"
+                    },
+                    "default": "#ff6900"
+                },
+                {
+                    "id": "name",
+                    "type": "text",
+                    "label": {
+                        "ar": "اسم الماركة",
+                        "en": "Brand name"
+                    }
+                },
+                {
+                    "id": "url",
+                    "type": "url",
+                    "label": {
+                        "ar": "رابط الماركة",
+                        "en": "Brand URL"
+                    }
+                }
+            ]
+        }
+    ]
+}

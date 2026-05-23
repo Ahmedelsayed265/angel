@@ -28,6 +28,12 @@
       {% if show_low_stock %}
         <span class="angel-cp-card__badge angel-cp-card__badge--stock">على وشك النفاذ</span>
       {% endif %}
+      {% if store.settings.products.reviews_enabled and product.rating and product.rating.average %}
+        <span class="angel-cp-card__rating" dir="ltr">
+          <span class="angel-cp-card__rating-star" aria-hidden="true">★</span>
+          {{ product.rating.average | round(1) }}
+        </span>
+      {% endif %}
       <img
         class="angel-cp-card__img"
         src="{{ product.main_image.image.small if product.main_image else image_url(('product-img.svg' | asset_url), w=235, q=100, f='auto') }}"

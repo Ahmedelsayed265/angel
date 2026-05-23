@@ -1,0 +1,97 @@
+{
+    "section_id": "angel-flip-banner-section",
+    "template": "sections/flip-banner-section.jinja",
+    "icon": "fa fa-clone",
+    "name": {
+        "ar": "بانر قلب 3D",
+        "en": "3D flip banner"
+    },
+    "settings": [
+        {
+            "id": "image_front",
+            "type": "image",
+            "label": {
+                "ar": "الصورة الأولى",
+                "en": "Image 1"
+            }
+        },
+        {
+            "id": "url_front",
+            "type": "url",
+            "label": {
+                "ar": "رابط الصورة الأولى (اختياري)",
+                "en": "Image 1 link (optional)"
+            }
+        },
+        {
+            "id": "image_back",
+            "type": "image",
+            "label": {
+                "ar": "الصورة الثانية",
+                "en": "Image 2"
+            }
+        },
+        {
+            "id": "url_back",
+            "type": "url",
+            "label": {
+                "ar": "رابط الصورة الثانية (اختياري)",
+                "en": "Image 2 link (optional)"
+            }
+        },
+        {
+            "id": "flip_interval",
+            "type": "number",
+            "label": {
+                "ar": "مدة الانتظار بين القلبات (ثانية)",
+                "en": "Seconds between flips"
+            },
+            "default": 5,
+            "min": 3,
+            "max": 30
+        },
+        {
+            "id": "flip_duration",
+            "type": "select",
+            "label": {
+                "ar": "سرعة حركة القلب",
+                "en": "Flip animation speed"
+            },
+            "options": [
+                { "value": "600", "label": { "ar": "سريع", "en": "Fast" } },
+                { "value": "800", "label": { "ar": "متوسط", "en": "Medium" } },
+                { "value": "1000", "label": { "ar": "بطيء", "en": "Slow" } }
+            ],
+            "default": "800"
+        },
+        {
+            "id": "pause_on_hover",
+            "type": "checkbox",
+            "label": {
+                "ar": "إيقاف التبديل عند تمرير الماوس",
+                "en": "Pause on hover"
+            },
+            "default": true
+        },
+        {
+            "id": "bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون الخلفية",
+                "en": "Background color"
+            },
+            "default": "#141414"
+        },
+        {
+            "id": "border_radius",
+            "type": "number",
+            "label": {
+                "ar": "انحناء الزوايا (px)",
+                "en": "Border radius (px)"
+            },
+            "default": 12,
+            "min": 0,
+            "max": 32
+        }
+    ]
+}

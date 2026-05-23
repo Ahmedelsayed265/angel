@@ -1,0 +1,214 @@
+{
+    "section_id": "angel-product-spotlight-section",
+    "template": "sections/product-spotlight-section.jinja",
+    "icon": "fa fa-bolt",
+    "name": {
+        "ar": "بانر منتج مميز",
+        "en": "Product spotlight"
+    },
+    "settings": [
+        {
+            "id": "product",
+            "type": "product",
+            "label": {
+                "ar": "المنتج (اختر منتجاً واحداً)",
+                "en": "Product (select one)"
+            }
+        },
+        {
+            "id": "video",
+            "type": "video",
+            "label": {
+                "ar": "فيديو الجانب",
+                "en": "Side video"
+            }
+        },
+        {
+            "id": "video_loop",
+            "type": "checkbox",
+            "label": {
+                "ar": "تكرار الفيديو (Loop)",
+                "en": "Loop video"
+            },
+            "default": true
+        },
+        {
+            "id": "image",
+            "type": "image",
+            "label": {
+                "ar": "صورة مخصصة (أو غلاف الفيديو قبل التشغيل)",
+                "en": "Custom image (or video poster)"
+            }
+        },
+        {
+            "id": "title",
+            "type": "text",
+            "label": {
+                "ar": "العنوان",
+                "en": "Title"
+            },
+            "default": "امتلك القوة من إيه إم دي"
+        },
+        {
+            "id": "subtitle",
+            "type": "text",
+            "label": {
+                "ar": "العنوان الفرعي",
+                "en": "Subtitle"
+            },
+            "default": "عرض خاص على معالج ryzen 9550x"
+        },
+        {
+            "id": "show_timer_label",
+            "type": "checkbox",
+            "label": {
+                "ar": "إظهار نص المؤقت (بدون عدّاد)",
+                "en": "Show timer label (no countdown)"
+            },
+            "default": true
+        },
+        {
+            "id": "timer_label",
+            "type": "text",
+            "label": {
+                "ar": "نص المؤقت",
+                "en": "Timer label"
+            },
+            "default": "متبقي على انتهاء الخصم:"
+        },
+        {
+            "id": "feature_heading",
+            "type": "text",
+            "label": {
+                "ar": "عنوان الميزة",
+                "en": "Feature heading"
+            },
+            "default": "المعالج الأقوى في العالم"
+        },
+        {
+            "id": "feature_text",
+            "type": "textarea",
+            "label": {
+                "ar": "وصف الميزة",
+                "en": "Feature description"
+            },
+            "default": "أداء فائق للألعاب والإنتاجية مع تقنية V-Cache المتقدمة."
+        },
+        {
+            "id": "add_to_cart_text",
+            "type": "text",
+            "label": {
+                "ar": "نص زر أضف للسلة",
+                "en": "Add to cart text"
+            },
+            "default": "أضف للسلة"
+        },
+        {
+            "id": "cart_btn_text",
+            "type": "text",
+            "label": {
+                "ar": "نص زر السلة",
+                "en": "Cart button text"
+            },
+            "default": "سلة المشتريات"
+        },
+        {
+            "id": "cart_btn_url",
+            "type": "url",
+            "label": {
+                "ar": "رابط زر السلة",
+                "en": "Cart button URL"
+            }
+        },
+        {
+            "id": "title_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان",
+                "en": "Title color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "subtitle_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان الفرعي",
+                "en": "Subtitle color"
+            },
+            "default": "#ffffff"
+        },
+        {
+            "id": "bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون الخلفية",
+                "en": "Background color"
+            },
+            "default": "#1a1a1a"
+        },
+        {
+            "id": "accent_color",
+            "type": "color",
+            "label": {
+                "ar": "لون التمييز",
+                "en": "Accent color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "sale_price_color",
+            "type": "color",
+            "label": {
+                "ar": "لون سعر العرض",
+                "en": "Sale price color"
+            },
+            "default": "#e53935"
+        },
+        {
+            "id": "add_btn_bg",
+            "type": "color",
+            "label": {
+                "ar": "لون زر أضف للسلة",
+                "en": "Add to cart background"
+            },
+            "default": "#e53935"
+        },
+        {
+            "id": "cart_btn_bg",
+            "type": "color",
+            "label": {
+                "ar": "لون زر السلة",
+                "en": "Cart button background"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "features",
+            "type": "list",
+            "max_items": 6,
+            "label": {
+                "ar": "أيقونات المميزات",
+                "en": "Feature icons"
+            },
+            "settings": [
+                {
+                    "id": "icon",
+                    "type": "image",
+                    "label": {
+                        "ar": "الأيقونة",
+                        "en": "Icon"
+                    }
+                },
+                {
+                    "id": "label",
+                    "type": "text",
+                    "label": {
+                        "ar": "وصف (للوصول)",
+                        "en": "Label (accessibility)"
+                    }
+                }
+            ]
+        }
+    ]
+}

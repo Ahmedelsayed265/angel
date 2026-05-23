@@ -1,6 +1,7 @@
-/* Category products swiper — load after angel-product.css */
+/* Category products & sales season swipers — load after angel-product.css */
 
-.angel-category-products-swiper .swiper-slide .product-item.angel-product-card {
+.angel-category-products-swiper .swiper-slide .product-item.angel-product-card,
+.angel-sales-season-swiper .swiper-slide .product-item.angel-product-card {
   position: relative;
   display: flex;
   flex: 1 1 auto;
@@ -16,7 +17,8 @@
   box-shadow: none;
 }
 
-.angel-category-products-swiper .swiper-slide .angel-product-card__inner {
+.angel-category-products-swiper .swiper-slide .angel-product-card__inner,
+.angel-sales-season-swiper .swiper-slide .angel-product-card__inner {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -25,13 +27,15 @@
   height: 100%;
 }
 
-.angel-category-products-swiper .swiper-slide .angel-grouped-card__media {
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__media,
+.angel-sales-season-swiper .swiper-slide .angel-grouped-card__media {
   aspect-ratio: 1 / 0.82;
   flex-shrink: 0;
   overflow: hidden;
 }
 
-.angel-category-products-swiper .swiper-slide .angel-grouped-card__media-link {
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__media-link,
+.angel-sales-season-swiper .swiper-slide .angel-grouped-card__media-link {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,7 +43,8 @@
   inset: 0;
 }
 
-.angel-category-products-swiper .swiper-slide .angel-grouped-card__img {
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__img,
+.angel-sales-season-swiper .swiper-slide .angel-grouped-card__img {
   position: relative;
   display: block;
   width: auto;
@@ -50,14 +55,17 @@
   object-position: center center;
 }
 
-.angel-category-products-swiper .swiper-slide .angel-grouped-card__body {
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__body,
+.angel-sales-season-swiper .swiper-slide .angel-grouped-card__body {
   flex: 1 1 auto;
   gap: 6px;
   padding: 8px 8px 6px;
 }
 
 .angel-category-products-swiper .swiper-slide .angel-grouped-card__title,
-.angel-category-products-swiper .swiper-slide .angel-grouped-card__title a {
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__title a,
+.angel-sales-season-swiper .swiper-slide .angel-grouped-card__title,
+.angel-sales-season-swiper .swiper-slide .angel-grouped-card__title a {
   display: -webkit-box;
   font-size: 13px;
   line-height: 1.35;
@@ -67,25 +75,30 @@
   word-break: break-word;
 }
 
-.angel-category-products-swiper .swiper-slide .angel-grouped-card__prices {
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__prices,
+.angel-sales-season-swiper .swiper-slide .angel-grouped-card__prices {
   font-size: 13px;
 }
 
-.angel-category-products-swiper .swiper-slide .angel-grouped-card__footer {
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__footer,
+.angel-sales-season-swiper .swiper-slide .angel-grouped-card__footer {
   flex-shrink: 0;
   margin-top: auto;
   padding: 0 8px 8px;
 }
 
-.angel-category-products-swiper .swiper-slide .angel-grouped-card__btn {
+.angel-category-products-swiper .swiper-slide .angel-grouped-card__btn,
+.angel-sales-season-swiper .swiper-slide .angel-grouped-card__btn {
   min-height: 40px;
   width: 100%;
 }
 
-.angel-category-products-swiper .swiper-slide .angel-product-card__variants {
+.angel-category-products-swiper .swiper-slide .angel-product-card__variants,
+.angel-sales-season-swiper .swiper-slide .angel-product-card__variants {
   max-width: 100%;
 }
 
-.angel-category-products-swiper .swiper-slide .angel-product-card__option--color .angel-text-option__choices {
+.angel-category-products-swiper .swiper-slide .angel-product-card__option--color .angel-text-option__choices,
+.angel-sales-season-swiper .swiper-slide .angel-product-card__option--color .angel-text-option__choices {
   justify-content: center;
 }

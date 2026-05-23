@@ -1,0 +1,117 @@
+{% set products_data = safeget(settings, "products", {}) %}
+{% set products = products_data.results if products_data.results else [] %}
+{% set section_title = settings.title | default("لايفوتك موسم التخفيضات") %}
+{% set subtitle = settings.subtitle | default("خصم لفترة محدودة حتى 50%") %}
+{% set more_text = settings.more_text | default("تصفح المزيد") %}
+{% set more_url = settings.more_url | default(products_data.url if products_data.url else "") %}
+{% set header_icon = settings.header_icon | default("") %}
+{% set title_color = settings.title_color | default("#54c8e9") %}
+{% set subtitle_color = settings.subtitle_color | default("#ffffff") %}
+{% set bg_color = settings.bg_color | default("#1a1a1a") %}
+{% set accent = settings.accent_color | default("#54c8e9") %}
+{% set slides_desktop = (settings.slides_desktop | default('6')) | int %}
+{% set slides_count = slides_desktop if slides_desktop >= 4 and slides_desktop <= 8 else 6 %}
+
+{% if section_title or products | length > 0 %}
+<link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
+<link rel="stylesheet" href="{{ ('angel-product.css?v=0.1.044') | asset_url }}">
+<link rel="stylesheet" href="{{ ('angel-category-products.css?v=0.1.044') | asset_url }}">
+
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-sales-season"
+  style="
+    --ss-bg: {{ bg_color }};
+    --ss-title: {{ title_color }};
+    --ss-subtitle: {{ subtitle_color }};
+    --ss-accent: {{ accent }};
+    --ss-slides: {{ slides_count }};
+  "
+>
+  <div class="container angel-sales-season__inner">
+    {% if header_icon or section_title or subtitle or more_text %}
+      <header class="angel-sales-season__header">
+        {% if header_icon %}
+          <img class="angel-sales-season__icon" src="{{ header_icon }}" alt="" width="40" height="40" loading="eager">
+        {% endif %}
+        {% if section_title %}
+          <h2 class="angel-sales-season__title">{{ section_title }}</h2>
+        {% endif %}
+        {% if subtitle %}
+          <p class="angel-sales-season__subtitle">{{ subtitle }}</p>
+        {% endif %}
+        {% if more_text %}
+          <a
+            class="angel-sales-season__more"
+            href="{{ more_url if more_url else 'javascript:;' }}"
+            {% if not more_url %}aria-disabled="true" tabindex="-1"{% endif %}
+          >{{ more_text }}</a>
+        {% endif %}
+      </header>
+    {% endif %}
+
+    {% if products | length > 0 %}
+      <div class="angel-sales-season__slider-wrap">
+        <div class="swiper angel-sales-season-swiper">
+          <div class="swiper-wrapper">
+            {% for product in products %}
+              <div class="swiper-slide">
+                {% include 'components/product-card.jinja' %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="angel-sales-season__scrollbar swiper-scrollbar" aria-hidden="true"></div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
+<script>
+  (function () {
+    var section = document.getElementById('{{ sectionId }}');
+    if (!section) return;
+
+    function initSwiper() {
+      var el = section.querySelector('.angel-sales-season-swiper');
+      if (!el || el.classList.contains('swiper-initialized') || typeof Swiper === 'undefined') {
+        return !!el && el.classList.contains('swiper-initialized');
+      }
+
+      var scrollbarEl = section.querySelector('.angel-sales-season__scrollbar');
+      var isRtl = window.appDirection === 'rtl';
+
+      function updateScrollbar(sw) {
+        if (!scrollbarEl) return;
+        scrollbarEl.style.display = sw.isLocked ? 'none' : '';
+      }
+
+      new Swiper(el, {
+        slidesPerView: 'auto',
+        slidesPerGroup: 1,
+        spaceBetween: 12,
+        speed: 500,
+        direction: 'horizontal',
+        rtl: isRtl,
+        watchOverflow: true,
+        observer: true,
+        observeParents: true,
+        scrollbar: scrollbarEl ? { el: scrollbarEl, draggable: true, hide: false } : false,
+        on: {
+          init: function () { updateScrollbar(this); },
+          resize: function () { updateScrollbar(this); },
+          breakpoint: function () { updateScrollbar(this); }
+        }
+      });
+
+      return true;
+    }
+
+    if (!initSwiper()) {
+      window.addEventListener('load', initSwiper);
+    }
+  })();
+</script>
+{% endif %}

@@ -1,0 +1,122 @@
+{% set image_front = settings.image_front | default("") %}
+{% set url_front = settings.url_front | default("") %}
+{% set image_back = settings.image_back | default("") %}
+{% set url_back = settings.url_back | default("") %}
+
+{% set flip_interval_sec = (settings.flip_interval | default(5)) | int %}
+{% set flip_interval_ms = (flip_interval_sec if flip_interval_sec >= 3 else 5) * 1000 %}
+{% set flip_duration = (settings.flip_duration | default('800')) | int %}
+{% set pause_on_hover = settings.pause_on_hover | default(true) %}
+{% set bg_color = settings.bg_color | default("#141414") %}
+{% set border_radius = (settings.border_radius | default(12)) | int %}
+
+{% set can_flip = image_front and image_back %}
+
+{% if image_front or image_back %}
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-flip-banner{% if not can_flip %} angel-flip-banner--static{% endif %}"
+  style="
+    --afb-bg: {{ bg_color }};
+    --afb-radius: {{ border_radius if border_radius >= 0 else 12 }}px;
+    --afb-flip-duration: {{ flip_duration if flip_duration >= 400 else 800 }}ms;
+  "
+  {% if can_flip %}
+    data-flip-interval="{{ flip_interval_ms }}"
+    data-pause-hover="{{ 'true' if pause_on_hover else 'false' }}"
+  {% endif %}
+>
+  <div class="container angel-flip-banner__inner">
+    <div class="angel-flip-banner__scene">
+      <div class="angel-flip-banner__card" data-flip-banner-card>
+        {% if image_front %}
+          <div class="angel-flip-banner__face angel-flip-banner__face--front">
+            {% if url_front %}
+              <a class="angel-flip-banner__link" href="{{ url_front }}">
+            {% endif %}
+            <img
+              class="angel-flip-banner__img"
+              src="{{ image_front }}"
+              alt=""
+              loading="eager"
+              width="1200"
+              height="320"
+            >
+            {% if url_front %}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if image_back %}
+          <div class="angel-flip-banner__face angel-flip-banner__face--back">
+            {% if url_back %}
+              <a class="angel-flip-banner__link" href="{{ url_back }}">
+            {% endif %}
+            <img
+              class="angel-flip-banner__img"
+              src="{{ image_back }}"
+              alt=""
+              loading="{% if image_front %}lazy{% else %}eager{% endif %}"
+              width="1200"
+              height="320"
+            >
+            {% if url_back %}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if can_flip %}
+<script>
+  (function () {
+    var section = document.getElementById('{{ sectionId }}');
+    if (!section) return;
+
+    var card = section.querySelector('[data-flip-banner-card]');
+    if (!card) return;
+
+    var intervalMs = parseInt(section.getAttribute('data-flip-interval'), 10) || 5000;
+    var pauseOnHover = section.getAttribute('data-pause-hover') === 'true';
+    var timerId = null;
+    var flipped = false;
+
+    function prefersReducedMotion() {
+      return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    function flip() {
+      flipped = !flipped;
+      card.classList.toggle('is-flipped', flipped);
+    }
+
+    function start() {
+      if (prefersReducedMotion()) return;
+      stop();
+      timerId = window.setInterval(flip, intervalMs);
+    }
+
+    function stop() {
+      if (timerId) {
+        window.clearInterval(timerId);
+        timerId = null;
+      }
+    }
+
+    start();
+
+    if (pauseOnHover) {
+      section.addEventListener('mouseenter', stop);
+      section.addEventListener('mouseleave', start);
+      section.addEventListener('focusin', stop);
+      section.addEventListener('focusout', start);
+    }
+  })();
+</script>
+{% endif %}
+{% endif %}

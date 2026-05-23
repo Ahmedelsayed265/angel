@@ -1,0 +1,128 @@
+{% set brands = safeget(settings, "brands", []) %}
+{% set section_title = settings.title | default("ماركات ستحبها") %}
+{% set subtitle = settings.subtitle | default("أفضل الماركات العالمية") %}
+{% set title_color = settings.title_color | default("#54c8e9") %}
+{% set subtitle_color = settings.subtitle_color | default("#ffffff") %}
+{% set name_color = settings.name_color | default("#54c8e9") %}
+{% set bg_color = settings.bg_color | default("#141414") %}
+{% set accent = settings.accent_color | default("#54c8e9") %}
+{% set slides_desktop = (settings.slides_desktop | default('6')) | int %}
+{% set slides_count = slides_desktop if slides_desktop >= 5 and slides_desktop <= 8 else 6 %}
+
+{% if section_title or brands | length > 0 %}
+<link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
+
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-brands-showcase"
+  style="
+    --abs-bg: {{ bg_color }};
+    --abs-title: {{ title_color }};
+    --abs-subtitle: {{ subtitle_color }};
+    --abs-name: {{ name_color }};
+    --abs-accent: {{ accent }};
+    --abs-slides: {{ slides_count }};
+  "
+>
+  <div class="container angel-brands-showcase__inner">
+    {% if section_title or subtitle %}
+      <header class="angel-brands-showcase__header">
+        {% if section_title %}
+          <h2 class="angel-brands-showcase__title">{{ section_title }}</h2>
+        {% endif %}
+        {% if subtitle and subtitle | trim != section_title | trim %}
+          <p class="angel-brands-showcase__subtitle">{{ subtitle }}</p>
+        {% endif %}
+      </header>
+    {% endif %}
+
+    {% if brands | length > 0 %}
+      <div class="angel-brands-showcase__slider-wrap">
+        <div class="swiper angel-brands-showcase-swiper">
+          <div class="swiper-wrapper">
+            {% for item in brands %}
+              {% if item.logo or item.name %}
+                <div class="swiper-slide">
+                  <a
+                    class="angel-brands-showcase__card"
+                    href="{{ item.url if item.url else 'javascript:;' }}"
+                    {% if not item.url %}aria-disabled="true" tabindex="-1"{% endif %}
+                  >
+                    {% if item.logo %}
+                      <span
+                        class="angel-brands-showcase__circle"
+                        style="--abs-circle-bg: {{ item.circle_bg | default('#ff6900') }};"
+                      >
+                        <img
+                          class="angel-brands-showcase__logo"
+                          src="{{ item.logo }}"
+                          alt="{{ item.name if item.name else '' }}"
+                          loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
+                          width="128"
+                          height="128"
+                        >
+                      </span>
+                    {% endif %}
+                    {% if item.name %}
+                      <span class="angel-brands-showcase__name">{{ item.name }}</span>
+                    {% endif %}
+                  </a>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="angel-brands-showcase__scrollbar swiper-scrollbar" aria-hidden="true"></div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
+<script>
+  (function () {
+    var section = document.getElementById('{{ sectionId }}');
+    if (!section) return;
+
+    function initSwiper() {
+      var el = section.querySelector('.angel-brands-showcase-swiper');
+      if (!el || el.classList.contains('swiper-initialized') || typeof Swiper === 'undefined') {
+        return !!el && el.classList.contains('swiper-initialized');
+      }
+
+      var scrollbarEl = section.querySelector('.angel-brands-showcase__scrollbar');
+      var isRtl = window.appDirection === 'rtl';
+
+      function updateScrollbar(sw) {
+        if (!scrollbarEl) return;
+        scrollbarEl.style.display = sw.isLocked ? 'none' : '';
+      }
+
+      new Swiper(el, {
+        slidesPerView: 'auto',
+        slidesPerGroup: 1,
+        spaceBetween: 20,
+        speed: 500,
+        direction: 'horizontal',
+        rtl: isRtl,
+        watchOverflow: true,
+        observer: true,
+        observeParents: true,
+        scrollbar: scrollbarEl ? { el: scrollbarEl, draggable: true, hide: false } : false,
+        on: {
+          init: function () { updateScrollbar(this); },
+          resize: function () { updateScrollbar(this); },
+          breakpoint: function () { updateScrollbar(this); }
+        }
+      });
+
+      return true;
+    }
+
+    if (!initSwiper()) {
+      window.addEventListener('load', initSwiper);
+    }
+  })();
+</script>
+{% endif %}

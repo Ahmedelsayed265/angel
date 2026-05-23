@@ -1,0 +1,133 @@
+{% set brands = safeget(settings, "brands", []) %}
+{% set section_title = settings.title | default("تسوق حسب الماركة") %}
+{% set subtitle = settings.subtitle | default("أفضل الماركات العالمية") %}
+{% set view_all_text = settings.view_all_text | default("عرض الكل") %}
+{% set view_all_url = settings.view_all_url | default("") %}
+{% set title_color = settings.title_color | default("#54c8e9") %}
+{% set subtitle_color = settings.subtitle_color | default("rgba(255, 255, 255, 0.55)") %}
+{% set bg_color = settings.bg_color | default("#2b2b2b") %}
+{% set card_bg = settings.card_bg_color | default("#ffffff") %}
+{% set accent = settings.accent_color | default("#54c8e9") %}
+{% set slides_desktop = (settings.slides_desktop | default('8')) | int %}
+{% set slides_count = slides_desktop if slides_desktop >= 4 and slides_desktop <= 10 else 8 %}
+
+{% if section_title or brands | length > 0 %}
+<link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
+
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-shop-brands angel-shop-brands--cards"
+  style="
+    --asb-bg: {{ bg_color }};
+    --asb-title: {{ title_color }};
+    --asb-subtitle: {{ subtitle_color }};
+    --asb-card-bg: {{ card_bg }};
+    --asb-accent: {{ accent }};
+    --asb-slides: {{ slides_count }};
+  "
+>
+  <div class="container angel-shop-brands__inner">
+    {% if section_title or subtitle or view_all_text %}
+      <header class="angel-shop-brands__header angel-shop-brands__header--row">
+        <div class="angel-shop-brands__heading">
+          {% if section_title %}
+            <h2 class="angel-shop-brands__title">{{ section_title }}</h2>
+          {% endif %}
+          {% if subtitle %}
+            <p class="angel-shop-brands__subtitle">{{ subtitle }}</p>
+          {% endif %}
+        </div>
+        {% if view_all_text %}
+          <a
+            class="angel-shop-brands__view-all"
+            href="{{ view_all_url if view_all_url else 'javascript:;' }}"
+            {% if not view_all_url %}aria-disabled="true" tabindex="-1"{% endif %}
+          >{{ view_all_text }}</a>
+        {% endif %}
+      </header>
+    {% endif %}
+
+    {% if brands | length > 0 %}
+      <div class="angel-shop-brands__slider-wrap">
+        <div class="swiper angel-shop-brands-swiper">
+          <div class="swiper-wrapper">
+            {% for item in brands %}
+              {% if item.logo %}
+                <div class="swiper-slide">
+                  <a
+                    class="angel-shop-brands-card angel-shop-brands-card--rect"
+                    href="{{ item.url if item.url else 'javascript:;' }}"
+                    {% if not item.url %}aria-disabled="true" tabindex="-1"{% endif %}
+                  >
+                    <img
+                      class="angel-shop-brands-card__logo"
+                      src="{{ item.logo }}"
+                      alt="{{ item.name if item.name else '' }}"
+                      loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
+                      width="120"
+                      height="64"
+                    >
+                  </a>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="angel-shop-brands__scrollbar swiper-scrollbar" aria-hidden="true"></div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
+<script>
+  (function () {
+    var section = document.getElementById('{{ sectionId }}');
+    if (!section) return;
+
+    function initSwiper() {
+      var el = section.querySelector('.angel-shop-brands-swiper');
+      if (!el || el.classList.contains('swiper-initialized') || typeof Swiper === 'undefined') {
+        return !!el && el.classList.contains('swiper-initialized');
+      }
+
+      var scrollbarEl = section.querySelector('.angel-shop-brands__scrollbar');
+      var isRtl = window.appDirection === 'rtl';
+
+      function updateScrollbar(sw) {
+        if (!scrollbarEl) return;
+        scrollbarEl.style.display = sw.isLocked ? 'none' : '';
+      }
+
+      new Swiper(el, {
+        slidesPerView: 'auto',
+        slidesPerGroup: 1,
+        spaceBetween: 14,
+        speed: 500,
+        direction: 'horizontal',
+        rtl: isRtl,
+        watchOverflow: true,
+        observer: true,
+        observeParents: true,
+        scrollbar: scrollbarEl ? {
+          el: scrollbarEl,
+          draggable: true,
+          hide: false
+        } : false,
+        on: {
+          init: function () { updateScrollbar(this); },
+          resize: function () { updateScrollbar(this); },
+          breakpoint: function () { updateScrollbar(this); }
+        }
+      });
+
+      return true;
+    }
+
+    if (!initSwiper()) {
+      window.addEventListener('load', initSwiper);
+    }
+  })();
+</script>
+{% endif %}

@@ -1,0 +1,142 @@
+{
+    "section_id": "angel-shop-by-brand-section",
+    "template": "sections/shop-by-brand-section.jinja",
+    "icon": "fa fa-tags",
+    "name": {
+        "ar": "تسوق حسب الماركة",
+        "en": "Shop by brand"
+    },
+    "settings": [
+        {
+            "id": "title",
+            "type": "text",
+            "label": {
+                "ar": "العنوان",
+                "en": "Title"
+            },
+            "default": "تسوق حسب الماركة"
+        },
+        {
+            "id": "subtitle",
+            "type": "text",
+            "label": {
+                "ar": "العنوان الفرعي",
+                "en": "Subtitle"
+            },
+            "default": "أفضل الماركات العالمية"
+        },
+        {
+            "id": "view_all_text",
+            "type": "text",
+            "label": {
+                "ar": "نص عرض الكل",
+                "en": "View all text"
+            },
+            "default": "عرض الكل"
+        },
+        {
+            "id": "view_all_url",
+            "type": "url",
+            "label": {
+                "ar": "رابط عرض الكل",
+                "en": "View all URL"
+            }
+        },
+        {
+            "id": "title_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان",
+                "en": "Title color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "subtitle_color",
+            "type": "color",
+            "label": {
+                "ar": "لون العنوان الفرعي",
+                "en": "Subtitle color"
+            },
+            "default": "#8a8a8a"
+        },
+        {
+            "id": "bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون الخلفية",
+                "en": "Background color"
+            },
+            "default": "#2b2b2b"
+        },
+        {
+            "id": "card_bg_color",
+            "type": "color",
+            "label": {
+                "ar": "لون خلفية البطاقة",
+                "en": "Card background"
+            },
+            "default": "#ffffff"
+        },
+        {
+            "id": "accent_color",
+            "type": "color",
+            "label": {
+                "ar": "لون التمييز",
+                "en": "Accent color"
+            },
+            "default": "#54c8e9"
+        },
+        {
+            "id": "slides_desktop",
+            "type": "select",
+            "label": {
+                "ar": "عدد الشعارات على الشاشة الكبيرة",
+                "en": "Logos per view (desktop)"
+            },
+            "options": [
+                { "value": "6", "label": { "ar": "6", "en": "6" } },
+                { "value": "7", "label": { "ar": "7", "en": "7" } },
+                { "value": "8", "label": { "ar": "8", "en": "8" } },
+                { "value": "9", "label": { "ar": "9", "en": "9" } },
+                { "value": "10", "label": { "ar": "10", "en": "10" } }
+            ],
+            "default": "8"
+        },
+        {
+            "id": "brands",
+            "type": "list",
+            "max_items": 24,
+            "label": {
+                "ar": "الماركات",
+                "en": "Brands"
+            },
+            "settings": [
+                {
+                    "id": "logo",
+                    "type": "image",
+                    "label": {
+                        "ar": "شعار الماركة",
+                        "en": "Brand logo"
+                    }
+                },
+                {
+                    "id": "name",
+                    "type": "text",
+                    "label": {
+                        "ar": "اسم الماركة (للوصول)",
+                        "en": "Brand name (accessibility)"
+                    }
+                },
+                {
+                    "id": "url",
+                    "type": "url",
+                    "label": {
+                        "ar": "رابط الماركة",
+                        "en": "Brand link"
+                    }
+                }
+            ]
+        }
+    ]
+}

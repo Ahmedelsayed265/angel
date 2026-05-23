@@ -99,32 +99,18 @@
 
       var isRtl = window.appDirection === 'rtl';
       var showArrows = {{ 'true' if show_arrows else 'false' }};
-      var productCount = parseInt(section.getAttribute('data-product-count'), 10) || 0;
-      var slidesDesktop = parseInt(section.getAttribute('data-slides-desktop'), 10) || 6;
-
-      function effectiveSlides(desired) {
-        if (!productCount) {
-          return desired;
-        }
-        return Math.min(desired, productCount);
-      }
+      var slideGap = 12;
 
       var swiper = new Swiper(el, {
-        slidesPerView: effectiveSlides(2),
+        slidesPerView: 'auto',
         slidesPerGroup: 1,
-        spaceBetween: 0,
+        spaceBetween: slideGap,
         speed: 500,
         direction: 'horizontal',
         rtl: isRtl,
         watchOverflow: true,
         observer: true,
         observeParents: true,
-        breakpoints: {
-          576: { slidesPerView: effectiveSlides(3) },
-          768: { slidesPerView: effectiveSlides(4) },
-          992: { slidesPerView: effectiveSlides(5) },
-          1200: { slidesPerView: effectiveSlides(slidesDesktop) }
-        },
         navigation: showArrows ? {
           nextEl: section.querySelector('.angel-category-products__nav--next'),
           prevEl: section.querySelector('.angel-category-products__nav--prev')
