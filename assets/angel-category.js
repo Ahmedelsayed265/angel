@@ -230,19 +230,6 @@
       }
     });
 
-    qsa('input[type="search"], input[type="text"]', root).forEach(
-      function (input) {
-        if (input.closest(".angel-category-filter-section--price")) {
-          return;
-        }
-        if (!input.getAttribute("placeholder")) {
-          input.setAttribute(
-            "placeholder",
-            input.getAttribute("aria-label") || "بحث",
-          );
-        }
-      },
-    );
   }
 
   function observeFilters() {
@@ -254,6 +241,9 @@
     enhanceFilterPanel();
     migrateBootstrapAttributes(root);
     initBootstrapWidgets(root);
+    if (window.AngelSideFilters && window.AngelSideFilters.enhance) {
+      window.AngelSideFilters.enhance();
+    }
 
     if (!window.MutationObserver) {
       return;

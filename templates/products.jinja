@@ -4,6 +4,7 @@
 
 {% block top_links %}
 	<link rel="stylesheet" type="text/css" href="{{ 'toastr.min.css' | asset_url }}"/>
+	<link rel="stylesheet" type="text/css" href="{{ ('angel-side-filters.css?v=0.1.1') | asset_url }}"/>
 {% endblock %}
 
 
@@ -30,7 +31,9 @@
 
      <div class="container d-flex flex-row">
         {% if  products.filters|length > 0 %}
-            {% set async=true %} {% include 'vitrin:products/filters.jinja' %}
+            <div class="angel-side-filters angel-side-filters--panel">
+                {% set async=true %} {% include 'vitrin:products/filters.jinja' %}
+            </div>
         {% endif %}
         <div class="products-container flex-grow-1 pt-4">
             <div>
@@ -52,6 +55,7 @@
 
 {% block footer_scripts %}
     <script type="text/javascript" src="{{ 'toastr.min.js' | asset_url }}" defer></script>
+    <script type="text/javascript" src="{{ ('angel-side-filters.js?v=0.1.1') | asset_url }}" defer></script>
     <script>
         window.onProductAttributesTriggered = function(){
             $('#products-list').css('opacity', '0.4');
@@ -72,6 +76,9 @@
             // Reload bundle offers for newly loaded products
             if (window.bundleOffersLoader) {
                 window.bundleOffersLoader.reload();
+            }
+            if (window.AngelSideFilters && window.AngelSideFilters.enhance) {
+                window.AngelSideFilters.enhance();
             }
         }
 

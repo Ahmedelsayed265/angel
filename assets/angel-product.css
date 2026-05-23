@@ -4021,6 +4021,7 @@ body.angel-product-lightbox-open {
   box-shadow: none;
   background: var(--primary-color) !important;
   color: #232323 !important;
+  width: 100%;
 }
 
 .products-list .product-item.angel-product-card {

@@ -52,7 +52,7 @@
 }
 
 .angel-cart-page__title {
-  margin: 0 0 20px;
+  margin: 0 0 4px;
   font-size: 20px;
   font-weight: 700;
   line-height: 1.25;
@@ -515,13 +515,100 @@
 }
 
 /* —— Empty cart —— */
-.angel-cart-page .cart-empty {
-  padding: 64px 16px;
-  text-align: center;
+.angel-cart-page .angel-cart-empty {
+  padding: 48px 16px 40px;
 }
 
-.angel-cart-page .cart-empty h2 {
-  color: var(--angel-cart-text);
+.angel-cart-empty__inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+[dir="ltr"] .angel-cart-empty__inner {
+  flex-direction: row-reverse;
+}
+
+.angel-cart-empty__icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: #353535;
+  flex-shrink: 0;
+}
+
+.angel-cart-empty__icon-wrap .icon {
+  font-size: 46px;
+  line-height: 1;
+  color: #ffffff9e;
+}
+
+.angel-cart-empty__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  min-width: 0;
+}
+
+.angel-cart-empty__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: white;
+  white-space: nowrap;
+}
+
+.angel-cart-empty__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 18px;
+  padding: 4px 10px;
+  border: 1px solid var(--primary-color);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--primary-color);
+  font-size: 16px;
+  line-height: 1.3;
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.angel-cart-empty__btn:hover {
+  background: rgba(103, 199, 232, 0.1);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+@media (max-width: 575.98px) {
+  .angel-cart-empty__inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  [dir="ltr"] .angel-cart-empty__inner {
+    flex-direction: column;
+  }
+
+  .angel-cart-empty__content {
+    align-items: center;
+  }
+
+  .angel-cart-empty__title {
+    white-space: normal;
+  }
 }
 
 /* —— Recommendations (same product cards as category page) —— */

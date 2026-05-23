@@ -5,7 +5,8 @@
 {% block top_links %}
     <link rel="stylesheet" type="text/css" href="{{ 'toastr.min.css' | asset_url }}"/>
     <link rel="stylesheet" type="text/css" href="{{ 'swiper-bundle.min.css' | asset_url }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ ('angel-category.css?v=0.1.044') | asset_url }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ ('angel-category.css?v=0.1.046') | asset_url }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ ('angel-side-filters.css?v=0.1.1') | asset_url }}"/>
 {% endblock %}
 
 {% block main_content %}
@@ -23,13 +24,15 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div id="angel-category-filters" class="angel-category-filters">
-                        {% set async = true %}
-                        {% include 'vitrin:products/filters.jinja' %}
+                    <div class="angel-side-filters-panel__inner">
+                        <div id="angel-category-filters" class="angel-category-filters angel-side-filters">
+                            {% set async = true %}
+                            {% include 'vitrin:products/filters.jinja' %}
+                        </div>
+                        <button type="button" class="angel-category-filters__clear" data-angel-category-clear>
+                            {{ _("Clear filter") }}
+                        </button>
                     </div>
-                    <button type="button" class="angel-category-filters__clear" data-angel-category-clear>
-                        {{ _("Clear filter") }}
-                    </button>
                 </aside>
                 <div class="angel-category-page__sidebar-backdrop d-lg-none" data-angel-category-filter-close hidden></div>
             {% endif %}
@@ -77,7 +80,8 @@
 {% block footer_scripts %}
     <script type="text/javascript" src="{{ 'toastr.min.js' | asset_url }}" defer></script>
     <script type="text/javascript" src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
-    <script type="text/javascript" src="{{ ('angel-category.js?v=0.1.044') | asset_url }}" defer></script>
+    <script type="text/javascript" src="{{ ('angel-side-filters.js?v=0.1.1') | asset_url }}" defer></script>
+    <script type="text/javascript" src="{{ ('angel-category.js?v=0.1.047') | asset_url }}" defer></script>
     <script>
         window.onProductAttributesTriggered = function () {
             var list = document.getElementById('products-list');
