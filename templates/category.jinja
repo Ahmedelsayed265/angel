@@ -5,8 +5,7 @@
 {% block top_links %}
     <link rel="stylesheet" type="text/css" href="{{ 'toastr.min.css' | asset_url }}"/>
     <link rel="stylesheet" type="text/css" href="{{ 'swiper-bundle.min.css' | asset_url }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ ('angel-category.css?v=0.1.046') | asset_url }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ ('angel-side-filters.css?v=0.1.2') | asset_url }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ ('angel-category.css?v=0.1.050') | asset_url }}"/>
 {% endblock %}
 
 {% block main_content %}
@@ -17,7 +16,7 @@
     <div class="container">
         <div class="angel-category-page__layout">
             {% if products.filters | length > 0 %}
-                <aside class="angel-category-page__sidebar" aria-label="{{ _('Filter') }}">
+                <aside class="angel-category-page__sidebar" data-angel-filter-drawer aria-label="{{ _('Filter') }}">
                     <div class="angel-category-page__sidebar-head d-lg-none">
                         <span class="angel-category-page__sidebar-title">{{ _("Filter") }}</span>
                         <button type="button" class="angel-category-page__sidebar-close" data-angel-category-filter-close aria-label="{{ _('Close') }}">
@@ -80,7 +79,7 @@
 {% block footer_scripts %}
     <script type="text/javascript" src="{{ 'toastr.min.js' | asset_url }}" defer></script>
     <script type="text/javascript" src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
-    <script type="text/javascript" src="{{ ('angel-side-filters.js?v=0.1.2') | asset_url }}" defer></script>
+    <script type="text/javascript" src="{{ ('angel-side-filters.js?v=0.1.5') | asset_url }}" defer></script>
     <script type="text/javascript" src="{{ ('angel-category.js?v=0.1.048') | asset_url }}" defer></script>
     <script>
         window.angelProductCardLabels = {

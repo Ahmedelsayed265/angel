@@ -791,6 +791,9 @@ msgstr "السابق"
 msgid "Please choose product options first"
 msgstr "يجب اختيار المتغيرات أولاً"
 
+msgid "Please choose {name} before adding to cart"
+msgstr "يرجى اختيار {name} قبل الإضافة إلى السلة"
+
 msgid "Our suggestions"
 msgstr "مقترحاتنا"
 

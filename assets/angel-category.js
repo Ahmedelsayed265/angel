@@ -126,61 +126,13 @@
   }
 
   function initFilterDrawer() {
-    var page = qs(".angel-category-page");
-    if (!page) {
+    if (
+      window.AngelSideFilters &&
+      window.AngelSideFilters.initMobileFilterDrawer
+    ) {
+      window.AngelSideFilters.initMobileFilterDrawer();
       return;
     }
-
-    if (page.getAttribute("data-angel-filter-drawer-bound") === "true") {
-      return;
-    }
-    page.setAttribute("data-angel-filter-drawer-bound", "true");
-
-    var sidebar = qs(".angel-category-page__sidebar", page);
-    var backdrop = qs(".angel-category-page__sidebar-backdrop", page);
-    var openBtns = qsa("[data-angel-category-filter-toggle]", page);
-
-    function setOpen(open) {
-      if (!sidebar) {
-        return;
-      }
-      sidebar.classList.toggle("is-open", open);
-      if (backdrop) {
-        backdrop.hidden = !open;
-      }
-      document.body.classList.toggle("angel-category-filter-open", open);
-      qsa("[data-angel-category-filter-toggle]", page).forEach(function (btn) {
-        btn.setAttribute("aria-expanded", open ? "true" : "false");
-      });
-    }
-
-    page.addEventListener("click", function (event) {
-      if (event.target.closest("[data-angel-category-filter-toggle]")) {
-        event.preventDefault();
-        setOpen(true);
-        return;
-      }
-      if (event.target.closest("[data-angel-category-filter-close]")) {
-        event.preventDefault();
-        setOpen(false);
-      }
-    });
-
-    document.addEventListener("keydown", function (event) {
-      if (
-        event.key === "Escape" &&
-        sidebar &&
-        sidebar.classList.contains("is-open")
-      ) {
-        setOpen(false);
-      }
-    });
-
-    openBtns.forEach(function (btn) {
-      if (!btn.getAttribute("aria-expanded")) {
-        btn.setAttribute("aria-expanded", "false");
-      }
-    });
   }
 
   function initClearFilter() {
@@ -256,6 +208,9 @@
       enhanceFilterPanel();
       migrateBootstrapAttributes(root);
       initBootstrapWidgets(root);
+      if (window.AngelSideFilters && window.AngelSideFilters.enhance) {
+        window.AngelSideFilters.enhance();
+      }
     });
     observer.observe(root, { childList: true, subtree: true });
   }

@@ -577,6 +577,11 @@
   border-radius: 6px;
   background: #353535;
   margin-block: 8px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .angel-product-page .angel-product-urgency__title {
@@ -1089,6 +1094,7 @@
   background: #353535;
   border-radius: 12px;
   overflow: hidden;
+  border: 2px solid #353535;
 }
 
 .angel-grouped-card__media {
@@ -1645,6 +1651,10 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 768px) {
+    max-height: 97dvh;
+  }
 }
 
 .angel-grouped-quick-view__close {
@@ -1788,9 +1798,9 @@
   margin: 0 !important;
   height: 100% !important;
 
-  & button {
+  /* & button {
     background: #fff !important;
-  }
+  } */
 }
 
 .angel-grouped-quick-view__info {
@@ -3386,7 +3396,6 @@ body.angel-grouped-qv-open {
 /* Related */
 .angel-product-related {
   padding: 40px 0 24px;
-  background: var(--secondary-color-alt7, #ebebeb);
 }
 
 .angel-product-related__head {
@@ -3404,67 +3413,12 @@ body.angel-grouped-qv-open {
   margin: 0;
 }
 
-.angel-product-related__nav {
-  display: flex;
-  gap: 8px;
-}
-
 .angel-product-related__arrow {
-  width: auto;
-  height: auto;
-  padding: 4px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--primary-color);
-  font-size: 28px;
-  line-height: 1;
-  transition: color 0.2s ease;
-}
-
-.angel-product-related__arrow span {
-  color: inherit;
-}
-
-.angel-product-related__arrow.swiper-button-disabled {
-  color: #9ca3af;
-  opacity: 1;
-  pointer-events: none;
-  cursor: default;
+  display: none;
 }
 
 .angel-product-related .swiper-slide {
   height: auto;
-}
-
-.angel-product-related .product-item {
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  height: 100%;
-  padding: 12px;
-}
-
-.angel-product-related .product-title span {
-  color: #1a1a1a;
-  font-size: 14px;
-}
-
-.angel-product-related .section-product-price .product-price {
-  color: var(--primary-color) !important;
-}
-
-.angel-product-related .btn-add-to-cart,
-.angel-product-related .btn-product-card-select {
-  width: 100%;
-  background: var(--primary-color) !important;
-  border-radius: 6px;
-  font-size: 13px;
 }
 
 /* Sticky bar */

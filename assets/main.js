@@ -272,7 +272,7 @@ function addToWishlist(elm, productId) {
   const container = $(elm).closest('.add-to-wishlist');
 
   // Hide ALL heart buttons and show loader
-  container.find('.icon-heart-mask, .angel-grouped-card__action-btn--wishlist').each(function() {
+  container.find('.icon-heart-mask, .angel-grouped-card__action-btn--wishlist, .angel-cart-item__wishlist').each(function() {
     this.style.setProperty('display', 'none', 'important');
   });
   container.find('.loader').removeClass('d-none');
@@ -292,10 +292,10 @@ function addToWishlist(elm, productId) {
                           container.find('.icon-heart-mask:not([zid-visible-wishlist])')[0];
 
       if (filledButton) {
-        filledButton.style.setProperty('display', 'inline-block', 'important');
+        filledButton.style.setProperty('display', 'inline-flex', 'important');
         filledButton.classList.add('filled');
       } else {
-        elm.style.setProperty('display', 'inline-block', 'important');
+        elm.style.setProperty('display', 'inline-flex', 'important');
         $(elm).addClass('filled');
       }
 
@@ -307,7 +307,7 @@ function addToWishlist(elm, productId) {
     } else {
       // toastr.error(response.data.message);
       // Show the original button back on error
-      elm.style.setProperty('display', 'inline-block', 'important');
+      elm.style.setProperty('display', 'inline-flex', 'important');
       container.find('.loader').addClass('d-none');
     }
   });
@@ -317,7 +317,7 @@ function removeFromWishlist(elm, productId) {
   const container = $(elm).closest('.add-to-wishlist');
 
   // Hide ALL heart buttons and show loader
-  container.find('.icon-heart-mask, .angel-grouped-card__action-btn--wishlist').each(function() {
+  container.find('.icon-heart-mask, .angel-grouped-card__action-btn--wishlist, .angel-cart-item__wishlist').each(function() {
     this.style.setProperty('display', 'none', 'important');
   });
   container.find('.loader').removeClass('d-none');
