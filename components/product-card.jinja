@@ -3,112 +3,222 @@
 {# Reset each card so preorder_badge variant does not leak between list items #}
 {% set preorder_badge_variant = 'default' %}
 
-{% set selected_product = product.selected_product %}
-{% set has_preorder = product.effective_preorder_campaign is not none %}
-{% set can_preorder = product.can_be_preordered %}
+{% set card_product = product %}
+{% set selected_product = card_product.selected_product | default(card_product) %}
+{% set has_preorder = card_product.effective_preorder_campaign is not none %}
+{% set can_preorder = card_product.can_be_preordered %}
+{% set is_in_stock_or_preorderable = card_product.is_infinite or card_product.quantity > 0 or can_preorder %}
+{% set is_out_of_stock = (card_product.is_infinite == false and card_product.quantity <= 0) and not can_preorder %}
+{% set stock_qty = selected_product.quantity | default(card_product.quantity, true) %}
+{% set show_low_stock = (
+    not card_product.is_infinite
+    and stock_qty is not none
+    and stock_qty > 0
+    and stock_qty < 5
+    and (selected_product.in_stock | default(card_product.in_stock, true))
+) %}
+{% set has_variant_options = card_product.has_options or card_product.has_fields or card_product.has_variants or card_product.product_class == 'dynamic_bundle' %}
 
-{% set can_buy = (selected_product.in_stock or can_preorder) %}
-{% set is_in_stock_or_preorderable = product.is_infinite or product.quantity > 0 or can_preorder %}
-{% set is_out_of_stock = (product.is_infinite == false and product.quantity <= 0) and not can_preorder  %}
+{% set image_src = '' %}
+{% if card_product.main_image and card_product.main_image.image %}
+    {% set image_src = card_product.main_image.image.medium | default(card_product.main_image.image.full_size, true) %}
+{% elif card_product.images and card_product.images | length > 0 %}
+    {% set image_src = card_product.images[0].image.medium | default(card_product.images[0].image.full_size, true) %}
+{% endif %}
 
-<div class="product-item position-relative {% if is_out_of_stock %}product-item-out-of-stock{% endif %}">
-    {% if store.settings.products.wishlist_enabled == true %}
-      <span class="add-to-wishlist" data-wishlist-id="{{ product.id }}">
-        <span zid-visible-customer="true">
-            <button zid-visible-wishlist="{{ product.id }}" class="icon-heart-mask filled" onclick="addToWishlist(this, '{{ product.id }}')"></button>
-            <button zid-hidden-wishlist="{{ product.id }}" class="icon-heart-mask" onclick="addToWishlist(this, '{{ product.id }}')"></button>
-        </span>
-        <a zid-visible-guest="true" class="icon-heart-mask" href="/auth/login?redirect_to={{ session.url.path }}" onclick="event.preventDefault(); handleLoginAction('', false); return false;"></a>
-        <img class="loader d-none" src="{{ 'spinner.gif' | asset_url }}" width="20" height="20"/>
-      </span>
+{% set qv_brand_cat = card_product.categories[0] if card_product.categories and card_product.categories | length > 0 else none %}
+{% set qv_brand_img = '' %}
+{% set qv_brand_url = '' %}
+{% if qv_brand_cat %}
+    {% set qv_brand_url = (qv_brand_cat.url | default('', true)) | trim or url_for('category_details', category_id=qv_brand_cat.id, slug=qv_brand_cat.slug or qv_brand_cat.id) %}
+    {% if qv_brand_cat.cover_image %}
+        {% set qv_brand_img = image_url(qv_brand_cat.cover_image, w=160, q=90, f='auto') %}
+    {% elif qv_brand_cat.image %}
+        {% set qv_brand_img = image_url(qv_brand_cat.image, w=160, q=90, f='auto') %}
     {% endif %}
-    
-    <a href="/products/{{ product.slug }}" class="d-flex flex-column justify-content-start">
+{% endif %}
 
-        <div class="box-1-1">
-            <div class="content">
-                <div class="d-flex justify-content-center" style="width: 100%; height: 100%;">
-                   {% if product.badge %}
-                        {% set positionProductCard = true %}
-                        {% include 'vitrin:products/badge.jinja' %}
-                   {% endif %}
-                    <img id="product-card-img-{{ product.id }}"
-                            {% if product.images or product.videos %}
-                                    src="{{ product.main_image.image.small if product.main_image else '' }}"
-                             {% else %}
-                                 src="{{ image_url(('product-img.svg' | asset_url), w=235, q=100, f='auto') }}"
-                            {% endif %}
-                         alt="{{ product.name }}">
-                    <span class="product-card-bundle-offer" data-bundle-offer-product-id="{{ product.id }}"></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="product-title" style="margin-top: 15px"><span>{{ product.name | safe }}</span></div>
-        {% if store.settings.products.reviews_enabled %}
-            <div class="product-card-rating-wrapper" style="height: 18px">
-                {% if product.rating %}
-                    {% set rating=product.rating.average %}{% include 'components/rating-stars.jinja' %}
-                    {% if product.rating.total_count > 0 %}<span class="product-card-rating-count">({{ product.rating.total_count }})</span>{% endif %}
-                {% endif %}
-            </div>
+<div
+    class="product-item angel-product-card position-relative{% if is_out_of_stock %} product-item-out-of-stock{% endif %}"
+    data-product-id="{{ card_product.id }}"
+    data-needs-options="{{ 'true' if has_variant_options else 'false' }}"
+    {% if has_variant_options and selected_product.id %}data-selected-variant-id="{{ selected_product.id }}"{% endif %}
+>
+    <article class="angel-grouped-card angel-product-card__inner{% if is_out_of_stock %} angel-grouped-card--out-of-stock{% endif %}">
+        {% if show_low_stock %}
+            <span class="angel-grouped-card__low-stock product-card-low-stock">{{ _("Almost out of stock") }}</span>
         {% endif %}
-        <div class="product-crd-spec">
-            {% if product.formatted_sale_price is not none %}
-                <div class="section-product-price">
-                    <div class="product-price theme-title-primary"><span>{{ product.formatted_sale_price }}</span></div>
-                    <div style="color: #494949"><span class="product-prev-price">{{ product.formatted_price }}</span>
-                        <span style="color:#f25f5f;">
-                        &nbsp;  &nbsp;{{ _("Discount") }}&nbsp;{{ product.discount_percentage }}%
+
+        <div class="angel-grouped-card__media">
+            <a href="/products/{{ card_product.slug }}" class="angel-grouped-card__media-link" aria-label="{{ card_product.name | striptags }}">
+                {% if card_product.badge %}
+                    {% set positionProductCard = true %}
+                    <span class="angel-product-card__vitrin-badge" aria-hidden="true">
+                        {% include 'vitrin:products/badge.jinja' %}
+                    </span>
+                {% endif %}
+                <img
+                    id="product-card-img-{{ card_product.id }}"
+                    class="angel-grouped-card__img"
+                    src="{{ image_src if image_src else ('product-img.svg' | asset_url) }}"
+                    alt="{{ card_product.name | striptags }}"
+                    loading="lazy"
+                />
+                <span class="product-card-bundle-offer" data-bundle-offer-product-id="{{ card_product.id }}"></span>
+            </a>
+            <span class="angel-grouped-card__glass" aria-hidden="true"></span>
+
+            {% if card_product.discount_percentage and card_product.discount_percentage > 0 %}
+                <span class="angel-grouped-card__discount">{{ card_product.discount_percentage }}%</span>
+            {% endif %}
+
+            {% if card_product.formatted_sale_price is not none %}
+                <span class="angel-product-card__best-price">{{ _("Best price") }}</span>
+            {% endif %}
+
+            {% if store.settings.products.reviews_enabled and card_product.rating and card_product.rating.average %}
+                <span class="angel-grouped-card__rating" aria-hidden="true">
+                    <span class="angel-grouped-card__rating-star"><i class="sicon-star2"></i></span>
+                    <span class="angel-grouped-card__rating-value">{{ card_product.rating.average }}</span>
+                </span>
+            {% endif %}
+
+            <div class="angel-grouped-card__actions">
+                {% if store.settings.products.wishlist_enabled == true %}
+                    <span class="add-to-wishlist angel-grouped-card__wishlist" data-wishlist-id="{{ card_product.id }}">
+                        <span zid-visible-customer="true">
+                            <button
+                                type="button"
+                                zid-visible-wishlist="{{ card_product.id }}"
+                                class="angel-grouped-card__action-btn angel-grouped-card__action-btn--wishlist filled"
+                                aria-label="{{ _('Wishlist') }}"
+                                onclick="event.preventDefault(); event.stopPropagation(); addToWishlist(this, '{{ card_product.id }}')"
+                            ><i class="sicon-heart"></i></button>
+                            <button
+                                type="button"
+                                zid-hidden-wishlist="{{ card_product.id }}"
+                                class="angel-grouped-card__action-btn angel-grouped-card__action-btn--wishlist"
+                                aria-label="{{ _('Wishlist') }}"
+                                onclick="event.preventDefault(); event.stopPropagation(); addToWishlist(this, '{{ card_product.id }}')"
+                            ><i class="sicon-heart"></i></button>
                         </span>
-                    </div>
-                </div>
-            {% else %}
-                <div class="product-price section-product-price theme-title-primary" ><span>{{ product.formatted_price }}</span></div>
-            {% endif %}
-
-            {% if is_in_stock_or_preorderable %}
-
-                {% if (product.has_options or product.has_fields) %}
-                    <small style="font-size: 1.1rem; white-space: break-spaces">{{ _("Available in several options") }}</small>
+                        <a
+                            zid-visible-guest="true"
+                            class="angel-grouped-card__action-btn angel-grouped-card__action-btn--wishlist"
+                            href="/auth/login?redirect_to={{ session.url.path }}"
+                            aria-label="{{ _('Wishlist') }}"
+                            onclick="event.preventDefault(); event.stopPropagation(); handleLoginAction('', false); return false;"
+                        ><i class="sicon-heart"></i></a>
+                        <img class="loader d-none" src="{{ 'spinner.gif' | asset_url }}" width="18" height="18" alt="" />
+                    </span>
                 {% endif %}
-
-                {% if not product.is_taxable %}
-                    <small style="font-size: 1.1rem; white-space: break-spaces">{{ _("Tax free") }}</small>
-                {% endif %}
-
-            {% endif %}
-
-            {% if is_out_of_stock %}
-                <small style="font-size: 1.1rem; white-space: break-spaces">{{ _("This product is out of stock") }}</small>
-            {% endif %}
-
+                <button
+                    type="button"
+                    class="angel-grouped-card__action-btn angel-grouped-card__action-btn--view"
+                    data-grouped-quick-view
+                    data-product-id="{{ card_product.id }}"
+                    data-product-slug="{{ card_product.slug }}"
+                    {% if qv_brand_img %}data-brand-image="{{ qv_brand_img | e }}"{% endif %}
+                    {% if qv_brand_url %}data-brand-url="{{ qv_brand_url | e }}"{% endif %}
+                    aria-label="{{ _('View') }}"
+                ><i class="sicon-eye"></i></button>
+            </div>
         </div>
 
-        <div class="product-card-footer" style="text-align: center">
-            {% if has_preorder %}
-            <div style="margin-bottom: 8px; text-align: start;">
-                {% set preorder_badge_variant = 'product_card' %}
-                {% include 'vitrin:products/preorder_badge.jinja' %}
-            </div>
+        <div class="angel-grouped-card__body">
+            {% if card_product.categories and card_product.categories | length > 0 %}
+                <div class="angel-grouped-card__brands">
+                    {% for cat in card_product.categories[:2] %}
+                        <span class="angel-grouped-card__brand">{{ cat.name }}</span>
+                    {% endfor %}
+                </div>
             {% endif %}
+
+            <h3 class="angel-grouped-card__title product-title">
+                <a href="/products/{{ card_product.slug }}">{{ card_product.name | safe }}</a>
+            </h3>
+
+            <div class="angel-product-card__variants" data-product-card-variants{% if not has_variant_options %} hidden{% endif %}></div>
+
+            <div class="angel-grouped-card__prices product-crd-spec">
+                {% if card_product.formatted_sale_price is not none %}
+                    <span class="angel-grouped-card__price" data-product-card-price>{{ card_product.formatted_sale_price }}</span>
+                    <del class="angel-grouped-card__price-old" data-product-card-price-old>{{ card_product.formatted_price }}</del>
+                {% else %}
+                    <span class="angel-grouped-card__price" data-product-card-price>{{ card_product.formatted_price }}</span>
+                    <del class="angel-grouped-card__price-old" data-product-card-price-old hidden></del>
+                {% endif %}
+            </div>
+
+            <div class="angel-product-card__meta-hidden" hidden>
+                {% if store.settings.products.reviews_enabled %}
+                    <div class="product-card-rating-wrapper">
+                        {% if card_product.rating %}
+                            {% set rating=card_product.rating.average %}{% include 'components/rating-stars.jinja' %}
+                            {% if card_product.rating.total_count > 0 %}<span class="product-card-rating-count">({{ card_product.rating.total_count }})</span>{% endif %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {% if is_in_stock_or_preorderable %}
+                    {% if (card_product.has_options or card_product.has_fields) %}
+                        <small>{{ _("Available in several options") }}</small>
+                    {% endif %}
+                    {% if not card_product.is_taxable %}
+                        <small>{{ _("Tax free") }}</small>
+                    {% endif %}
+                {% endif %}
+
+                {% if is_out_of_stock %}
+                    <small>{{ _("This product is out of stock") }}</small>
+                {% endif %}
+
+                {% if card_product.formatted_sale_price is not none and card_product.discount_percentage %}
+                    <span>{{ _("Discount") }} {{ card_product.discount_percentage }}%</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="angel-grouped-card__footer product-card-footer">
+            {% if has_preorder %}
+                <div class="angel-product-card__preorder">
+                    {% set preorder_badge_variant = 'product_card' %}
+                    {% include 'vitrin:products/preorder_badge.jinja' %}
+                </div>
+            {% endif %}
+
             {% if is_out_of_stock %}
-                <a href="/products/{{ product.slug }}" class="btn btn-primary btn-product-card-out-of-stock">
-                    <img src="{{ 'u_bell.svg' | asset_url }}" alt="" width="18" height="18" class="d-inline">
+                <a href="/products/{{ card_product.slug }}" class="angel-grouped-card__btn angel-grouped-card__btn--muted btn btn-primary btn-product-card-out-of-stock">
+                    <img src="{{ 'u_bell.svg' | asset_url }}" alt="" width="18" height="18" class="d-inline" />
                     <span>{{ _("Notify me when available") }}</span>
                 </a>
-            {% elif ( product.has_options or product.has_fields or product.product_class == 'dynamic_bundle' ) %}
-                <a class="btn btn-primary btn-product-card-select-variant" href="/products/{{ product.slug }}">
-                    {{ _("Preorder now") if has_preorder else _("add to cart") }}
-                </a>
             {% else %}
-            <a class="btn btn-primary product-card-add-to-cart" onclick="event.preventDefault(); event.stopPropagation(); productCartAddToCart(this,'{{ product.id }}')">
-                <img style="display: inline" class="add-to-cart-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="20" height="20"/>
-                {{ _("Preorder now") if has_preorder else _("add to cart") }}
-            </a>
+                <button
+                    type="button"
+                    class="angel-grouped-card__btn product-card-add-to-cart btn btn-primary"
+                    data-product-card-add
+                    data-product-id="{{ card_product.id }}"
+                >
+                    <img class="angel-grouped-card__btn-progress add-to-cart-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="18" height="18" alt="" />
+                    <span class="angel-grouped-card__btn-content">
+                        <span class="angel-grouped-card__btn-icon" aria-hidden="true">+</span>
+                        <span>{{ _("Preorder now") if has_preorder else _("add to cart") }}</span>
+                    </span>
+                </button>
             {% endif %}
         </div>
 
-    </a>
+        <script type="application/json" class="angel-grouped-card__data angel-product-card__data">{{ {
+            'id': card_product.id,
+            'slug': card_product.slug,
+            'options': card_product.options,
+            'variants': card_product.variants,
+            'selected_product': selected_product,
+            'has_options': has_variant_options,
+            'formatted_sale_price': card_product.formatted_sale_price,
+            'formatted_price': card_product.formatted_price,
+            'discount_percentage': card_product.discount_percentage
+        } | tojson }}</script>
+    </article>
 </div>
 {% endif %}

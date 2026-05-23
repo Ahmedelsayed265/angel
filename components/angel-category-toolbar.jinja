@@ -1,0 +1,51 @@
+{# Sort toolbar — category listing only #}
+{% set current_sort = session.query_params.get('sort_by') %}
+{% set current_order = session.query_params.get('order') %}
+
+<div class="angel-category-toolbar">
+    <button
+        type="button"
+        class="angel-category-toolbar__filter-btn d-lg-none"
+        data-angel-category-filter-toggle
+        aria-expanded="false"
+        aria-controls="angel-category-filters"
+    >
+        <i class="icon-filter-secondary" aria-hidden="true"></i>
+        <span>{{ _("Filter") }}</span>
+    </button>
+
+    <div class="angel-category-toolbar__sort">
+        <label class="angel-category-toolbar__sort-label" for="angel-category-sort-btn">{{ _("Sort by") }}:</label>
+        <div class="angel-category-toolbar__sort-dropdown">
+            <button
+                id="angel-category-sort-btn"
+                type="button"
+                class="angel-category-toolbar__sort-btn"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+            >
+                <span class="angel-category-toolbar__sort-value">
+                    {% if current_sort == 'popularity_order' %}
+                        {{ _("Most popular") }}
+                    {% elif current_sort == 'price' and current_order == 'asc' %}
+                        {{ _("Low to high") }}
+                    {% elif current_sort == 'price' and current_order == 'desc' %}
+                        {{ _("High to low") }}
+                    {% else %}
+                        {{ _("Our suggestions") }}
+                    {% endif %}
+                </span>
+                <svg class="angel-category-toolbar__sort-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M2.5 4.25L6 7.75L9.5 4.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="dropdown-menu angel-category-toolbar__sort-menu">
+                <a class="dropdown-item" href="{{ session.url.include_query_params(sort_by='created_at', order='desc') }}">{{ _("Our suggestions") }}</a>
+                <a class="dropdown-item" href="{{ session.url.include_query_params(sort_by='popularity_order', order='asc') }}">{{ _("Most popular") }}</a>
+                <a class="dropdown-item" href="{{ session.url.include_query_params(sort_by='price', order='asc') }}">{{ _("Low to high") }}</a>
+                <a class="dropdown-item" href="{{ session.url.include_query_params(sort_by='price', order='desc') }}">{{ _("High to low") }}</a>
+            </div>
+        </div>
+    </div>
+</div>

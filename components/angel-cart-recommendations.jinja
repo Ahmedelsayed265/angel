@@ -1,0 +1,17 @@
+<section class="angel-cart-recommendations" id="angel-cart-recommendations"{% if recommendation_products is not defined or recommendation_products | length == 0 %} hidden{% endif %}>
+    {# <div class="angel-cart-recommendations__head">
+        <h2 class="angel-cart-recommendations__title">{{ _("You may also like") }}</h2>
+    </div> #}
+    <div
+        id="angel-cart-recommendations-grid"
+        class="angel-cart-recommendations__grid products-list angel-category-page__grid"
+        data-angel-cart-recommendations-grid
+    >
+        {% if recommendation_products is defined %}
+            {% for product in recommendation_products %}
+                {% set index = loop.index0 %}
+                {% include 'components/product-card.jinja' %}
+            {% endfor %}
+        {% endif %}
+    </div>
+</section>

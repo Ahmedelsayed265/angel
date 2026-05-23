@@ -1,4 +1,4 @@
-{% set ver = '0.1.043' %}
+{% set ver = '0.1.063' %}
 
 <!doctype html>
 <html class="no-js" lang="{{ session.lang }}" dir="{{ session.locale.language.direction }}">
@@ -115,7 +115,10 @@
 
   <link rel="stylesheet" href="{{ ('main.css?v=' ~ ver) | asset_url }}" />
 
-  <link rel="stylesheet" type="text/css" href="{{ 'custom.css?v=1.206' | asset_url }}" />
+  <link rel="stylesheet" type="text/css" href="{{ ('angel-product.css?v=' ~ ver) | asset_url }}" />
+
+  <link rel="stylesheet" type="text/css" href="{{ 'custom.css?v=1.170' | asset_url }}" />
+  <link rel="stylesheet" type="text/css" href="{{ ('angel-cart-toast.css?v=' ~ ver) | asset_url }}" />
 
   {% if session.lang == 'ar' %}
     <link rel="stylesheet" href="{{ 'main.rtl.css?v=1.25' | asset_url }}">
@@ -155,7 +158,6 @@
       {% if settings.colors_header_text_color %}--header-text-color-primary-bg: {{settings.colors_header_text_color}};{% endif %}
       {% if settings.colors_footer_background_color %}--footer-primary-color: {{settings.colors_footer_background_color}};{% endif %}
       {% if settings.colors_footer_text_color %}--footer-text-color-primary-bg: {{settings.colors_footer_text_color}};{% endif %}
-      {% if settings.colors_background_color %}--page-background-color: {{ settings.colors_background_color }};{% endif %}
     {% endif %}
   }
 </style>
@@ -165,7 +167,7 @@
 <div class="app d-flex flex-column visible">
     {% block header %}{% endblock %}
     
-    <div class="main flex-grow-1 app-content"{% if settings.colors_background_color %} style="background-color: {{ settings.colors_background_color }};"{% endif %}>
+    <div class="main flex-grow-1 app-content" {% if settings.colors_background_image %} style="background-repeat: repeat; background-image: url('{{ settings.colors_background_image }}');" {% endif %}>
         {% block main_content %}{% endblock %}
     </div>
 
@@ -177,6 +179,11 @@
 </div>
 
 <script> window.appDirection = '{{ session.locale.language.direction }}'; </script>
+<script>
+  window.angelProductCardLabels = {
+    chooseOptions: {{ _("Please choose product options first") | tojson }}
+  };
+</script>
 
 <script src="{{ 'jquery-3.6.0.min.js?v=1.0.0' | asset_url }}"></script>
 
@@ -189,6 +196,7 @@
 <script src="{{ 'slide-menu.ie.js?v=1.06' | asset_url }}"></script>
 
 <script type="text/javascript" src="{{ ('main.js?v=' ~ ver) | asset_url }}" defer></script>
+<script type="text/javascript" src="{{ ('angel-product-card.js?v=' ~ ver) | asset_url }}" defer></script>
 <script type="text/javascript" src="{{ ('bundle-offers.js?v=' ~ ver) | asset_url }}" defer></script>
 
 {% vitrin_body %}
@@ -204,6 +212,11 @@
 {% endif %}
 
 {% block footer_scripts %}{% endblock %}
+
+{% include 'components/angel-cart-toast.jinja' %}
+{% include 'components/angel-grouped-quick-view.jinja' %}
+<script type="text/javascript" src="{{ ('angel-cart-toast.js?v=' ~ ver) | asset_url }}"></script>
+<script type="text/javascript" src="{{ ('angel-product.js?v=' ~ ver) | asset_url }}" defer></script>
 
 {% include "vitrin:shared/region_settings_dialog.jinja" %}
 

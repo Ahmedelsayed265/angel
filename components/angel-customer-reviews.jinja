@@ -1,0 +1,82 @@
+{% if reviews %}
+<div class="angel-reviews-list" id="angel-reviews-list">
+    {% for review in reviews %}
+    <article
+        class="angel-review-card"
+        data-review-date="{{ review.created_at | default('', true) }}"
+        data-review-rating="{{ review.rating | default(0) }}"
+    >
+        <div class="angel-review-card__avatar-wrap" aria-hidden="true">
+            {% if review.customer and review.customer.image %}
+                <img class="angel-review-card__avatar" src="{{ review.customer.image }}" alt="" loading="lazy" />
+            {% elif store.logo %}
+                <img class="angel-review-card__avatar" src="{{ store.logo }}" alt="" loading="lazy" />
+            {% else %}
+                <span class="angel-review-card__avatar angel-review-card__avatar--letter">
+                    {{ (review.customer.name | default('?'))[:1] }}
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="angel-review-card__panel">
+            <div class="angel-review-card__header">
+                <div class="angel-review-card__meta">
+                    <div class="angel-review-card__author-row">
+                        <span class="angel-review-card__name">{{ review.customer.name | default(_("Customer")) }}</span>
+                        {% if review.is_verified_purchase or review.verified or (review.customer and review.customer.is_verified) %}
+                        <span class="angel-review-card__verified" title="{{ _('Verified purchase') }}" aria-label="{{ _('Verified purchase') }}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="12" r="12" fill="#3b82f6"/>
+                                <path fill="#fff" d="M10.2 16.2 6.5 12.5l1.4-1.4 2.3 2.3 6.4-6.4 1.4 1.4z"/>
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="angel-review-card__stars">
+                        {% set rating = review.rating %}{% set star_tone = 'gold' %}{% include 'components/angel-rating-stars.jinja' %}
+                    </div>
+                </div>
+                <time class="angel-review-card__date" datetime="{{ review.created_at | default('', true) }}" data-review-date-value="{{ review.created_at | default('', true) }}"></time>
+            </div>
+
+            {% if review.comment %}
+            <p class="angel-review-card__comment">{{ review.comment | striptags }}</p>
+            {% endif %}
+
+            <div class="angel-review-card__body">
+                {% if review.images and review.images | length > 0 %}
+                <div class="angel-review-card__media">
+                    {% for image in review.images[:1] %}
+                    <button type="button" class="angel-review-card__media-btn" data-review-image="{{ image.path }}" data-review-image-index="{{ loop.index0 }}">
+                        <img src="{{ image.path }}" alt="" loading="lazy" />
+                    </button>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {# <div class="angel-review-card__footer">
+                    <button type="button" class="angel-review-card__helpful" data-helpful-count="{{ review.helpful_count | default(review.likes_count, true) | default(0) }}">
+                        <svg class="angel-review-card__helpful-icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="currentColor" d="M9 22H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h4m0 11V10M9 10V5a2 2 0 0 1 2-2h.18a2 2 0 0 1 1.72 1l1.42 2.84A2 2 0 0 0 16.24 8H19a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-1.28a1 1 0 0 0-.95.68l-.53 1.6A2 2 0 0 1 13.24 18H11"/>
+                        </svg>
+                        <span>{{ _("Helpful") }} (<span data-helpful-num>{{ review.helpful_count | default(review.likes_count, true) | default(0) }}</span>)</span>
+                    </button>
+                </div> #}
+            </div>
+
+            {% if review.reply %}
+            <div class="angel-review-card__reply">
+                <div class="angel-review-card__reply-head">
+                    {% if store.logo %}
+                    <img class="angel-review-card__reply-logo" src="{{ store.logo }}" alt="" width="24" height="24" />
+                    {% endif %}
+                    <span class="angel-review-card__reply-name">{{ store.name }}</span>
+                </div>
+                <p class="angel-review-card__reply-text">{{ review.reply.text | striptags }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </article>
+    {% endfor %}
+</div>
+{% endif %}

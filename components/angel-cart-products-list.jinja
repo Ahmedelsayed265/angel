@@ -1,0 +1,173 @@
+{% set cart_lines = cart.products | default(cart.items | default([])) %}
+{% if cart_lines | length == 0 %}
+    {% include 'vitrin:cart/products_list.jinja' %}
+{% endif %}
+{% for item in cart_lines %}
+    {% set line = item %}
+    {% set line_product = line.product | default(none) %}
+    {% set line_selected = line.selected_product | default(none) %}
+    {% set line_image = '' %}
+    {% if line.main_image and line.main_image.image %}
+        {% set line_image = line.main_image.image.medium | default(line.main_image.image.small, true) | default(line.main_image.image.full_size, true) | default(line.main_image.image.thumbnail, true) %}
+    {% elif line_product and line_product.main_image and line_product.main_image.image %}
+        {% set line_image = line_product.main_image.image.medium | default(line_product.main_image.image.small, true) | default(line_product.main_image.image.full_size, true) %}
+    {% elif line_selected and line_selected.main_image and line_selected.main_image.image %}
+        {% set line_image = line_selected.main_image.image.medium | default(line_selected.main_image.image.small, true) | default(line_selected.main_image.image.full_size, true) %}
+    {% elif line.images and line.images | length > 0 %}
+        {% set line_img0 = line.images[0] %}
+        {% if line_img0.image %}
+            {% set line_image = line_img0.image.medium | default(line_img0.image.small, true) | default(line_img0.image.full_size, true) %}
+        {% elif line_img0 is string %}
+            {% set line_image = line_img0 %}
+        {% else %}
+            {% set line_image = line_img0.medium | default(line_img0.small, true) | default(line_img0.url, true) %}
+        {% endif %}
+    {% elif line.media and line.media | length > 0 %}
+        {% set line_media0 = line.media[0] %}
+        {% if line_media0.image %}
+            {% set line_image = line_media0.image.medium | default(line_media0.image.small, true) | default(line_media0.image.full_size, true) %}
+        {% elif line_media0 is string %}
+            {% set line_image = line_media0 %}
+        {% endif %}
+    {% elif line.image is string and line.image | length > 0 %}
+        {% set line_image = line.image %}
+    {% elif line.image and line.image.image %}
+        {% set line_image = line.image.image.medium | default(line.image.image.small, true) | default(line.image.image.full_size, true) %}
+    {% elif line.image_url %}
+        {% set line_image = line.image_url %}
+    {% elif line.product_image is string and line.product_image | length > 0 %}
+        {% set line_image = line.product_image %}
+    {% elif line.product_image and line.product_image.medium %}
+        {% set line_image = line.product_image.medium | default(line.product_image.url, true) %}
+    {% elif line.thumbnail is string and line.thumbnail | length > 0 %}
+        {% set line_image = line.thumbnail %}
+    {% elif line.thumbnail and line.thumbnail.medium %}
+        {% set line_image = line.thumbnail.medium | default(line.thumbnail.url, true) %}
+    {% endif %}
+
+    {% set img_src = 'product-img.svg' | asset_url %}
+    {% if line_image and line_image | length > 0 %}
+        {% set img_src = line_image %}
+        {% set img_resized = image_url(line_image, w=96, h=80, q=90, f='auto') %}
+        {% if img_resized and img_resized | length > 0 %}
+            {% set img_src = img_resized %}
+        {% endif %}
+    {% endif %}
+
+    {% set catalog_product_id = line.product_id | default(none) %}
+    {% if not catalog_product_id and line_product %}
+        {% set catalog_product_id = line_product.id %}
+    {% endif %}
+    {% set line_url = line.url | default('/products/' ~ (line.slug | default(catalog_product_id, true)), true) %}
+    {% set line_name = line.name | default(line.product_name, true) %}
+    {% set line_total = line.total_string | default(line.formatted_total, true) %}
+    {% set line_price_each = line.price_string | default(line.formatted_price, true) %}
+    {% set max_qty = 100 %}
+    {% if not line.is_infinite and line.quantity_max %}
+        {% set max_qty = line.quantity_max %}
+    {% elif not line.is_infinite and line.stock %}
+        {% set max_qty = line.stock %}
+    {% endif %}
+    {% if max_qty > 100 %}
+        {% set max_qty = 100 %}
+    {% endif %}
+
+    <article class="cart-product-row-wrapper angel-cart-item" data-cart-line-id="{{ line.id }}"{% if catalog_product_id %} data-catalog-product-id="{{ catalog_product_id }}"{% endif %}>
+        <div class="cart-product-row angel-cart-item__row" data-cart-line-id="{{ line.id }}">
+            <div class="cart-product-col-img angel-cart-item__media">
+                <a href="{{ line_url }}" class="angel-cart-item__media-link">
+                    <img
+                        class="angel-cart-item__img"
+                        src="{{ img_src }}"
+                        alt="{{ line_name | striptags }}"
+                        width="96"
+                        height="80"
+                        loading="lazy"
+                        decoding="async"
+                        data-angel-cart-img
+                        {% if line_image %}data-angel-cart-img-url="{{ line_image }}"{% endif %}
+                    />
+                </a>
+            </div>
+
+            <div class="cart-product-col-details angel-cart-item__body">
+                <div class="angel-cart-item__content">
+                    <div class="angel-cart-item__info">
+                        <h1 class="angel-cart-item__title">
+                            <a href="{{ line_url }}">{{ line_name | safe }}</a>
+                        </h1>
+                        {% if line_price_each %}
+                            <p class="angel-cart-item__price">{{ line_price_each }}</p>
+                        {% endif %}
+                        {% if line.weight and line.weight.value %}
+                            <p class="angel-cart-item__meta">{{ _("Weight") }}: {{ line.weight.value }} {{ line.weight.unit }}</p>
+                        {% endif %}
+                        {% if line.options and line.options | length > 0 %}
+                            <div class="angel-cart-item__options">
+                                {% for opt in line.options %}
+                                    {% if opt.type == 'color' or opt.name | lower == 'color' or opt.name | lower == 'اللون' %}
+                                        <span class="angel-cart-item__swatch" style="{% if opt.value %}background-color: {{ opt.value }};{% endif %}" title="{{ opt.name }}: {{ opt.value }}"></span>
+                                    {% else %}
+                                        <span class="angel-cart-item__option-text">{{ opt.name }}: {{ opt.value }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        {% if line.custom_fields and line.custom_fields | length > 0 %}
+                            <div class="angel-cart-item__custom-fields">
+                                {% for field in line.custom_fields %}
+                                    <span class="angel-cart-item__option-text">{{ field.label }}: {{ field.value }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="angel-cart-item__controls cart-products-action">
+                        <div class="cart-product-quantity-dropdown angel-cart-qty" data-angel-cart-qty>
+                            <button type="button" class="angel-cart-qty__btn" data-angel-cart-qty-minus aria-label="{{ _('Decrease') }}">−</button>
+                            <select name="quantity" class="angel-cart-qty__select cart-product-quantity" data-cart-line-id="{{ line.id }}" aria-label="{{ _('Quantity') }}">
+                                {% for n in range(1, max_qty + 1) %}
+                                    <option value="{{ n }}" {% if n == line.quantity %}selected{% endif %}>{{ n }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="button" class="angel-cart-qty__btn" data-angel-cart-qty-plus aria-label="{{ _('Increase') }}">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="angel-cart-item__footer">
+            <div class="cart-product-prices angel-cart-item__line-total">
+                <span class="angel-cart-item__total-label">{{ _("Total") }}</span>
+                <span class="angel-cart-item__total-value totals">{{ line_total or line_price_each }}</span>
+            </div>
+            <div class="angel-cart-item__footer-actions">
+                <div class="cart-product-delete angel-cart-item__remove">
+                    <a href="#" role="button" data-cart-line-id="{{ line.id }}" aria-label="{{ _('Remove') }}">
+                        <span class="icon-delete angel-cart-item__remove-icon" aria-hidden="true"></span>
+                        <span class="prefix d-none"></span>
+                    </a>
+                </div>
+                {% if store.settings.products.wishlist_enabled == true and catalog_product_id %}
+                    <span class="add-to-wishlist angel-cart-item__wishlist-wrap" data-wishlist-id="{{ catalog_product_id }}">
+                        <button
+                            type="button"
+                            class="angel-cart-item__wishlist"
+                            zid-hidden-wishlist="{{ catalog_product_id }}"
+                            aria-label="{{ _('Add to wishlist') }}"
+                            onclick="event.preventDefault(); addToWishlist(this, '{{ catalog_product_id }}')"
+                        >
+                            <span class="icon-heart-mask" aria-hidden="true"></span>
+                            <span>{{ _("Add to wishlist") }}</span>
+                        </button>
+                        <img class="loader d-none" src="{{ 'spinner.gif' | asset_url }}" width="18" height="18" alt="" />
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+        {% if line.error_message %}
+            <div class="cart-product-error-messages">{{ line.error_message }}</div>
+        {% endif %}
+    </article>
+{% endfor %}
