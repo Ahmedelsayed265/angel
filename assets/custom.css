@@ -17,6 +17,10 @@ select {
   font-family: var(--angel-font-family) !important;
 }
 
+body {
+  background: #282828;
+}
+
 /* Hero section */
 .angel-hero-section {
   position: relative;
@@ -1090,11 +1094,14 @@ select {
     display: none;
   }
 }
+body[data-template="home"] .header {
+  position: absolute !important;
+}
 .header {
+  position: static;
   background: transparent;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0);
   left: 0;
-  position: absolute;
   right: 0;
   top: 0;
   z-index: 10;
@@ -4660,7 +4667,8 @@ body.angel-stories-modal-open {
   z-index: 2;
 }
 
-.angel-promo-banner__layout:not(:has(.angel-promo-banner__media)) .angel-promo-banner__content {
+.angel-promo-banner__layout:not(:has(.angel-promo-banner__media))
+  .angel-promo-banner__content {
   inset: auto;
   max-width: 1480px;
   position: relative;

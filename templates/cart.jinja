@@ -242,16 +242,14 @@
             </div>
             </div>
 
-            <div class="cart-empty pt-5 pbb-5 {% if cart.products_count > 0 %}d-none{% endif %}">
-                <div class="d-flex flex-column align-items-center">
-                    <span class="icon-shopping_cart_black_36dp-1-1 theme-title-primary" style="font-size: 90px">
-                        <span class="path1"></span><span class="path2"></span>
-                    </span>
-                    <h2 class="mt-3">{{ _("Cart is empty") }}</h2>
-                    <div class="mt-3">
-                        <a href="/" class="btn btn-outline-primary btn-lg btn-block">
-                            {{ _("continue shopping") }}
-                        </a>
+            <div class="cart-empty angel-cart-empty {% if cart.products_count > 0 %}d-none{% endif %}">
+                <div class="angel-cart-empty__inner">
+                    <div class="angel-cart-empty__icon-wrap" aria-hidden="true">
+                        <i class="sicon-shopping-bag icon"></i>
+                    </div>
+                    <div class="angel-cart-empty__content">
+                        <h2 class="angel-cart-empty__title">{{ _("Cart is empty") }}</h2>
+                        <a href="/" class="angel-cart-empty__btn">{{ _("Back to home") }}</a>
                     </div>
                 </div>
             </div>

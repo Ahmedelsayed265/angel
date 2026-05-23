@@ -97,6 +97,9 @@ msgstr "السلة"
 msgid "Cart is empty"
 msgstr "السلة فارغة"
 
+msgid "Back to home"
+msgstr "العودة للرئيسية"
+
 msgid "Cart items"
 msgstr "عناصر السلة"
 
