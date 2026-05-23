@@ -1138,7 +1138,9 @@
 }
 
 .angel-grouped-card__wishlist {
-  display: contents;
+  position: static !important;
+  background-color: transparent !important;
+  margin: 0 !important;
 }
 
 .angel-grouped-card__wishlist .loader {
@@ -1780,9 +1782,10 @@
 }
 
 .angel-grouped-quick-view__wishlist {
-  /* border: 1px solid rgba(229, 231, 235, var(--tw-border-opacity, 1)) !important;
-  position: unset !important;
-  margin: 0 !important; */
+  position: static !important;
+  background-color: transparent !important;
+  margin: 0 !important;
+  height: 100% !important;
 
   & button {
     background: #fff !important;
