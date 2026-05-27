@@ -59,6 +59,24 @@
   color: white;
 }
 
+.angel-cart-page__banner {
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.angel-cart-page__banner-link {
+  display: block;
+}
+
+.angel-cart-page__banner-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
 .angel-cart-page__layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);

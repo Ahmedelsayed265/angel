@@ -1,0 +1,65 @@
+{% set home_tab = settings.home_tab | default('') %}
+{% set video = settings.video %}
+{% set display_video = settings.display_video | default(true) %}
+{% set video_loop = settings.video_loop | default(true) %}
+{% set bg_image = settings.bg_image %}
+{% set video_url = settings.video_url | default('', true) %}
+{% set cards = safeget(settings, "cards", []) %}
+
+{% set show_video = display_video and video %}
+
+{% if show_video or bg_image or (cards and cards | length > 0) %}
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-hero-section"
+  data-layout="home"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
+>
+  <div class="angel-hero-panels">
+    <div class="angel-hero-panel angel-hero-panel--home is-active" data-hero-panel="1" data-layout="home">
+      <div class="angel-hero-panel-inner angel-hero-home">
+        <div class="angel-hero-home-layout">
+          {% if show_video or bg_image %}
+            <div class="angel-hero-home-video-wrap">
+              {% if video_url %}<a class="angel-hero-home-video-link" href="{{ video_url }}" aria-label="{{ store.name }}">{% endif %}
+              {% if show_video %}
+                <video
+                  class="angel-hero-home-video"
+                  autoplay
+                  muted
+                  playsinline
+                  {% if video_loop %}loop{% endif %}
+                  {% if bg_image %}poster="{{ bg_image }}"{% endif %}
+                >
+                  <source src="{{ video }}" type="video/mp4">
+                </video>
+              {% else %}
+                <img class="angel-hero-home-video" src="{{ bg_image }}" alt="{{ store.name }}" loading="eager" />
+              {% endif %}
+              {% if video_url %}</a>{% endif %}
+            </div>
+          {% endif %}
+
+          {% if cards and cards | length > 0 %}
+            <div class="container angel-hero-home-cards-wrap">
+              <div class="angel-hero-home-cards">
+                {% for card in cards %}
+                  {% if card.image or card.url %}
+                    <a class="angel-hero-home-card" href="{{ card.url if card.url else 'javascript:;' }}">
+                      {% if card.image %}
+                        <img class="angel-hero-home-card-img" src="{{ card.image }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}" />
+                      {% endif %}
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+

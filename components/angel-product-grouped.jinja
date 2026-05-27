@@ -1,4 +1,4 @@
-{% set grouped_products_list = product.grouped_products | default(product.frequently_bought_together | default([])) %}
+{% set grouped_products_list = custom_grouped_products if custom_grouped_products is defined and custom_grouped_products else (product.grouped_products | default(product.frequently_bought_together | default([]))) %}
 {% set use_custom_cards = grouped_products_list | length > 0 %}
 
 {% if use_custom_cards %}

@@ -6,6 +6,115 @@
   },
   "groups": [
     {
+      "id": "layout_footer",
+      "icon": "fa fa-window-minimize",
+      "name": {
+        "ar": "إعدادات عامة للتذييل",
+        "en": "Footer layout"
+      },
+      "settings": [
+        {
+          "id": "bg_color",
+          "type": "color",
+          "label": {
+            "ar": "لون خلفية أسفل الصفحة",
+            "en": "Footer background color"
+          }
+        },
+        {
+          "id": "logo_scale",
+          "type": "text",
+          "label": {
+            "ar": "حجم شعار المتجر في أسفل الصفحة",
+            "en": "Footer logo size"
+          },
+          "info": {
+            "ar": "قيمة من 0 إلى 10 (مثال: 2.5). الافتراضي 2.5.",
+            "en": "Value from 0 to 10 (e.g. 2.5). Default is 2.5."
+          },
+          "default": "2.5"
+        },
+        {
+          "id": "show_payment_icons",
+          "type": "checkbox",
+          "label": {
+            "ar": "عرض صور وسائل الدفع الافتراضية",
+            "en": "Show default payment method icons"
+          },
+          "default": false
+        },
+        {
+          "id": "extra_logos",
+          "type": "list",
+          "label": {
+            "ar": "شعارات إضافية أسفل الصفحة",
+            "en": "Additional footer logos"
+          },
+          "settings": [
+            {
+              "id": "image",
+              "type": "image",
+              "label": {
+                "ar": "ارفع صورة الشعار",
+                "en": "Logo image"
+              }
+            },
+            {
+              "id": "url",
+              "type": "url",
+              "label": {
+                "ar": "رابط الشعار",
+                "en": "Logo link"
+              }
+            }
+          ]
+        },
+        {
+          "id": "hide_back_to_top",
+          "type": "checkbox",
+          "label": {
+            "ar": "إخفاء زر الصعود لأعلى",
+            "en": "Hide back-to-top button"
+          },
+          "default": false
+        },
+        {
+          "id": "compact",
+          "type": "checkbox",
+          "label": {
+            "ar": "تصغير أسفل الصفحة",
+            "en": "Compact footer"
+          },
+          "info": {
+            "ar": "يُخفى قسم النشرة البريدية عند تفعيل هذا الخيار.",
+            "en": "Hides the newsletter block when enabled."
+          },
+          "default": false
+        },
+        {
+          "id": "newsletter_enabled",
+          "type": "checkbox",
+          "label": {
+            "ar": "تفعيل النشرة البريدية أسفل المتجر",
+            "en": "Enable store newsletter"
+          },
+          "default": true
+        },
+        {
+          "id": "newsletter_form_url",
+          "type": "url",
+          "label": {
+            "ar": "رابط النشرة البريدية",
+            "en": "Newsletter form URL"
+          },
+          "info": {
+            "ar": "رابط إرسال النموذج (مثل Google Apps Script). إذا كان موجودًا سيتم استخدامه بدل رابط مجموعة «النشرة البريدية».",
+            "en": "Form POST URL (e.g. Google Apps Script). If set, it overrides Newsletter → Form URL."
+          }
+        }
+      ]
+    },
+    {
       "id": "newsletter",
       "icon": "fa fa-envelope",
       "name": {
@@ -59,6 +168,18 @@
           "label": {
             "ar": "رابط يوتيوب (شريط الأيقونات العلوي)",
             "en": "YouTube URL (top icon row)"
+          }
+        },
+        {
+          "id": "form_action_url",
+          "type": "url",
+          "label": {
+            "ar": "رابط إرسال النشرة البريدية",
+            "en": "Newsletter form POST URL"
+          },
+          "info": {
+            "ar": "يمكن أيضاً ضبطه من إعدادات التخطيط → أسفل الصفحة.",
+            "en": "Can also be set under Layout → Footer."
           }
         }
       ]

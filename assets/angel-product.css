@@ -430,6 +430,13 @@
   border-radius: 6px;
 }
 
+.angel-product-brand__title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+}
+
 .angel-product-brand__logo {
   flex-shrink: 0;
   width: 64px;
@@ -479,6 +486,50 @@
 
 .angel-product-brand__more a:hover {
   text-decoration: underline;
+}
+
+/* Discount codes (layout settings) */
+.angel-product-discount-codes {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.angel-product-discount-code {
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.angel-product-discount-code__title {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.angel-product-discount-code__subtitle {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.angel-product-discount-code__row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.angel-product-discount-code__code {
+  display: inline-flex;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.5px;
 }
 
 .angel-product-info-main {
@@ -1117,6 +1168,38 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.angel-grouped-card__img--alt {
+  display: none;
+}
+
+body.angel-pcard--img-hover-second .angel-grouped-card__media-link,
+body.angel-pcard--img-gallery .angel-grouped-card__media-link {
+  overflow: hidden;
+}
+
+body.angel-pcard--img-hover-second .angel-grouped-card__img,
+body.angel-pcard--img-gallery .angel-grouped-card__img {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.25s ease;
+}
+
+body.angel-pcard--img-hover-second .angel-grouped-card__img--alt,
+body.angel-pcard--img-gallery .angel-grouped-card__img--alt {
+  display: block;
+  opacity: 0;
+}
+
+body.angel-pcard--img-hover-second .angel-grouped-card:hover .angel-grouped-card__img--alt,
+body.angel-pcard--img-gallery .angel-grouped-card:hover .angel-grouped-card__img--alt {
+  opacity: 1;
+}
+
+body.angel-pcard--img-hover-second .angel-grouped-card:hover .angel-grouped-card__img:not(.angel-grouped-card__img--alt),
+body.angel-pcard--img-gallery .angel-grouped-card:hover .angel-grouped-card__img:not(.angel-grouped-card__img--alt) {
+  opacity: 0;
 }
 
 .angel-grouped-card__glass {
@@ -3988,4 +4071,243 @@ body.angel-product-lightbox-open {
   border: 0;
   box-shadow: none;
   padding: 0;
+}
+
+/* —— Product card layout settings (layout.schema → body classes) —— */
+.angel-product-card .angel-grouped-card__inner {
+  background: var(--angel-pcard-bg, #353535);
+  border-color: var(--angel-pcard-border, #353535);
+}
+
+.angel-product-card .angel-product-card__best-price,
+.angel-product-card .angel-grouped-card__low-stock {
+  background: var(--angel-pcard-promo-bg, #9e2c34);
+}
+
+body.angel-pcard--img-tall .angel-product-card .angel-grouped-card__media {
+  aspect-ratio: 9 / 16;
+}
+
+body.angel-pcard--corner-straight .angel-product-card .angel-grouped-card__inner,
+body.angel-pcard--corner-straight .angel-product-card .angel-grouped-card__btn {
+  border-radius: 0;
+}
+
+body.angel-pcard--corner-rounded_1 .angel-product-card .angel-grouped-card__inner {
+  border-radius: 6px;
+}
+
+body.angel-pcard--corner-rounded_2 .angel-product-card .angel-grouped-card__inner {
+  border-radius: 10px;
+}
+
+body.angel-pcard--corner-rounded_3 .angel-product-card .angel-grouped-card__inner {
+  border-radius: 12px;
+}
+
+body.angel-pcard--corner-rounded_4 .angel-product-card .angel-grouped-card__inner {
+  border-radius: 16px;
+}
+
+body.angel-pcard--corner-rounded_5 .angel-product-card .angel-grouped-card__inner {
+  border-radius: 20px;
+}
+
+body.angel-pcard--corner-rounded_1 .angel-product-card .angel-grouped-card__btn {
+  border-radius: 6px;
+}
+
+body.angel-pcard--corner-rounded_2 .angel-product-card .angel-grouped-card__btn {
+  border-radius: 10px;
+}
+
+body.angel-pcard--corner-rounded_3 .angel-product-card .angel-grouped-card__btn {
+  border-radius: 12px;
+}
+
+body.angel-pcard--corner-rounded_4 .angel-product-card .angel-grouped-card__btn {
+  border-radius: 16px;
+}
+
+body.angel-pcard--corner-rounded_5 .angel-product-card .angel-grouped-card__btn {
+  border-radius: 20px;
+}
+
+body.angel-pcard--no-border .angel-product-card .angel-grouped-card__inner {
+  border-width: 0;
+}
+
+body.angel-pcard--no-bg .angel-product-card .angel-grouped-card__inner {
+  background: transparent;
+}
+
+body.angel-pcard--no-discount .angel-product-card .angel-grouped-card__discount {
+  display: none !important;
+}
+
+body.angel-pcard--no-ratings .angel-product-card .angel-grouped-card__rating {
+  display: none !important;
+}
+
+body.angel-pcard--no-category .angel-product-card .angel-grouped-card__brands,
+body.angel-pcard--no-brand .angel-product-card .angel-grouped-card__brands {
+  display: none !important;
+}
+
+body.angel-pcard--no-wishlist .angel-product-card .angel-grouped-card__wishlist {
+  display: none !important;
+}
+
+body.angel-pcard--no-quickview .angel-product-card .angel-grouped-card__action-btn--view {
+  display: none !important;
+}
+
+body.angel-pcard--no-atc .angel-product-card .angel-grouped-card__footer .product-card-add-to-cart,
+body.angel-pcard--no-atc .angel-product-card .angel-grouped-card__footer .btn-product-card-out-of-stock {
+  display: none !important;
+}
+
+body.angel-pcard--title-bold .angel-product-card .angel-grouped-card__title {
+  font-weight: 700;
+}
+
+body:not(.angel-pcard--title-bold) .angel-product-card .angel-grouped-card__title {
+  font-weight: 400;
+}
+
+body.angel-pcard--title-one-line .angel-product-card .angel-grouped-card__title {
+  -webkit-line-clamp: 1;
+}
+
+body.angel-pcard--center .angel-product-card .angel-grouped-card__body,
+body.angel-pcard--center .angel-product-card .angel-grouped-card__prices {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+body:not(.angel-pcard--center) .angel-product-card .angel-grouped-card__body {
+  align-items: flex-start;
+  text-align: start;
+}
+
+body:not(.angel-pcard--center) .angel-product-card .angel-grouped-card__prices {
+  justify-content: flex-start;
+}
+
+body.angel-pcard--cart-no-bg .angel-product-card .angel-grouped-card__btn {
+  background: transparent !important;
+  color: var(--primary-color, #54c8e9) !important;
+  border: 1px solid var(--primary-color, #54c8e9);
+}
+
+body.angel-pcard--cart-icon-cart .angel-product-card .angel-grouped-card__btn-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+body.angel-pcard--cart-icon-bag .angel-product-card .angel-grouped-card__btn-icon,
+body.angel-pcard--cart-icon-bag_2 .angel-product-card .angel-grouped-card__btn-icon,
+body.angel-pcard--cart-icon-bag_3 .angel-product-card .angel-grouped-card__btn-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+body.angel-pcard--cart-icon-bag_2 .angel-product-card .angel-grouped-card__btn-bag {
+  transform: translateY(1px) scale(1.02);
+}
+
+body.angel-pcard--cart-icon-bag_3 .angel-product-card .angel-grouped-card__btn-bag {
+  transform: translateY(1px) scale(1.08);
+}
+
+body.angel-pcard--hover-shine .angel-product-card .angel-grouped-card__inner {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+body.angel-pcard--hover-shine .angel-product-card:hover .angel-grouped-card__inner {
+  box-shadow: 0 12px 28px rgba(84, 200, 233, 0.22);
+}
+
+body.angel-pcard--actions-under .angel-product-card .angel-grouped-card__actions {
+  opacity: 1;
+  transform: none;
+  flex-direction: row;
+  inset-inline-start: 50%;
+  bottom: 8px;
+  translate: -50% 0;
+  gap: 6px;
+}
+
+body.angel-pcard--actions-under .angel-product-card .angel-grouped-card__action-btn {
+  opacity: 1;
+  transform: none;
+  width: 34px;
+  height: 34px;
+}
+
+body.angel-pcard--actions-under .angel-product-card .angel-grouped-card__glass {
+  opacity: 0;
+}
+
+body.angel-pcard--dark-fixed .angel-product-card .angel-grouped-card__inner {
+  background: #353535;
+  border-color: #3d3d3d;
+  color: #fff;
+}
+
+body.angel-pcard--dark-fixed .angel-product-card .angel-grouped-card__title,
+body.angel-pcard--dark-fixed .angel-product-card .angel-grouped-card__title a {
+  color: #fff;
+}
+
+.angel-product-card__oos-label {
+  position: absolute;
+  bottom: 8px;
+  inset-inline-start: 50%;
+  z-index: 6;
+  translate: -50% 0;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+body:not(.angel-pcard--show-options) .angel-product-card__variants[hidden] {
+  display: none !important;
+}
+
+/* Big discount — countdown on product cards */
+.angel-discount-countdown {
+  position: absolute;
+  z-index: 6;
+  bottom: 8px;
+  inset-inline-start: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.angel-discount-countdown::before {
+  content: "⏱";
+  font-size: 10px;
+  opacity: 0.9;
+}
+
+.angel-discount-countdown[hidden] {
+  display: none !important;
 }

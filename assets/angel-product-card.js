@@ -984,9 +984,80 @@
     card.dataset.productCardReady = "1";
   }
 
+  function parseCountdownEnd(value) {
+    if (!value) {
+      return NaN;
+    }
+    var trimmed = String(value).trim();
+    if (!trimmed) {
+      return NaN;
+    }
+    var asNum = Number(trimmed);
+    if (!Number.isNaN(asNum) && trimmed === String(asNum)) {
+      return trimmed.length <= 10 ? asNum * 1000 : asNum;
+    }
+    var parsed = Date.parse(trimmed);
+    return Number.isNaN(parsed) ? NaN : parsed;
+  }
+
+  function formatCountdown(ms) {
+    var totalSeconds = Math.max(0, Math.floor(ms / 1000));
+    var hours = Math.floor(totalSeconds / 3600);
+    var minutes = Math.floor((totalSeconds % 3600) / 60);
+    var seconds = totalSeconds % 60;
+    return (
+      String(hours).padStart(2, "0") +
+      ":" +
+      String(minutes).padStart(2, "0") +
+      ":" +
+      String(seconds).padStart(2, "0")
+    );
+  }
+
+  function initDiscountCountdown(el) {
+    if (!el || el.dataset.countdownReady === "1") {
+      return;
+    }
+
+    var endMs = parseCountdownEnd(el.getAttribute("data-countdown-end"));
+    if (Number.isNaN(endMs)) {
+      el.hidden = true;
+      return;
+    }
+
+    var remaining = endMs - Date.now();
+    if (remaining <= 0) {
+      el.hidden = true;
+      return;
+    }
+
+    el.dataset.countdownReady = "1";
+    el.hidden = false;
+
+    function tick() {
+      var left = endMs - Date.now();
+      if (left <= 0) {
+        el.hidden = true;
+        el.textContent = "00:00:00";
+        return false;
+      }
+      el.textContent = formatCountdown(left);
+      return true;
+    }
+
+    tick();
+    window.setInterval(tick, 1000);
+  }
+
+  function initDiscountCountdowns(root) {
+    var scope = root || document;
+    scope.querySelectorAll("[data-discount-countdown]").forEach(initDiscountCountdown);
+  }
+
   function initProductCards(root) {
     var scope = root || document;
     scope.querySelectorAll(".angel-product-card").forEach(initProductCard);
+    initDiscountCountdowns(scope);
   }
 
   function handleProductCardAdd(btn) {
@@ -1084,6 +1155,7 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     initProductCards();
+    initDiscountCountdowns(document);
     bindProductCardQuickView(document.getElementById("products-list") || document);
 
     var list = document.getElementById("products-list");
@@ -1099,5 +1171,6 @@
   window.AngelProductCard = {
     init: initProductCards,
     initCard: initProductCard,
+    initDiscountCountdowns: initDiscountCountdowns,
   };
 })();

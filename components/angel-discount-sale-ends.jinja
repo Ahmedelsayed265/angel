@@ -1,0 +1,17 @@
+{# Resolve discount end datetime for a product (layout «الخصم الكبير» settings) #}
+{% macro angel_sale_ends_at(product) %}
+  {% if settings.big_discount_unified_end_date_enabled | default(false) %}
+    {{ (settings.big_discount_unified_end_date | default('', true)) | trim }}
+  {% else %}
+    {% set sp = product.selected_product if product.selected_product is defined else product %}
+    {{
+      sp.sale_price_date_to
+      | default(sp.sale_price_end_date, true)
+      | default(sp.discount_end_date, true)
+      | default(product.sale_price_date_to, true)
+      | default(product.discount_end_date, true)
+      | default('', true)
+      | trim
+    }}
+  {% endif %}
+{% endmacro %}

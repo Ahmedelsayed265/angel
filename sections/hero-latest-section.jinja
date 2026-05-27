@@ -1,0 +1,104 @@
+{% set home_tab = settings.home_tab | default('') %}
+{% set bg_image = settings.bg_image %}
+{% set space_between = settings.space_between | default(0) %}
+{% set slides = safeget(settings, 'slides', []) %}
+
+{% if slides and slides | length > 0 %}
+<link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
+
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-hero-section"
+  data-layout="swiper"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
+>
+  <div class="angel-hero-panels">
+    <div
+      class="angel-hero-panel angel-hero-panel--swiper is-active"
+      data-hero-panel="1"
+      data-layout="swiper"
+      style="--hero-space-between: {{ space_between }}px;"
+    >
+      <div class="angel-hero-panel-inner angel-hero-swiper-wrap">
+        <div class="swiper angel-hero-swiper angel-hero-latest-swiper">
+          <div class="swiper-wrapper">
+            {% for slide in slides %}
+              {% set slide_bg = slide.bg_image if slide.bg_image else bg_image %}
+              <div class="swiper-slide">
+                <div class="angel-hero-slide" style="--slide-flex-dir: row;">
+                  <div class="angel-hero-slide-bg">
+                    {% if slide_bg %}
+                      <img class="angel-hero-slide-bg-img" src="{{ slide_bg }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+                    {% endif %}
+                    <span class="angel-hero-slide-bg-fade" aria-hidden="true"></span>
+                  </div>
+                  <div class="container angel-hero-slide-body">
+                    <div class="angel-hero-slide-content angel-hero-slide-foreground angel-hero-slide-foreground--image-left">
+                      {% if slide.image %}
+                        <div class="angel-hero-slide-media">
+                          <img class="angel-hero-slide-product" src="{{ slide.image }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+                        </div>
+                      {% endif %}
+                      <div class="angel-hero-slide-text">
+                        {% if slide.subtitle %}<p class="angel-hero-subtitle angel-hero-slide-subtitle">{{ slide.subtitle }}</p>{% endif %}
+                        {% if slide.heading %}<h2 class="angel-hero-heading angel-hero-slide-heading">{{ slide.heading }}</h2>{% endif %}
+                        {% if slide.button_text %}
+                          <div class="angel-hero-slide-btn-wrap">
+                            <span class="angel-hero-slide-btn-fade" aria-hidden="true"></span>
+                            <a class="angel-hero-btn angel-hero-btn--banner" href="{{ slide.button_url if slide.button_url else 'javascript:;' }}">
+                              <span class="angel-hero-btn-label">{{ slide.button_text }}</span>
+                              <span class="angel-hero-btn-arrow sicon-arrow-up-left" aria-hidden="true"></span>
+                            </a>
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="swiper-pagination angel-hero-pagination"></div>
+          <button type="button" class="swiper-button-prev angel-hero-nav angel-hero-nav--prev" aria-label="{{ _('Previous') }}"></button>
+          <button type="button" class="swiper-button-next angel-hero-nav angel-hero-nav--next" aria-label="{{ _('Next') }}"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
+<script>
+(function () {
+  var section = document.getElementById('{{ sectionId }}');
+  if (!section || typeof Swiper === 'undefined') return;
+  var el = section.querySelector('.angel-hero-swiper');
+  if (!el || el.classList.contains('swiper-initialized')) return;
+  var isRtl = window.appDirection === 'rtl';
+  var spaceBetween = parseInt(getComputedStyle(section).getPropertyValue('--hero-space-between'), 10) || 0;
+  new Swiper(el, {
+    slidesPerView: 1,
+    spaceBetween: spaceBetween,
+    speed: 650,
+    effect: 'slide',
+    grabCursor: true,
+    resistanceRatio: 0.72,
+    observer: true,
+    observeParents: true,
+    direction: 'horizontal',
+    rtl: isRtl,
+    navigation: {
+      nextEl: el.querySelector('.swiper-button-next'),
+      prevEl: el.querySelector('.swiper-button-prev')
+    },
+    pagination: {
+      el: el.querySelector('.swiper-pagination'),
+      clickable: true
+    }
+  });
+})();
+</script>
+{% endif %}
+

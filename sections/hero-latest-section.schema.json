@@ -1,0 +1,39 @@
+{
+  "section_id": "angel-hero-latest-section",
+  "template": "sections/hero-latest-section.jinja",
+  "icon": "fa fa-clock-o",
+  "name": {
+    "ar": "الهيرو — شكل 3 (سلايدر)",
+    "en": "Hero — Layout 3 (slider)"
+  },
+  "settings": [
+    {
+      "id": "home_tab",
+      "type": "select",
+      "label": { "ar": "عرض داخل تبويب الرئيسية", "en": "Show in home tab" },
+      "default": "",
+      "options": [
+        { "value": "", "label": { "ar": "كل التبويبات (افتراضي)", "en": "All tabs (default)" } },
+        { "value": "1", "label": { "ar": "تبويب 1", "en": "Tab 1" } },
+        { "value": "2", "label": { "ar": "تبويب 2", "en": "Tab 2" } },
+        { "value": "3", "label": { "ar": "تبويب 3", "en": "Tab 3" } }
+      ]
+    },
+    { "id": "bg_image", "type": "image", "label": { "ar": "صورة خلفية (افتراضي)", "en": "Default background image" } },
+    { "id": "space_between", "type": "number", "label": { "ar": "المسافة بين الشرائح (px)", "en": "Space between (px)" }, "default": 0 },
+    {
+      "id": "slides",
+      "type": "list",
+      "label": { "ar": "الشرائح", "en": "Slides" },
+      "settings": [
+        { "id": "heading", "type": "text", "label": { "ar": "العنوان", "en": "Heading" } },
+        { "id": "subtitle", "type": "text", "label": { "ar": "العنوان الفرعي", "en": "Subtitle" } },
+        { "id": "button_text", "type": "text", "label": { "ar": "نص الزر", "en": "Button text" } },
+        { "id": "button_url", "type": "url", "label": { "ar": "رابط الزر", "en": "Button URL" } },
+        { "id": "bg_image", "type": "image", "label": { "ar": "خلفية الشريحة (اختياري)", "en": "Slide background (optional)" } },
+        { "id": "image", "type": "image", "label": { "ar": "صورة المنتج/العنصر", "en": "Slide image" } }
+      ]
+    }
+  ]
+}
+

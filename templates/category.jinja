@@ -5,15 +5,80 @@
 {% block top_links %}
     <link rel="stylesheet" type="text/css" href="{{ 'toastr.min.css' | asset_url }}"/>
     <link rel="stylesheet" type="text/css" href="{{ 'swiper-bundle.min.css' | asset_url }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ ('angel-category.css?v=0.1.050') | asset_url }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ ('angel-category.css?v=0.1.051') | asset_url }}"/>
 {% endblock %}
 
 {% block main_content %}
 
-<div class="angel-category-page">
+{% set category_page_hide_main_products = settings.category_page_hide_main_products | default(false) %}
+{% set category_page_mobile_cols = settings.category_page_mobile_columns_when_hidden | default('2') %}
+{% set category_page_desktop_cols = settings.category_page_desktop_columns_when_hidden | default('6') %}
+{% set category_page_slider = settings.category_page_show_subcategories_as_slider | default(false) %}
+{% set category_page_load_same_page = settings.category_page_load_subcategory_products_same_page | default(false) %}
+{% set category_page_square_banners = settings.category_page_banners_square | default(false) %}
+{% set category_page_separate_banners = settings.category_page_banners_separate | default(false) %}
+
+{% set raw_children = safeget(category, 'children_categories', safeget(category, 'children', safeget(category, 'sub_categories', safeget(category, 'subcategories', [])))) %}
+{% set subcategories =
+    raw_children
+    if raw_children is iterable and raw_children is not boolean and raw_children is not string
+    else []
+%}
+{% set hide_main_products_now = category_page_hide_main_products and (subcategories | length > 0) %}
+
+{% set category_media_raw = safeget(settings, 'category_page_category_media', []) %}
+{% set category_media =
+    category_media_raw
+    if category_media_raw is iterable and category_media_raw is not boolean and category_media_raw is not string
+    else []
+%}
+
+{% set banners_raw = safeget(settings, 'category_page_banners', []) %}
+{% set banners =
+    banners_raw
+    if banners_raw is iterable and banners_raw is not boolean and banners_raw is not string
+    else []
+%}
+
+<div
+    class="angel-category-page{% if hide_main_products_now %} angel-category-page--hide-products{% endif %}{% if category_page_slider %} angel-category-page--subcats-slider{% endif %}{% if category_page_square_banners %} angel-category-page--square-banners{% endif %}{% if category_page_separate_banners %} angel-category-page--separate-banners{% endif %}"
+    data-angel-category-page
+    data-hide-main-products="{{ 'true' if hide_main_products_now else 'false' }}"
+    data-subcategory-load="{{ 'true' if category_page_load_same_page else 'false' }}"
+    style="--angel-subcats-cols-mobile: {{ category_page_mobile_cols }}; --angel-subcats-cols-desktop: {{ category_page_desktop_cols }};"
+>
     {% include 'components/angel-category-hero.jinja' %}
 
     <div class="container">
+        {% set shown_banner_count = 0 %}
+        {% for banner in banners %}
+            {% set banner_cat = safeget(banner, 'category', none) %}
+            {% if banner.image and banner_cat and (safeget(banner_cat, 'id', '') == safeget(category, 'id', '')) %}
+                {% set shown_banner_count = shown_banner_count + 1 %}
+            {% endif %}
+        {% endfor %}
+
+        {% if shown_banner_count > 0 %}
+            <section class="angel-category-banners" aria-label="{{ _('Banners') }}">
+                <div class="angel-category-banners__grid">
+                    {% for banner in banners %}
+                        {% set banner_cat = safeget(banner, 'category', none) %}
+                        {% if banner.image and banner_cat and (safeget(banner_cat, 'id', '') == safeget(category, 'id', '')) %}
+                            {% if banner.url %}
+                                <a class="angel-category-banner" href="{{ banner.url }}">
+                                    <img class="angel-category-banner__img" src="{{ image_url(banner.image, q=85) }}" alt="" loading="lazy" decoding="async">
+                                </a>
+                            {% else %}
+                                <div class="angel-category-banner" aria-hidden="true">
+                                    <img class="angel-category-banner__img" src="{{ image_url(banner.image, q=85) }}" alt="" loading="lazy" decoding="async">
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
         <div class="angel-category-page__layout">
             {% if products.filters | length > 0 %}
                 <aside class="angel-category-page__sidebar" data-angel-filter-drawer aria-label="{{ _('Filter') }}">
@@ -39,25 +104,81 @@
             <div class="angel-category-page__main">
                 {% set count = products.count %}
                 {% set has_products_filtration = (products.filters | length > 0) %}
-                {% include 'components/angel-category-toolbar.jinja' %}
-
-                <div id="products-list" class="angel-category-page__grid products-list">
-                    {% for product in products.results %}
-                        {% set product = product %}
-                        {% set index = key %}
-                        {% include 'components/product-card.jinja' %}
-                    {% endfor %}
-                </div>
-
-                {% if products.results | length == 0 %}
-                    <p class="angel-category-page__empty">{{ _("No products") }}</p>
+                {% if not hide_main_products_now %}
+                    {% include 'components/angel-category-toolbar.jinja' %}
                 {% endif %}
 
-                <div class="angel-category-page__pagination-wrap">
-                    {% set totalPages = products.pages_count %}
-                    {% set currentPage = products.page %}
-                    {% include 'components/pagination.jinja' %}
-                </div>
+                {% if hide_main_products_now %}
+                    <section class="angel-category-subcats" aria-label="{{ _('Categories') }}">
+                        <div class="angel-category-subcats__grid">
+                            {% for subcat in subcategories %}
+                                {% set custom = none %}
+                                {% for cm in category_media %}
+                                    {% set cm_cat = safeget(cm, 'category', none) %}
+                                    {% if cm_cat and (safeget(cm_cat, 'id', '') == safeget(subcat, 'id', '')) %}
+                                        {% set custom = cm %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% set sub_url = safeget(subcat, 'url', safeget(subcat, 'html_url', '')) %}
+                                {% set sub_name = safeget(subcat, 'name', '') %}
+                                {% set sub_img = safeget(custom, 'image', safeget(subcat, 'cover_image', safeget(subcat, 'image', ''))) %}
+                                {% set sub_desc = safeget(custom, 'short_desc', '') %}
+                                {% set sub_promo = safeget(custom, 'promo_title', '') %}
+
+                                <a
+                                    class="angel-category-subcat"
+                                    href="{{ sub_url if sub_url else 'javascript:;' }}"
+                                    {% if category_page_load_same_page and sub_url %}data-angel-subcategory-load data-subcategory-url="{{ sub_url }}"{% endif %}
+                                >
+                                    <span class="angel-category-subcat__media" aria-hidden="true">
+                                        {% if sub_img %}
+                                            <img class="angel-category-subcat__img" src="{{ image_url(sub_img, w=560, h=560, q=85, f='auto') }}" alt="" loading="lazy" decoding="async">
+                                        {% else %}
+                                            <span class="angel-category-subcat__img angel-category-subcat__img--placeholder"></span>
+                                        {% endif %}
+                                    </span>
+                                    <span class="angel-category-subcat__body">
+                                        {% if sub_desc %}<span class="angel-category-subcat__desc">{{ sub_desc }}</span>{% endif %}
+                                        {% if sub_promo %}<span class="angel-category-subcat__promo">{{ sub_promo }}</span>{% endif %}
+                                        <span class="angel-category-subcat__title">{{ sub_name }}</span>
+                                    </span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <section class="angel-category-subcat-products" id="angel-subcategory-products" hidden>
+                        <div class="angel-category-subcat-products__head">
+                            <h2 class="angel-category-subcat-products__title" id="angel-subcategory-products-title"></h2>
+                            <button type="button" class="angel-category-subcat-products__back" data-angel-subcategory-back>
+                                {{ _("Back") }}
+                            </button>
+                        </div>
+                        <div class="angel-category-subcat-products__body">
+                            <div id="products-list" class="angel-category-page__grid products-list"></div>
+                            <div class="angel-category-page__pagination-wrap"></div>
+                        </div>
+                    </section>
+                {% else %}
+                    <div id="products-list" class="angel-category-page__grid products-list">
+                        {% for product in products.results %}
+                            {% set product = product %}
+                            {% set index = key %}
+                            {% include 'components/product-card.jinja' %}
+                        {% endfor %}
+                    </div>
+
+                    {% if products.results | length == 0 %}
+                        <p class="angel-category-page__empty">{{ _("No products") }}</p>
+                    {% endif %}
+
+                    <div class="angel-category-page__pagination-wrap">
+                        {% set totalPages = products.pages_count %}
+                        {% set currentPage = products.page %}
+                        {% include 'components/pagination.jinja' %}
+                    </div>
+                {% endif %}
 
             </div>
         </div>
@@ -80,7 +201,7 @@
     <script type="text/javascript" src="{{ 'toastr.min.js' | asset_url }}" defer></script>
     <script type="text/javascript" src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
     <script type="text/javascript" src="{{ ('angel-side-filters.js?v=0.1.5') | asset_url }}" defer></script>
-    <script type="text/javascript" src="{{ ('angel-category.js?v=0.1.048') | asset_url }}" defer></script>
+    <script type="text/javascript" src="{{ ('angel-category.js?v=0.1.049') | asset_url }}" defer></script>
     <script>
         window.angelProductCardLabels = {
             chooseOptions: {{ _("Please choose product options first") | tojson }}

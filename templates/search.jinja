@@ -5,9 +5,37 @@
 
 {% block main_content %}
 
-    <section class="search-products">
-        <div class="products-title">
-            <h2>Items</h2>
+    {% set links_raw = safeget(settings, 'angel_search_page_links', []) %}
+    {% set search_links =
+        links_raw
+        if links_raw is iterable and links_raw is not boolean and links_raw is not string
+        else []
+    %}
+
+    <section class="search-products angel-search-page">
+        <div class="container">
+            {% if search_links | length > 0 %}
+                <div class="angel-search-page__links" aria-label="{{ _('Links') }}">
+                    {% for link in search_links %}
+                        {% set link_url = (link.url | default('', true)) | trim %}
+                        {% if link_url %}
+                            {% set href = link_url | localized_url if link_url[0:1] == '/' else link_url %}
+                            <a class="angel-search-page__link" href="{{ href }}"{% if href and href[0:4] == 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
+                                {% if link.image %}
+                                    <img class="angel-search-page__link-img" src="{{ image_url(link.image, h=140, q=90) }}" alt="" loading="lazy" decoding="async" />
+                                {% endif %}
+                                {% if link.title %}
+                                    <span class="angel-search-page__link-title">{{ link.title }}</span>
+                                {% endif %}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="products-title">
+                <h2>{{ _("Search") }}</h2>
+            </div>
         </div>
     </section>
 

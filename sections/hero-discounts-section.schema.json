@@ -1,0 +1,51 @@
+{
+  "section_id": "angel-hero-discounts-section",
+  "template": "sections/hero-discounts-section.jinja",
+  "icon": "fa fa-percent",
+  "name": {
+    "ar": "الهيرو — شكل 2",
+    "en": "Hero — Layout 2"
+  },
+  "settings": [
+    {
+      "id": "home_tab",
+      "type": "select",
+      "label": { "ar": "عرض داخل تبويب الرئيسية", "en": "Show in home tab" },
+      "default": "",
+      "options": [
+        { "value": "", "label": { "ar": "كل التبويبات (افتراضي)", "en": "All tabs (default)" } },
+        { "value": "1", "label": { "ar": "تبويب 1", "en": "Tab 1" } },
+        { "value": "2", "label": { "ar": "تبويب 2", "en": "Tab 2" } },
+        { "value": "3", "label": { "ar": "تبويب 3", "en": "Tab 3" } }
+      ]
+    },
+    { "id": "video", "type": "video", "label": { "ar": "فيديو الخلفية", "en": "Background video" } },
+    { "id": "video_loop", "type": "checkbox", "label": { "ar": "تكرار الفيديو (Loop)", "en": "Loop video" }, "default": true },
+    { "id": "heading", "type": "text", "label": { "ar": "العنوان الرئيسي", "en": "Heading" } },
+    { "id": "subtitle", "type": "text", "label": { "ar": "العنوان الفرعي", "en": "Subtitle" } },
+    { "id": "button_text", "type": "text", "label": { "ar": "نص الزر", "en": "Button text" } },
+    { "id": "button_url", "type": "url", "label": { "ar": "رابط الزر", "en": "Button URL" } },
+    { "id": "button_icon", "type": "image", "label": { "ar": "أيقونة الزر (اختياري)", "en": "Button icon (optional)" } },
+    { "id": "title_color", "type": "color", "label": { "ar": "لون العنوان", "en": "Title color" }, "default": "#ffffff" },
+    { "id": "subtitle_color", "type": "color", "label": { "ar": "لون العنوان الفرعي", "en": "Subtitle color" }, "default": "#ffffff" },
+    { "id": "button_bg_color", "type": "color", "label": { "ar": "لون خلفية الزر", "en": "Button background" }, "default": "#54c8e9" },
+    { "id": "button_text_color", "type": "color", "label": { "ar": "لون نص الزر", "en": "Button text color" }, "default": "#0f172a" },
+    { "id": "overlay_opacity", "type": "number", "label": { "ar": "شفافية التعتيم (0-100)", "en": "Overlay opacity" }, "default": 35 },
+    { "id": "card_title_color", "type": "color", "label": { "ar": "لون عناوين البطاقات", "en": "Cards title color" }, "default": "#54c8e9" },
+    { "id": "card_btn_bg_color", "type": "color", "label": { "ar": "لون زر البطاقات", "en": "Cards button background" }, "default": "#54c8e9" },
+    { "id": "card_btn_text_color", "type": "color", "label": { "ar": "لون نص زر البطاقات", "en": "Cards button text" }, "default": "#0f172a" },
+    {
+      "id": "cards",
+      "type": "list",
+      "max_items": 4,
+      "label": { "ar": "البطاقات العائمة", "en": "Floating cards" },
+      "settings": [
+        { "id": "image", "type": "image", "label": { "ar": "الصورة", "en": "Image" } },
+        { "id": "title", "type": "text", "label": { "ar": "العنوان", "en": "Title" } },
+        { "id": "url", "type": "url", "label": { "ar": "الرابط", "en": "URL" } },
+        { "id": "button_text", "type": "text", "label": { "ar": "نص الزر", "en": "Button text" } }
+      ]
+    }
+  ]
+}
+

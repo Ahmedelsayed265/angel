@@ -14,6 +14,80 @@
       },
       "settings": [
         {
+          "id": "bg_color",
+          "type": "color",
+          "label": {
+            "ar": "لون خلفية أعلى الصفحة",
+            "en": "Header background color"
+          }
+        },
+        {
+          "id": "logo_scale",
+          "type": "text",
+          "label": {
+            "ar": "حجم شعار المتجر في أعلى الصفحة",
+            "en": "Header logo size"
+          },
+          "info": {
+            "ar": "قيمة من 0 إلى 10 (مثال: 2.5). الافتراضي 2.5.",
+            "en": "Value from 0 to 10 (e.g. 2.5). Default is 2.5."
+          },
+          "default": "2.5"
+        },
+        {
+          "id": "mobile_logo_right",
+          "type": "checkbox",
+          "label": {
+            "ar": "شعار المتجر على اليمين بدلاً من المنتصف",
+            "en": "Logo on the right instead of center"
+          },
+          "info": {
+            "ar": "يعمل في الجوال فقط.",
+            "en": "Mobile only."
+          },
+          "default": false
+        },
+        {
+          "id": "mobile_back_button",
+          "type": "checkbox",
+          "label": {
+            "ar": "تفعيل زر العودة للخلف في الجوال",
+            "en": "Enable back button on mobile"
+          },
+          "default": false
+        },
+        {
+          "id": "big_icons",
+          "type": "checkbox",
+          "label": {
+            "ar": "تكبير أيقونات أعلى الصفحة",
+            "en": "Enlarge header icons"
+          },
+          "default": false
+        },
+        {
+          "id": "merge_with_hero_banner",
+          "type": "checkbox",
+          "label": {
+            "ar": "دمج الشريط العلوي مع صورة البانر",
+            "en": "Merge header with hero banner image"
+          },
+          "info": {
+            "ar": "فعّله فقط إذا كان أول عنصر في الصفحة الرئيسية بانر/سلايدر.",
+            "en": "Enable only when the first home element is a banner/slider."
+          },
+          "default": false
+        },
+        {
+          "id": "enable_bottom_nav",
+          "type": "checkbox",
+          "label": {
+            "ar": "تفعيل شريط التنقل أسفل الشاشة",
+            "en": "Enable bottom navigation bar"
+          },
+          "default": false
+        },
+        {
           "id": "logo",
           "type": "image",
           "label": {
@@ -96,6 +170,14 @@
       },
       "settings": [
         {
+          "id": "bg_color",
+          "type": "color",
+          "label": {
+            "ar": "لون خلفية القائمة الجانبية",
+            "en": "Sliding menu background color"
+          }
+        },
+        {
           "id": "title",
           "type": "text",
           "label": {
@@ -176,6 +258,57 @@
                 "ar": "الرابط",
                 "en": "Link"
               }
+            }
+          ]
+        },
+        {
+          "id": "custom_links",
+          "type": "list",
+          "label": {
+            "ar": "روابط مخصصة للقائمة الجانبية",
+            "en": "Custom links for sliding menu"
+          },
+          "info": {
+            "ar": "يمكن إضافة صورة ونص ورابط مع خيار عرض الرابط في صف جديد.",
+            "en": "Add image + label + URL, with an option to force a new row."
+          },
+          "settings": [
+            {
+              "id": "title",
+              "type": "text",
+              "label": {
+                "ar": "نص الرابط",
+                "en": "Link text"
+              }
+            },
+            {
+              "id": "image",
+              "type": "image",
+              "label": {
+                "ar": "صورة الرابط",
+                "en": "Link image"
+              },
+              "info": {
+                "ar": "المقاس المناسب: 60×400 بكسل",
+                "en": "Recommended size: 60×400px"
+              }
+            },
+            {
+              "id": "url",
+              "type": "url",
+              "label": {
+                "ar": "الرابط",
+                "en": "URL"
+              }
+            },
+            {
+              "id": "new_row",
+              "type": "checkbox",
+              "label": {
+                "ar": "عرض الرابط في صف جديد",
+                "en": "Show link on a new row"
+              },
+              "default": false
             }
           ]
         },

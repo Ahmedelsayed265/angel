@@ -1688,13 +1688,22 @@
       return;
     }
 
+    var urgencySection = timerEl.closest(".angel-product-urgency");
+
+    function hideUrgency() {
+      if (urgencySection) {
+        urgencySection.hidden = true;
+      }
+    }
+
     function tick() {
       var remaining = endMs - Date.now();
-      timerEl.textContent = formatCountdown(remaining);
       if (remaining <= 0) {
         timerEl.textContent = "00:00:00";
+        hideUrgency();
         return false;
       }
+      timerEl.textContent = formatCountdown(remaining);
       return true;
     }
 

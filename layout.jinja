@@ -115,14 +115,22 @@
 
   <link rel="stylesheet" href="{{ ('main.css?v=' ~ ver) | asset_url }}" />
 
-  <link rel="stylesheet" type="text/css" href="{{ ('angel-product.css?v=' ~ ver) | asset_url }}" />
+  <link rel="stylesheet" type="text/css" href="{{ ('angel-product.css?v=' ~ ver ~ '.1') | asset_url }}" />
 
-  <link rel="stylesheet" type="text/css" href="{{ 'custom.css?v=1.171' | asset_url }}" />
+  <link rel="stylesheet" type="text/css" href="{{ 'custom.css?v=1.184' | asset_url }}" />
 
   <link rel="stylesheet" type="text/css" href="{{ ('angel-cart-toast.css?v=' ~ ver) | asset_url }}" />
 
   {% if session.lang == 'ar' %}
     <link rel="stylesheet" href="{{ 'main.rtl.css?v=1.25' | asset_url }}">
+  {% endif %}
+
+  {% set fonts_url = (settings.fonts_ar_url | default('', true)) | trim if session.lang == 'ar' else (settings.fonts_en_url | default('', true)) | trim %}
+  {% if not fonts_url %}
+    {% set fonts_url = (settings.fonts_ar_url | default('', true)) | trim %}
+  {% endif %}
+  {% if fonts_url %}
+    <link rel="stylesheet" href="{{ fonts_url }}">
   {% endif %}
 
   {% block top_links %}{% endblock %}
@@ -133,11 +141,92 @@
 
 </head>
 
-<body class="{{ session.locale.language.direction }}" data-template="{{ session.template }}" {% if template == 'category' and category is not none %} data-category-id="{{ category.id }}" {% endif %}>
+{% set pc_fix_dark = settings.product_card_fix_dark_mode | default(false) %}
+{% set pc_hide_border = settings.product_card_hide_border | default(false) %}
+{% set pc_hide_discount = settings.product_card_hide_discount | default(false) %}
+{% set pc_hide_bg = settings.product_card_hide_background | default(false) %}
+{% set pc_title_bold = settings.product_card_title_bold | default(true) %}
+{% set pc_title_one_line = settings.product_card_title_single_line | default(true) %}
+{% set pc_center = settings.product_card_center_text | default(false) %}
+{% set pc_cart_no_bg = settings.product_card_cart_btn_no_bg | default(true) %}
+{% set pc_hide_oos_btn = settings.product_card_hide_out_of_stock_btn | default(true) %}
+{% set pc_hide_atc = settings.product_card_hide_add_to_cart | default(false) %}
+{% set pc_hide_wishlist = settings.product_card_hide_wishlist | default(false) %}
+{% set pc_hide_ratings = settings.product_card_hide_ratings | default(false) %}
+{% set pc_hide_category = settings.product_card_hide_category | default(false) %}
+{% set pc_hover_shine = settings.product_card_hover_shine | default(true) %}
+{% set pc_hide_brand = settings.product_card_hide_brand | default(false) %}
+{% set pc_quick_view = settings.product_card_enable_quick_view | default(true) %}
+{% set pc_actions_under = settings.product_card_actions_under_image | default(false) %}
+{% set pc_show_options = settings.product_card_show_options | default(false) %}
+{% set pc_image_ratio = settings.product_card_image_ratio | default('square') %}
+{% set pc_image_mode = settings.product_card_image_mode | default('single') %}
+{% set pc_corner = settings.product_card_corner_style | default('rounded_3') %}
+{% set pc_cart_icon = settings.product_card_cart_icon | default('plus') %}
+{% set pc_bg = settings.product_card_bg_color | default('#353535') %}
+{% set pc_border = settings.product_card_border_color | default('#353535') %}
+{% set pc_promo_bg = settings.product_card_promo_bg_color | default('#9e2c34') %}
+
+{% set cs_theme_mode = settings.color_system_theme_mode | default('light') %}
+{% set cs_bg_primary = settings.color_system_bg_primary | default('#292929') %}
+{% set cs_bg_muted = settings.color_system_bg_muted | default('#3d3d3d') %}
+{% set cs_text_primary = settings.color_system_text_primary | default('#ffffff') %}
+{% set cs_text_muted = settings.color_system_text_muted | default('#a9a9a9') %}
+{% set cs_btn_text = settings.color_system_button_text | default('#ffffff') %}
+{% set cs_force_dark_header = settings.color_system_force_dark_header | default(false) %}
+{% set cs_force_dark_menu = settings.color_system_force_dark_sliding_menu | default(false) %}
+{% set cs_force_dark_footer = settings.color_system_force_dark_footer | default(false) %}
+
+<body
+  class="{{ session.locale.language.direction }}{% if pc_fix_dark %} angel-pcard--dark-fixed{% endif %}{% if pc_hide_border %} angel-pcard--no-border{% endif %}{% if pc_hide_discount %} angel-pcard--no-discount{% endif %}{% if pc_hide_bg %} angel-pcard--no-bg{% endif %}{% if pc_title_bold %} angel-pcard--title-bold{% endif %}{% if pc_title_one_line %} angel-pcard--title-one-line{% endif %}{% if pc_center %} angel-pcard--center{% endif %}{% if pc_cart_no_bg %} angel-pcard--cart-no-bg{% endif %}{% if pc_hide_oos_btn %} angel-pcard--oos-label{% endif %}{% if pc_hide_atc %} angel-pcard--no-atc{% endif %}{% if pc_hide_wishlist %} angel-pcard--no-wishlist{% endif %}{% if pc_hide_ratings %} angel-pcard--no-ratings{% endif %}{% if pc_hide_category %} angel-pcard--no-category{% endif %}{% if pc_hover_shine %} angel-pcard--hover-shine{% endif %}{% if pc_hide_brand %} angel-pcard--no-brand{% endif %}{% if pc_actions_under %} angel-pcard--actions-under{% endif %}{% if not pc_quick_view %} angel-pcard--no-quickview{% endif %}{% if pc_image_ratio == 'tall' %} angel-pcard--img-tall{% endif %}{% if pc_image_mode == 'hover_second' %} angel-pcard--img-hover-second{% elif pc_image_mode == 'gallery' %} angel-pcard--img-gallery{% endif %}{% if cs_theme_mode == 'auto' %} angel-theme--auto angel-theme--light{% elif cs_theme_mode == 'dark' %} angel-theme--dark{% else %} angel-theme--light{% endif %}{% if cs_force_dark_header %} angel-theme--dark-header{% endif %}{% if cs_force_dark_menu %} angel-theme--dark-menu{% endif %}{% if cs_force_dark_footer %} angel-theme--dark-footer{% endif %} angel-pcard--corner-{{ pc_corner }} angel-pcard--cart-icon-{{ pc_cart_icon }}{% if pc_show_options %} angel-pcard--show-options{% endif %}"
+  data-template="{{ session.template }}"
+  {% if template == 'category' and category is not none %} data-category-id="{{ category.id }}" {% endif %}
+>
+{% if cs_theme_mode == 'auto' %}
+<script>
+(function () {
+  try {
+    var body = document.body;
+    if (!body) return;
+    var mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    if (!mq) return;
+
+    function apply(isDark) {
+      body.classList.toggle('angel-theme--dark', !!isDark);
+      body.classList.toggle('angel-theme--light', !isDark);
+    }
+
+    apply(mq.matches);
+    if (typeof mq.addEventListener === 'function') {
+      mq.addEventListener('change', function (e) { apply(e.matches); });
+    } else if (typeof mq.addListener === 'function') {
+      mq.addListener(function (e) { apply(e.matches); });
+    }
+  } catch (e) {}
+})();
+</script>
+{% endif %}
 
 <style>
   :root {
     {% if settings is defined %}
+      --angel-pcard-bg: {{ pc_bg }};
+      --angel-pcard-border: {{ pc_border }};
+      --angel-pcard-promo-bg: {{ pc_promo_bg }};
+      --angel-cs-bg: {{ cs_bg_primary }};
+      --angel-cs-bg-muted: {{ cs_bg_muted }};
+      --angel-cs-text: {{ cs_text_primary }};
+      --angel-cs-text-muted: {{ cs_text_muted }};
+      --angel-cs-btn-text: {{ cs_btn_text }};
+      {% if settings.store_background_bg_color %}--angel-store-bg-color: {{ settings.store_background_bg_color }};{% endif %}
+      {% if settings.store_background_bg_image %}--angel-store-bg-image: url('{{ image_url(settings.store_background_bg_image, q=90, f='auto') }}');{% endif %}
+      {% if session.lang == 'ar' %}
+        {% if settings.fonts_ar_family %}--angel-font-family: {{ settings.fonts_ar_family }};{% endif %}
+        {% if settings.fonts_ar_weight %}--angel-font-weight: {{ settings.fonts_ar_weight }};{% endif %}
+      {% else %}
+        {% if settings.fonts_en_family %}--angel-font-family: {{ settings.fonts_en_family }};{% endif %}
+        {% if settings.fonts_en_weight %}--angel-font-weight: {{ settings.fonts_en_weight }};{% endif %}
+      {% endif %}
       {% if settings.colors_header_background_color %}
         --header-primary-color: {{ settings.colors_header_background_color }};
       {% endif %}
@@ -166,10 +255,67 @@
 
 {% block top_body %}{% endblock %}
 
+{% set lp_enabled = settings.loading_page_enabled | default(false) %}
+{% set lp_all = settings.loading_page_show_on_all_pages | default(false) %}
+{% set lp_should_show = lp_enabled and (lp_all or session.template == 'home') %}
+{% if lp_should_show %}
+  {% set lp_bg = settings.loading_page_bg_color | default('#ffffff') %}
+  {% set lp_img = (settings.loading_page_image_url | default('', true)) | trim %}
+  {% set lp_logo_size = (settings.loading_page_logo_size | default('180', true)) | trim %}
+  {% set lp_duration_raw = (settings.loading_page_duration_seconds | default('2', true)) | trim %}
+  {% set lp_show_skip = settings.loading_page_show_skip | default(true) %}
+  {% set lp_blur = settings.loading_page_blur_background | default(true) %}
+  {% set lp_show_spinner = settings.loading_page_show_spinner | default(false) %}
+  <div
+    id="angel-loading-overlay"
+    class="angel-loading-overlay{% if lp_blur %} angel-loading-overlay--blur{% endif %}"
+    style="--angel-loading-bg: {{ lp_bg }}; --angel-loading-size: {{ lp_logo_size | e }}px;"
+    aria-live="polite"
+    aria-busy="true"
+  >
+    <div class="angel-loading-overlay__inner">
+      {% if lp_img %}
+        <img class="angel-loading-overlay__logo" src="{{ lp_img }}" alt="{{ store.name }}" loading="eager" decoding="async" />
+      {% else %}
+        <img class="angel-loading-overlay__logo" src="{{ image_url(store.logo, h=240, q=95) }}" alt="{{ store.name }}" loading="eager" decoding="async" />
+      {% endif %}
+      {% if lp_show_spinner %}
+        <div class="angel-loading-overlay__spinner" aria-hidden="true"></div>
+      {% endif %}
+      {% if lp_show_skip %}
+        <button type="button" class="angel-loading-overlay__skip" data-angel-loading-skip>{{ _("Skip") }}</button>
+      {% endif %}
+    </div>
+  </div>
+  <script>
+  (function () {
+    try {
+      var overlay = document.getElementById('angel-loading-overlay');
+      if (!overlay) return;
+
+      function hide() {
+        overlay.classList.add('is-hidden');
+        window.setTimeout(function () {
+          overlay.remove();
+        }, 250);
+      }
+
+      var btn = overlay.querySelector('[data-angel-loading-skip]');
+      if (btn) btn.addEventListener('click', hide);
+
+      var seconds = Number({{ lp_duration_raw | default('2', true) | tojson }});
+      if (Number.isNaN(seconds) || seconds < 0) seconds = 2;
+
+      window.setTimeout(hide, Math.round(seconds * 1000));
+    } catch (e) {}
+  })();
+  </script>
+{% endif %}
+
 <div class="app d-flex flex-column visible">
     {% block header %}{% endblock %}
     
-    <div class="main flex-grow-1 app-content"{% if settings.colors_background_color %} style="background-color: {{ settings.colors_background_color }};"{% endif %}>
+    <div class="main flex-grow-1 app-content angel-store-bg"{% if settings.colors_background_color %} style="background-color: {{ settings.colors_background_color }};"{% endif %}>
         {% block main_content %}{% endblock %}
     </div>
 
@@ -188,6 +334,45 @@
   };
 </script>
 
+<script>
+(function () {
+  var tabs = document.querySelectorAll('.angel-header-home-tabs [data-hero-tab]');
+  if (!tabs || !tabs.length) return;
+
+  function setActiveTab(index) {
+    if (!index) return;
+
+    tabs.forEach(function (tab) {
+      var isActive = tab.getAttribute('data-hero-tab') === index;
+      tab.classList.toggle('is-active', isActive);
+      tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+
+    document.querySelectorAll('[data-home-tab]').forEach(function (el) {
+      var target = el.getAttribute('data-home-tab');
+      if (!target) return;
+      el.hidden = target !== index;
+    });
+
+    try {
+      window.dispatchEvent(new CustomEvent('angel:homeTabChange', { detail: { tab: index } }));
+    } catch (e) {}
+  }
+
+  var initial = null;
+  tabs.forEach(function (tab) {
+    if (!initial && tab.classList.contains('is-active')) {
+      initial = tab.getAttribute('data-hero-tab');
+    }
+    tab.addEventListener('click', function () {
+      setActiveTab(tab.getAttribute('data-hero-tab'));
+    });
+  });
+  if (!initial) initial = tabs[0].getAttribute('data-hero-tab');
+  setActiveTab(initial);
+})();
+</script>
+
 <script src="{{ 'jquery-3.6.0.min.js?v=1.0.0' | asset_url }}"></script>
 
 <script src="{{ 'jquery-ui.min.js' | asset_url }}"></script>
@@ -199,7 +384,7 @@
 <script src="{{ 'slide-menu.ie.js?v=1.06' | asset_url }}"></script>
 
 <script type="text/javascript" src="{{ ('main.js?v=' ~ ver) | asset_url }}" defer></script>
-<script type="text/javascript" src="{{ ('angel-product-card.js?v=' ~ ver) | asset_url }}" defer></script>
+<script type="text/javascript" src="{{ ('angel-product-card.js?v=' ~ ver ~ '.1') | asset_url }}" defer></script>
 <script type="text/javascript" src="{{ ('bundle-offers.js?v=' ~ ver) | asset_url }}" defer></script>
 
 {% vitrin_body %}
@@ -216,6 +401,7 @@
 
 {% block footer_scripts %}{% endblock %}
 
+{% include 'components/angel-whatsapp-fab.jinja' %}
 {% include 'components/angel-cart-toast.jinja' %}
 {% include 'components/angel-grouped-quick-view.jinja' %}
 <script type="text/javascript" src="{{ ('angel-cart-toast.js?v=' ~ ver) | asset_url }}"></script>

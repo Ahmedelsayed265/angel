@@ -770,6 +770,12 @@ msgstr "توصيل آمن"
 msgid "Hello, I would like to inquire about"
 msgstr "مرحبًا، أرغب بالاستفسار عن"
 
+msgid "Hello, I would like to contact"
+msgstr "مرحبًا، أرغب بالتواصل مع"
+
+msgid "Cart page banner"
+msgstr "بانر صفحة السلة"
+
 msgid "Contact us on WhatsApp"
 msgstr "تواصل عبر واتساب"
 

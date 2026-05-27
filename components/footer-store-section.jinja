@@ -28,7 +28,23 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
 {%- endif -%}
 {%- endmacro %}
 
-{% set newsletter_hidden = settings.newsletter_hide | default(false) %}
+{% set ft_bg = (settings.layout_footer_bg_color | default('', true)) | trim %}
+{% set ft_logo_scale_raw = (settings.layout_footer_logo_scale | default('2.5', true)) | trim %}
+{% set ft_logo_scale = ft_logo_scale_raw if ft_logo_scale_raw else '2.5' %}
+{% set ft_show_payments = settings.layout_footer_show_payment_icons | default(false) %}
+{% set ft_hide_back_top = settings.layout_footer_hide_back_to_top | default(false) %}
+{% set ft_compact = settings.layout_footer_compact | default(false) %}
+{% set ft_newsletter_enabled = settings.layout_footer_newsletter_enabled | default(true) %}
+{% set ft_extra_logos_raw = safeget(settings, 'layout_footer_extra_logos', []) %}
+{% set ft_extra_logos =
+    ft_extra_logos_raw
+    if ft_extra_logos_raw is iterable and ft_extra_logos_raw is not boolean and ft_extra_logos_raw is not string
+    else []
+%}
+{% set ft_newsletter_url = (settings.layout_footer_newsletter_form_url | default('', true)) | trim %}
+{% set section_newsletter_url = (settings.newsletter_form_action_url | default('', true)) | trim %}
+{% set newsletter_form_url = ft_newsletter_url or section_newsletter_url %}
+{% set newsletter_hidden = settings.newsletter_hide | default(false) or ft_compact or not ft_newsletter_enabled %}
 {% set youtube_href %}{{ angel_footer_youtube_link(settings, store) }}{% endset %}
 {% set youtube_href = youtube_href | trim %}
 {% set tg_href %}{{ angel_footer_telegram_link(settings, store) }}{% endset %}
@@ -50,12 +66,17 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
     {% endif %}
 {% endif %}
 
-<div class="angel-footer-store">
+<div
+    class="angel-footer-store{% if ft_compact %} angel-footer-store--compact{% endif %}{% if ft_bg %} angel-footer-store--custom-bg{% endif %}"
+    style="--angel-footer-logo-scale: {{ ft_logo_scale | e }};{% if ft_bg %} --angel-footer-bg: {{ ft_bg }};{% endif %}"
+>
     <div class="container angel-footer-store__container">
+        {% if not ft_hide_back_top %}
         <button type="button" class="angel-footer-store__back-top" id="angel-footer-back-top">
             <span class="angel-footer-store__back-top-text">{{ _("Back to top") }}</span>
             <i class="sicon-arrow-up icon angel-footer-store__back-top-icon" aria-hidden="true"></i>
         </button>
+        {% endif %}
 
         {% if not newsletter_hidden %}
         <div class="angel-footer-store__newsletter-band">
@@ -72,7 +93,7 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
                     <form
                         class="angel-footer-store__newsletter-form"
                         method="post"
-                        {% if settings.newsletter_form_action_url %}action="{{ settings.newsletter_form_action_url }}"{% else %}data-angel-newsletter-missing-action="1"{% endif %}
+                        {% if newsletter_form_url %}action="{{ newsletter_form_url }}"{% else %}data-angel-newsletter-missing-action="1"{% endif %}
                     >
                         {% if csrf_token is defined %}
                             <input type="hidden" name="_token" value="{{ csrf_token }}" />
@@ -143,9 +164,19 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
                 <div class="col-12 col-sm-6 col-lg-3 angel-footer-store__col">
                     <div class="angel-footer-store__brand">
                         {% if settings.footer_brand_logo %}
-                            <img class="angel-footer-store__brand-logo" src="{{ image_url(settings.footer_brand_logo, h=120, q=90) }}" alt="{{ store.name }}" loading="lazy" decoding="async" width="160" height="48" />
+                            <img class="angel-footer-store__brand-logo" src="{{ image_url(settings.footer_brand_logo, h=120, q=90) }}" alt="{{ store.name }}" loading="lazy" decoding="async" />
                         {% else %}
-                            <img class="angel-footer-store__brand-logo" src="{{ image_url(store.logo, h=120, q=90) }}" alt="{{ store.name }}" loading="lazy" decoding="async" width="160" height="48" />
+                            {% set cs_dark_logo = settings.color_system_dark_logo | default(none) %}
+                            {% set cs_mode = (settings.color_system_theme_mode | default('light')) %}
+                            {% set use_dark_logo = cs_mode == 'dark' or (settings.color_system_force_dark_footer | default(false)) %}
+                            {% if cs_mode == 'auto' and cs_dark_logo and not (settings.color_system_force_dark_footer | default(false)) %}
+                                <img class="angel-footer-store__brand-logo angel-footer-store__brand-logo--light" src="{{ image_url(store.logo, h=120, q=90) }}" alt="{{ store.name }}" loading="lazy" decoding="async" />
+                                <img class="angel-footer-store__brand-logo angel-footer-store__brand-logo--dark d-none" src="{{ image_url(cs_dark_logo, h=120, q=90) }}" alt="{{ store.name }}" loading="lazy" decoding="async" />
+                            {% elif use_dark_logo and cs_dark_logo %}
+                                <img class="angel-footer-store__brand-logo" src="{{ image_url(cs_dark_logo, h=120, q=90) }}" alt="{{ store.name }}" loading="lazy" decoding="async" />
+                            {% else %}
+                                <img class="angel-footer-store__brand-logo" src="{{ image_url(store.logo, h=120, q=90) }}" alt="{{ store.name }}" loading="lazy" decoding="async" />
+                            {% endif %}
                         {% endif %}
                         {% set footer_brand_subtitle = (settings.footer_brand_subtitle | default('متجر تجريبي - Demo Store', true)) | trim %}
                         {% if footer_brand_subtitle %}
@@ -308,16 +339,32 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
                     {% endif %}
                 </div>
             <div class="angel-footer-store__pay-icons">
-                {% for shipping_method in store.settings.checkout.shipping_methods | default([]) %}
-                    <a href="/shipping-and-payment" class="angel-footer-store__pay-link">
-                        <img src="{{ image_url(shipping_method.icon, h=80, q=100) }}" alt="" loading="lazy" height="24" />
-                    </a>
+                {% for logo_item in ft_extra_logos %}
+                    {% if logo_item.image %}
+                        {% set logo_href = (logo_item.url | default('', true)) | trim %}
+                        {% if logo_href %}
+                            <a href="{{ logo_href }}" class="angel-footer-store__extra-logo-link" target="_blank" rel="noopener noreferrer">
+                                <img src="{{ image_url(logo_item.image, h=80, q=90) }}" alt="" loading="lazy" class="angel-footer-store__extra-logo" />
+                            </a>
+                        {% else %}
+                            <span class="angel-footer-store__extra-logo-link">
+                                <img src="{{ image_url(logo_item.image, h=80, q=90) }}" alt="" loading="lazy" class="angel-footer-store__extra-logo" />
+                            </span>
+                        {% endif %}
+                    {% endif %}
                 {% endfor %}
-                {% for payment_method in store.settings.checkout.payment_methods | default([]) %}
-                    <a href="/shipping-and-payment" class="angel-footer-store__pay-link">
-                        <img src="{{ image_url(payment_method.icon, h=80, q=100) }}" alt="" loading="lazy" height="24" />
-                    </a>
-                {% endfor %}
+                {% if ft_show_payments %}
+                    {% for shipping_method in store.settings.checkout.shipping_methods | default([]) %}
+                        <a href="/shipping-and-payment" class="angel-footer-store__pay-link">
+                            <img src="{{ image_url(shipping_method.icon, h=80, q=100) }}" alt="" loading="lazy" height="24" />
+                        </a>
+                    {% endfor %}
+                    {% for payment_method in store.settings.checkout.payment_methods | default([]) %}
+                        <a href="/shipping-and-payment" class="angel-footer-store__pay-link">
+                            <img src="{{ image_url(payment_method.icon, h=80, q=100) }}" alt="" loading="lazy" height="24" />
+                        </a>
+                    {% endfor %}
+                {% endif %}
             </div>
             <span class="footer-copyrights">{{ store.settings.branding.copyrights | safe }}</span>
         </div>
@@ -336,7 +383,7 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
     if (form) {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
-            var msg = {{ _("Set the newsletter form URL in the footer section settings (Newsletter → Form POST URL).") | tojson }};
+            var msg = {{ _("Set the newsletter form URL in Layout → Footer or Footer section → Newsletter.") | tojson }};
             if (window.zid && window.zid.toaster && typeof window.zid.toaster.showSuccess === 'function') {
                 window.zid.toaster.showSuccess(msg);
             } else {

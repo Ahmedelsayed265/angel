@@ -1,0 +1,64 @@
+{
+  "section_id": "angel-hero-home-section",
+  "template": "sections/hero-home-section.jinja",
+  "icon": "fa fa-home",
+  "name": {
+    "ar": "الهيرو — شكل 1",
+    "en": "Hero — Layout 1"
+  },
+  "settings": [
+    {
+      "id": "home_tab",
+      "type": "select",
+      "label": {
+        "ar": "عرض داخل تبويب الرئيسية",
+        "en": "Show in home tab"
+      },
+      "default": "",
+      "options": [
+        { "value": "", "label": { "ar": "كل التبويبات (افتراضي)", "en": "All tabs (default)" } },
+        { "value": "1", "label": { "ar": "تبويب 1", "en": "Tab 1" } },
+        { "value": "2", "label": { "ar": "تبويب 2", "en": "Tab 2" } },
+        { "value": "3", "label": { "ar": "تبويب 3", "en": "Tab 3" } }
+      ]
+    },
+    {
+      "id": "video",
+      "type": "video",
+      "label": { "ar": "فيديو أعلى الصفحة", "en": "Top video" }
+    },
+    {
+      "id": "display_video",
+      "type": "checkbox",
+      "label": { "ar": "عرض الفيديو", "en": "Show video" },
+      "default": true
+    },
+    {
+      "id": "video_loop",
+      "type": "checkbox",
+      "label": { "ar": "تكرار الفيديو (Loop)", "en": "Loop video" },
+      "default": true
+    },
+    {
+      "id": "video_url",
+      "type": "url",
+      "label": { "ar": "رابط عند الضغط على الفيديو", "en": "Video click URL" }
+    },
+    {
+      "id": "bg_image",
+      "type": "image",
+      "label": { "ar": "غلاف الفيديو / صورة بديلة", "en": "Video poster / fallback image" }
+    },
+    {
+      "id": "cards",
+      "type": "list",
+      "max_items": 3,
+      "label": { "ar": "البطاقات (حد أقصى 3)", "en": "Cards (max 3)" },
+      "settings": [
+        { "id": "image", "type": "image", "label": { "ar": "الصورة", "en": "Image" } },
+        { "id": "url", "type": "url", "label": { "ar": "الرابط", "en": "Link" } }
+      ]
+    }
+  ]
+}
+

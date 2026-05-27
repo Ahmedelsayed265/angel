@@ -27,10 +27,50 @@
         {% set can_buy = false %}
     {% endif %}
 
+    {% set pp_hide_breadcrumb = settings.product_page_hide_breadcrumb | default(false) %}
+    {% set pp_hide_thumbs = settings.product_page_hide_thumbs | default(false) %}
+    {% set pp_hide_short_description = settings.product_page_hide_short_description | default(false) %}
+    {% set pp_show_read_more = settings.product_page_show_read_more | default(true) %}
+    {% set pp_show_availability = settings.product_page_show_availability | default(true) %}
+    {% set pp_hide_discount_value = settings.product_page_hide_discount_value | default(false) %}
+    {% set pp_hide_product_category = settings.product_page_hide_product_category | default(false) %}
+    {% set pp_hide_payment_methods = settings.product_page_hide_payment_methods | default(false) %}
+    {% set pp_hide_badges = settings.product_page_hide_badges | default(false) %}
+    {% set pp_enable_zoom = settings.product_page_enable_zoom | default(true) %}
+    {% set pp_sticky_add = settings.product_page_sticky_add_to_cart | default(true) %}
+    {% set pp_brand_title = (settings.product_page_brand_title | default('', true)) | trim %}
+    {% set bd_show_counter = settings.big_discount_show_counter | default(false) %}
+    {% from 'components/angel-discount-sale-ends.jinja' import angel_sale_ends_at %}
+
+    {% set pp_discount_codes_raw = safeget(settings, 'product_page_discount_codes', []) %}
+    {% set pp_discount_codes =
+        pp_discount_codes_raw
+        if pp_discount_codes_raw is iterable and pp_discount_codes_raw is not boolean and pp_discount_codes_raw is not string
+        else []
+    %}
+
+    {% set pp_bought_raw = safeget(settings, 'product_page_bought_together', []) %}
+    {% set pp_bought =
+        pp_bought_raw
+        if pp_bought_raw is iterable and pp_bought_raw is not boolean and pp_bought_raw is not string
+        else []
+    %}
+    {% set custom_grouped_products = none %}
+    {% if product and pp_bought | length > 0 %}
+        {% for item in pp_bought %}
+            {% if item.product and safeget(item.product, 'id', '') == safeget(product, 'id', '') %}
+                {% set custom_grouped_products = item.products | default([]) %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
     <section class="product products-details-page angel-product-page"
              data-has-preorder="{{ 'true' if has_preorder else 'false' }}"
              data-can-preorder="{{ 'true' if can_preorder else 'false' }}"
-             data-stock-behavior="{{ preorder_stock_behavior or '' }}">
+             data-stock-behavior="{{ preorder_stock_behavior or '' }}"
+             data-hide-badges="{{ 'true' if pp_hide_badges else 'false' }}"
+             data-enable-zoom="{{ 'true' if pp_enable_zoom else 'false' }}"
+             data-hide-thumbs="{{ 'true' if pp_hide_thumbs else 'false' }}">
         <div class="container pb-5">
             <section class="products-details mb-5">
                 <div>
@@ -55,6 +95,9 @@
                                 {% set brand_cat = product.categories[0] %}
                                 {% set brand_cat_url = (brand_cat.url | default('', true)) | trim or url_for('category_details', category_id=brand_cat.id, slug=brand_cat.slug or brand_cat.id) %}
                                 <div class="angel-product-brand">
+                                    {% if pp_brand_title %}
+                                        <p class="angel-product-brand__title">{{ pp_brand_title }}</p>
+                                    {% endif %}
                                     <a href="{{ brand_cat_url }}" class="angel-product-brand__logo" aria-label="{{ brand_cat.name }}">
                                         {% if brand_cat.cover_image %}
                                             <img src="{{ image_url(brand_cat.cover_image, w=160, q=90, f='auto') }}" alt="" loading="lazy" width="64" height="64" />
@@ -103,9 +146,12 @@
                                     {% endif %}
                                 </div> #}
 
-                                {% if product.short_description %}
-                                    <div class="text-short-description">{{ product.short_description | safe }}...
-                                        <a id="product-description-a" href="#product-tabs" class="angel-product-read-more">{{ _("Read more") }}</a>
+                                {% if product.short_description and not pp_hide_short_description %}
+                                    <div class="text-short-description">
+                                        {{ product.short_description | safe }}...
+                                        {% if pp_show_read_more %}
+                                            <a id="product-description-a" href="#product-tabs" class="angel-product-read-more">{{ _("Read more") }}</a>
+                                        {% endif %}
                                     </div>
                                 {% endif %}
 
@@ -120,6 +166,7 @@
                                 </div>
                                 {% endif %}
 
+                                {% if pp_show_availability %}
                                 <div class="angel-product-stock-rows">
                                     {% if not can_buy %}
                                     <div class="angel-product-stock angel-product-stock--depleted is-unavailable">
@@ -131,17 +178,11 @@
                                         <span class="angel-product-stock__label angel-product-stock__label--strong">{% if can_buy %}{{ _("Available") }}{% else %}{{ _("Out of stock") }}{% endif %}</span>
                                     </div>
                                 </div>
+                                {% endif %}
 
                                 {% if can_buy and not safeget(store, 'settings.general.availability.closed_now') and not product.preorder_campaign %}
-                                {% set sale_ends_at = (
-                                    product.selected_product.sale_price_date_to
-                                    | default(product.selected_product.sale_price_end_date, true)
-                                    | default(product.selected_product.discount_end_date, true)
-                                    | default(product.sale_price_date_to, true)
-                                    | default(product.discount_end_date, true)
-                                    | default('', true)
-                                ) | trim %}
-                                {% set show_sale_urgency = product.selected_product.formatted_sale_price or product.discount_percentage %}
+                                {% set sale_ends_at = angel_sale_ends_at(product) %}
+                                {% set show_sale_urgency = bd_show_counter and sale_ends_at and (product.selected_product.formatted_sale_price or product.discount_percentage) %}
                                 {% if show_sale_urgency %}
                                 <section class="angel-product-urgency"{% if sale_ends_at %} data-sale-ends="{{ sale_ends_at | e }}"{% endif %}>
                                     <p class="angel-product-urgency__countdown{% if not sale_ends_at %} angel-product-urgency__countdown--no-timer{% endif %}">
@@ -163,7 +204,7 @@
                                 {% endif %}
                                 {% endif %}
 
-                                {% if product.categories and product.categories | length > 0 %}
+                                {% if not pp_hide_product_category and product.categories and product.categories | length > 0 %}
                                 {% set class_cat = product.categories[0] %}
                                 {% set class_cat_url = (class_cat.url | default('', true)) | trim or url_for('category_details', category_id=class_cat.id, slug=class_cat.slug or class_cat.id) %}
                                 <div class="angel-product-classification">
@@ -184,7 +225,7 @@
                                 </div>
                                 {% endif %}
 
-                                {% if product.discount_percentage %}
+                                {% if product.discount_percentage and not pp_hide_discount_value %}
                                 <div class="angel-product-order-offer">
                                     <h2 class="angel-product-order-offer__title">{{ _("%(pct)s%% discount on order") | format(pct=product.discount_percentage) }}</h2>
                                     <p class="angel-product-order-offer__sub">{{ _("Do not miss this exclusive order discount.") }}</p>
@@ -197,13 +238,31 @@
                                 </div>
                                 {% endif %}
 
+                                {% if pp_discount_codes | length > 0 %}
+                                    <section class="angel-product-discount-codes">
+                                        {% for item in pp_discount_codes %}
+                                            {% if item.code %}
+                                                <div class="angel-product-discount-code">
+                                                    {% if item.title %}<h3 class="angel-product-discount-code__title">{{ item.title }}</h3>{% endif %}
+                                                    {% if item.subtitle %}<p class="angel-product-discount-code__subtitle">{{ item.subtitle }}</p>{% endif %}
+                                                    <div class="angel-product-discount-code__row">
+                                                        <code class="angel-product-discount-code__code">{{ item.code }}</code>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </section>
+                                {% endif %}
+
                                 <div>
                                     {% include 'vitrin:products/loyalty_points_widget.jinja' %}
                                 </div>
 
-                                <div>
-                                    {% include 'vitrin:products/payment_widgets.jinja' %}
-                                </div>
+                                {% if not pp_hide_payment_methods %}
+                                    <div>
+                                        {% include 'vitrin:products/payment_widgets.jinja' %}
+                                    </div>
+                                {% endif %}
                                 <div>
                                     {% include 'vitrin:products/preorder_countdown.jinja' %}
                                 </div>
@@ -403,11 +462,13 @@
                                     </div>
                                 </div>
 
-                                <div class="angel-product-payments">
-                                    {% for payment_method in store.settings.checkout.payment_methods | default([]) %}
-                                        <img src="{{ image_url(payment_method.icon, h=80, q=100) }}" alt="" loading="lazy" height="24" />
-                                    {% endfor %}
-                                </div>
+                                {% if not pp_hide_payment_methods %}
+                                    <div class="angel-product-payments">
+                                        {% for payment_method in store.settings.checkout.payment_methods | default([]) %}
+                                            <img src="{{ image_url(payment_method.icon, h=80, q=100) }}" alt="" loading="lazy" height="24" />
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
 
                                 {% if can_buy and (product.selected_product.is_infinite or product.selected_product.quantity > 0) %}
                                     <div class="select-quantity-div d-none" aria-hidden="true">
@@ -589,17 +650,6 @@
             {% set product = page_product %}
             {% endif %}
 
-            {% set wa_phone = (store.settings.contact.phone | default('', true)) | trim %}
-            {% if wa_phone and page_product is defined %}
-                {% set wa_digits = wa_phone | replace(' ', '') | replace('-', '') | replace('(', '') | replace(')', '') %}
-                {% if wa_digits[:1] == '+' %}
-                    {% set wa_digits = wa_digits[1:] %}
-                {% endif %}
-                <a class="angel-product-wa-fab" href="https://wa.me/{{ wa_digits }}?text={{ (_('Hello, I would like to inquire about') ~ ' ' ~ (page_product.name | e) ~ '\n' ~ page_product.html_url) | urlencode }}" target="_blank" rel="noopener noreferrer" aria-label="{{ _('Contact us on WhatsApp') }}">
-                    <i class="icon-whatsapp" aria-hidden="true"></i>
-                </a>
-            {% endif %}
-
         </div>
 
         {% if page_product is defined and page_product.bundle_offer and page_product.bundle_offer.products and (page_product.bundle_offer.products.results | default([])) | length > 5 %}
@@ -635,7 +685,8 @@
 {% endblock %}
 
 {% block footer_sticky %}
-    {% if product %}
+    {% set pp_sticky_add = settings.product_page_sticky_add_to_cart | default(true) %}
+    {% if product and pp_sticky_add %}
     <div class="angel-product-sticky" id="angel-product-sticky-bar">
         <div class="container">
             <div class="angel-product-sticky__inner">
@@ -695,7 +746,7 @@
     <script type="text/javascript" src="{{ 'product-details.js' | asset_url }}" defer></script>
     <script type="text/javascript" src="{{ 'toastr.min.js' | asset_url }}" defer></script>
     <script type="text/javascript" src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
-    <script type="text/javascript" src="{{ ('angel-product.js?v=' ~ ver) | asset_url }}" defer></script>
+    <script type="text/javascript" src="{{ ('angel-product.js?v=' ~ ver ~ '.1') | asset_url }}" defer></script>
     <script>
         var productImages = {{ product.selected_product.media | tojson }};
         var customerWishlistIds = {{ customer.wishlist | tojson if customer else '[]' }};

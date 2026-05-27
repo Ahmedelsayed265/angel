@@ -8,6 +8,7 @@
 {% set accent = settings.accent_color | default("#54c8e9") %}
 {% set slides_desktop = (settings.slides_desktop | default('6')) | int %}
 {% set slides_count = slides_desktop if slides_desktop >= 5 and slides_desktop <= 8 else 6 %}
+{% set home_tab = settings.home_tab | default('') %}
 
 {% if section_title or brands | length > 0 %}
 <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
@@ -16,6 +17,7 @@
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
   class="angel-brands-showcase"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   style="
     --abs-bg: {{ bg_color }};
     --abs-title: {{ title_color }};

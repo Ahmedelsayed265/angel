@@ -4,6 +4,7 @@
 {% set bg_color = settings.bg_color | default("#141414") %}
 {% set card_bg = settings.card_bg_color | default("#2b2b2b") %}
 {% set card_text = settings.card_text_color | default("#ffffff") %}
+{% set home_tab = settings.home_tab | default('') %}
 
 {% if categories and categories | length > 0 %}
 <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
@@ -12,6 +13,7 @@
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
   class="angel-popular-categories"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   style="
     --pc-bg: {{ bg_color }};
     --pc-title: {{ title_color }};

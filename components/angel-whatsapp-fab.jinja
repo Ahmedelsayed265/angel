@@ -1,0 +1,30 @@
+{% set wa_phone = (settings.whatsapp_fab_phone | default('', true)) | trim %}
+{% if not wa_phone %}
+  {% set wa_phone = (store.settings.contact.phone | default('', true)) | trim %}
+{% endif %}
+
+{% if wa_phone %}
+  {% set wa_digits = wa_phone | replace(' ', '') | replace('-', '') | replace('(', '') | replace(')', '') %}
+  {% if wa_digits[:1] == '+' %}
+    {% set wa_digits = wa_digits[1:] %}
+  {% endif %}
+
+  {% set wa_message = (settings.whatsapp_fab_message | default('', true)) | trim %}
+  {% if not wa_message and page_product is defined %}
+    {% set wa_message = _('Hello, I would like to inquire about') ~ ' ' ~ (page_product.name | e) ~ '\n' ~ page_product.html_url %}
+  {% elif not wa_message %}
+    {% set wa_message = _('Hello, I would like to contact') ~ ' ' ~ store.name %}
+  {% endif %}
+
+  {% set wa_position_right = settings.whatsapp_fab_position_right | default(true) %}
+
+  <a
+    class="angel-whatsapp-fab{% if wa_position_right %} angel-whatsapp-fab--right{% else %} angel-whatsapp-fab--left{% endif %}"
+    href="https://wa.me/{{ wa_digits }}?text={{ wa_message | urlencode }}"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="{{ _('Contact us on WhatsApp') }}"
+  >
+    <i class="icon-whatsapp" aria-hidden="true"></i>
+  </a>
+{% endif %}

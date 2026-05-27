@@ -68,6 +68,29 @@
                 </div>
             </header>
         <div class="container">
+            {% if settings.cart_page_banner_image %}
+                <div class="angel-cart-page__banner">
+                    {% if settings.cart_page_banner_url %}
+                        <a class="angel-cart-page__banner-link" href="{{ settings.cart_page_banner_url }}">
+                            <img
+                                class="angel-cart-page__banner-img"
+                                src="{{ image_url(settings.cart_page_banner_image, q=85) }}"
+                                alt="{{ _('Cart page banner') }}"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                        </a>
+                    {% else %}
+                        <img
+                            class="angel-cart-page__banner-img"
+                            src="{{ image_url(settings.cart_page_banner_image, q=85) }}"
+                            alt="{{ _('Cart page banner') }}"
+                            loading="lazy"
+                            decoding="async"
+                        >
+                    {% endif %}
+                </div>
+            {% endif %}
 
             <div class="cart-view">
             <div class="angel-cart-page__layout cart-products-with-totals {% if cart.products_count <= 0 %}d-none{% endif %}">
@@ -254,7 +277,9 @@
                 </div>
             </div>
 
-            {% include 'components/angel-cart-recommendations.jinja' %}
+            {% if not settings.cart_page_hide_recommendations | default(false) %}
+                {% include 'components/angel-cart-recommendations.jinja' %}
+            {% endif %}
         </div>
     </section>
 

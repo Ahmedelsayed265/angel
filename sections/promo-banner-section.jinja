@@ -9,12 +9,14 @@
 {% set subtitle_color = settings.subtitle_color | default("#ffffff") %}
 {% set button_bg = settings.button_bg_color | default("#54c8e9") %}
 {% set button_text_color = settings.button_text_color | default("#0f172a") %}
+{% set home_tab = settings.home_tab | default('') %}
 
 {% if title or subtitle or image_desktop or image_mobile or button_text %}
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
   class="angel-promo-banner"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   style="
     --pb-bg: {{ bg_color }};
     --pb-title: {{ title_color }};

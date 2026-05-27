@@ -144,6 +144,90 @@
     });
   }
 
+  function initSubcategoryLoader() {
+    var page = qs("[data-angel-category-page]");
+    if (!page) return;
+    if (page.getAttribute("data-subcategory-load") !== "true") return;
+
+    var productsWrap = document.getElementById("angel-subcategory-products");
+    var productsTitle = document.getElementById("angel-subcategory-products-title");
+    var productsList = document.getElementById("products-list");
+    var paginationWrap = qs(".angel-category-page__pagination-wrap", productsWrap);
+
+    function closeInjected() {
+      if (productsWrap) productsWrap.hidden = true;
+      if (productsList) productsList.innerHTML = "";
+      if (paginationWrap) paginationWrap.innerHTML = "";
+      if (productsTitle) productsTitle.textContent = "";
+    }
+
+    qsa("[data-angel-subcategory-back]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        closeInjected();
+        var top = qs(".angel-category-subcats");
+        if (top) top.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    qsa("[data-angel-subcategory-load]").forEach(function (link) {
+      link.addEventListener("click", function (event) {
+        var url = link.getAttribute("data-subcategory-url");
+        if (!url) return;
+        event.preventDefault();
+
+        fetch(url, {
+          credentials: "same-origin",
+          headers: { "X-Requested-With": "XMLHttpRequest" },
+        })
+          .then(function (res) {
+            if (!res.ok) throw new Error("subcategory_fetch_failed");
+            return res.text();
+          })
+          .then(function (html) {
+            var doc = new DOMParser().parseFromString(html, "text/html");
+            var nextList = doc.getElementById("products-list");
+            var nextPagination = doc.getElementById("product-pagination");
+            var nextTitle =
+              doc.querySelector(".angel-category-hero__title") ||
+              doc.querySelector("h1");
+
+            if (productsList && nextList) {
+              productsList.innerHTML = nextList.innerHTML || "";
+            }
+            if (paginationWrap && nextPagination) {
+              paginationWrap.innerHTML = nextPagination.innerHTML || "";
+            }
+            if (productsTitle && nextTitle) {
+              productsTitle.textContent = (nextTitle.textContent || "").trim();
+            }
+            if (productsWrap) productsWrap.hidden = false;
+
+            if (window.AngelProductCard && window.AngelProductCard.init) {
+              window.AngelProductCard.init(productsWrap || document);
+            }
+            if (
+              window.AngelProductPage &&
+              window.AngelProductPage.bindGroupedQuickViewTriggers
+            ) {
+              window.AngelProductPage.bindGroupedQuickViewTriggers(
+                productsWrap || document,
+              );
+            }
+            if (window.bundleOffersLoader) {
+              window.bundleOffersLoader.reload();
+            }
+
+            if (productsWrap) {
+              productsWrap.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          })
+          .catch(function () {
+            window.location.href = url;
+          });
+      });
+    });
+  }
+
   function initBackToTop() {
     var btn = qs("[data-angel-category-back-top]");
     if (!btn) {
@@ -594,6 +678,7 @@
     initFilterDrawer();
     initSortDropdown();
     initClearFilter();
+    initSubcategoryLoader();
     initBackToTop();
     observeFilters();
     loadCategoryTestimonials();

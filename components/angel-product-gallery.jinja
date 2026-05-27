@@ -1,12 +1,15 @@
 {% set media_items = product.selected_product.media | default([]) %}
 {% set share_url = product.html_url | default('', true) %}
 {% set share_title = product.name | striptags %}
+{% set pp_hide_badges = settings.product_page_hide_badges | default(false) %}
+{% set pp_enable_zoom = settings.product_page_enable_zoom | default(true) %}
+{% set pp_hide_thumbs = settings.product_page_hide_thumbs | default(false) %}
 <div class="angel-product-gallery" id="angel-product-gallery" data-media-count="{{ media_items | length }}" data-video-icon="{{ 'video-play.svg' | asset_url }}" data-share-url="{{ share_url }}" data-share-title="{{ share_title | e }}" data-share-copied="{{ _('Link copied') | e }}">
     <div class="angel-product-gallery__stage {% if media_items | length <= 0 %}angel-product-gallery__stage--empty{% endif %}">
         {% if product.low_stock_quantity and product.selected_product.in_stock %}
             <span class="angel-product-gallery__low-stock">{{ _("Almost out of stock") }}</span>
         {% endif %}
-        {% if product.badge or product.discount_percentage %}
+        {% if not pp_hide_badges and (product.badge or product.discount_percentage) %}
             <span class="angel-product-gallery__badge">{{ _("Sale") }}</span>
         {% endif %}
 
@@ -75,6 +78,7 @@
             <div class="swiper-wrapper" id="angel-product-gallery-main-wrapper">
                 {% for image in media_items %}
                     <div class="swiper-slide">
+                        {% if pp_enable_zoom %}
                         <button type="button" class="angel-product-gallery__zoom" data-gallery-index="{{ loop.index0 }}" aria-label="{{ _('View image') }}">
                             <img
                                 src="{{ image.image.full_size }}"
@@ -92,6 +96,16 @@
                                 />
                             {% endif %}
                         </button>
+                        {% else %}
+                        <div class="angel-product-gallery__zoom" aria-label="{{ _('View image') }}">
+                            <img
+                                src="{{ image.image.full_size }}"
+                                alt="{{ image.alt_text | default(product.name, true) }}"
+                                class="angel-product-gallery__img"
+                                loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
+                            />
+                        </div>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -106,24 +120,28 @@
             <div class="angel-product-gallery__pagination swiper-pagination" id="angel-product-gallery-pagination"></div>
         </div>
 
-        <div class="angel-product-gallery__lens" id="angel-product-gallery-lens" aria-hidden="true">
-            <img class="angel-product-gallery__lens-img" alt="" />
-        </div>
+        {% if pp_enable_zoom %}
+            <div class="angel-product-gallery__lens" id="angel-product-gallery-lens" aria-hidden="true">
+                <img class="angel-product-gallery__lens-img" alt="" />
+            </div>
+        {% endif %}
 
         <div class="angel-product-gallery__empty {% if media_items | length > 0 %}d-none{% endif %}" id="angel-product-gallery-empty">
             <img src="{{ 'product-img.svg' | asset_url }}" alt="" width="120" height="120" />
         </div>
     </div>
 
-    <div class="swiper angel-product-gallery__thumbs {% if media_items | length <= 1 %}d-none{% endif %}" id="angel-product-gallery-thumbs">
-        <div class="swiper-wrapper" id="angel-product-gallery-thumbs-wrapper">
-            {% for image in media_items %}
-                <div class="swiper-slide">
-                    <button type="button" class="angel-product-gallery__thumb" data-index="{{ loop.index0 }}">
-                        <img src="{{ image.image.medium }}" alt="" loading="lazy" />
-                    </button>
-                </div>
-            {% endfor %}
+    {% if not pp_hide_thumbs %}
+        <div class="swiper angel-product-gallery__thumbs {% if media_items | length <= 1 %}d-none{% endif %}" id="angel-product-gallery-thumbs">
+            <div class="swiper-wrapper" id="angel-product-gallery-thumbs-wrapper">
+                {% for image in media_items %}
+                    <div class="swiper-slide">
+                        <button type="button" class="angel-product-gallery__thumb" data-index="{{ loop.index0 }}">
+                            <img src="{{ image.image.medium }}" alt="" loading="lazy" />
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 </div>

@@ -1,0 +1,99 @@
+{% set home_tab = settings.home_tab | default('') %}
+{% set video = settings.video %}
+{% set video_loop = settings.video_loop | default(true) %}
+{% set heading = settings.heading | default('', true) %}
+{% set subtitle = settings.subtitle | default('', true) %}
+{% set button_text = settings.button_text | default('', true) %}
+{% set button_url = settings.button_url | default('', true) %}
+{% set button_icon = settings.button_icon %}
+{% set title_color = settings.title_color | default('#ffffff') %}
+{% set subtitle_color = settings.subtitle_color | default('#ffffff') %}
+{% set button_bg = settings.button_bg_color | default('#54c8e9') %}
+{% set button_text_color = settings.button_text_color | default('#0f172a') %}
+{% set overlay = settings.overlay_opacity | default(35) %}
+{% set card_title_color = settings.card_title_color | default('#54c8e9') %}
+{% set card_btn_bg = settings.card_btn_bg_color | default('#54c8e9') %}
+{% set card_btn_text = settings.card_btn_text_color | default('#0f172a') %}
+{% set cards = safeget(settings, 'cards', []) %}
+
+{% macro hero_button(text, url, icon, bg_color, text_color) %}
+  {% if text %}
+    <a class="angel-hero-btn angel-hero-btn--banner" href="{{ url if url else 'javascript:;' }}" style="background-color: {{ bg_color }}; color: {{ text_color }};">
+      <span class="angel-hero-btn-label">{{ text }}</span>
+      {% if icon %}
+        <span class="angel-hero-btn-icon-wrap"><img class="angel-hero-btn-icon" src="{{ icon }}" alt="" loading="lazy" width="20" height="20"></span>
+      {% else %}
+        <span class="angel-hero-btn-plus" aria-hidden="true">+</span>
+      {% endif %}
+    </a>
+  {% endif %}
+{% endmacro %}
+
+{% if video or (cards and cards | length > 0) or heading or subtitle or button_text %}
+<section
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="angel-hero-section"
+  data-layout="discounts"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
+>
+  <div class="angel-hero-panels">
+    <div
+      class="angel-hero-panel angel-hero-panel--discounts is-active"
+      data-hero-panel="1"
+      data-layout="discounts"
+      style="
+        --hero-card-title: {{ card_title_color }};
+        --hero-card-btn-bg: {{ card_btn_bg }};
+        --hero-card-btn-color: {{ card_btn_text }};
+        --hero-title-color: {{ title_color }};
+        --hero-subtitle-color: {{ subtitle_color }};
+        --hero-btn-bg: {{ button_bg }};
+        --hero-btn-color: {{ button_text_color }};
+        --hero-accent: {{ card_title_color }};
+        --hero-overlay: {{ overlay }}%;
+      "
+    >
+      <div class="angel-hero-panel-inner angel-hero-home">
+        <div class="angel-hero-home-layout">
+          {% if video %}
+            <div class="angel-hero-home-video-wrap angel-hero-discounts-video-wrap">
+              <video class="angel-hero-home-video" autoplay muted playsinline {% if video_loop %}loop{% endif %}>
+                <source src="{{ video }}" type="video/mp4">
+              </video>
+              <span class="angel-hero-discounts-video-fade" aria-hidden="true"></span>
+              {% if heading or subtitle or button_text %}
+                <div class="container angel-hero-discounts-intro">
+                  {% if heading %}<h2 class="angel-hero-heading">{{ heading }}</h2>{% endif %}
+                  {% if subtitle %}<p class="angel-hero-subtitle">{{ subtitle }}</p>{% endif %}
+                  {{ hero_button(button_text, button_url, button_icon, button_bg, button_text_color) }}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if cards and cards | length > 0 %}
+            <div class="container angel-hero-home-cards-wrap angel-hero-discounts-cards-wrap">
+              <div class="angel-hero-home-cards angel-hero-discounts-cards-row">
+                {% for card in cards %}
+                  {% if card.image or card.title or card.url %}
+                    <a class="angel-hero-home-card angel-hero-discount-card" href="{{ card.url if card.url else 'javascript:;' }}">
+                      {% if card.image %}
+                        <img class="angel-hero-home-card-img angel-hero-discount-card-img" src="{{ card.image }}" alt="{{ card.title if card.title else '' }}" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+                      {% endif %}
+                      <span class="angel-hero-discount-card-shade" aria-hidden="true"></span>
+                      {% if card.title %}<span class="angel-hero-discount-card-title">{{ card.title }}</span>{% endif %}
+                      <span class="angel-hero-discount-card-cta">{{ card.button_text if card.button_text else 'تسوق الآن' }}</span>
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
