@@ -235,8 +235,10 @@ document.addEventListener('zid-customer-fetched', function (event) {
         document.querySelector('.header');
     var searchHeader = header ? header.querySelector('.search-header') : document.querySelector('.search-header');
     var stickyThreshold = 200;
+    var stickyEnabled = {{ (settings.header_sticky | default(true)) | tojson }};
 
     if (!header && !searchHeader) return;
+    if (!stickyEnabled) return;
 
     function getScrollTop() {
         return (

@@ -1063,11 +1063,11 @@ body {
     display: none;
   }
 }
-body[data-template="home"] .header {
+body[data-template="home"] .header:not(.header--is-fixed) {
   position: absolute !important;
 }
 .header {
-  position: static;
+  position: sticky;
   background: transparent;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0);
   left: 0;
