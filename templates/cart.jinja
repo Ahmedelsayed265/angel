@@ -277,7 +277,7 @@
                 </div>
             </div>
 
-            {% if not settings.cart_page_hide_recommendations | default(false) %}
+            {% if not settings.cart_page_hide_recommendations %}
                 {% include 'components/angel-cart-recommendations.jinja' %}
             {% endif %}
         </div>

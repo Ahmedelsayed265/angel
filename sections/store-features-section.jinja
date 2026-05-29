@@ -7,14 +7,13 @@
 {% set value_color = settings.value_color | default("#ffffff") %}
 {% set label_color = settings.label_color | default("#9ca3af") %}
 {% set count_duration = (settings.count_duration | default(2000)) | int %}
-{% set enable_count_up = settings.enable_count_up | default(true) %}
 
 {% if features and features | length > 0 %}
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
   class="angel-store-features"
-  data-count-up="{{ 'true' if enable_count_up else 'false' }}"
+  data-count-up="{{ 'true' if settings.enable_count_up != false else 'false' }}"
   data-count-duration="{{ count_duration if count_duration > 0 else 2000 }}"
   style="
     --sf-bg: {{ bg_color }};
@@ -53,7 +52,7 @@
             {% if display_value %}
               <p
                 class="angel-store-features-item__value"
-                {% if enable_count_up %}data-count-from-value="{{ display_value | e }}"{% endif %}
+                {% if settings.enable_count_up != false %}data-count-from-value="{{ display_value | e }}"{% endif %}
               >{{ display_value }}</p>
             {% endif %}
             {% if item.label %}

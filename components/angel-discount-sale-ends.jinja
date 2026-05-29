@@ -1,6 +1,6 @@
 {# Resolve discount end datetime for a product (layout «الخصم الكبير» settings) #}
 {% macro angel_sale_ends_at(product) %}
-  {% if settings.big_discount_unified_end_date_enabled | default(false) %}
+  {% if settings.big_discount_unified_end_date_enabled %}
     {{ (settings.big_discount_unified_end_date | default('', true)) | trim }}
   {% else %}
     {% set sp = product.selected_product if product.selected_product is defined else product %}

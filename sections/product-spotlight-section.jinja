@@ -10,8 +10,6 @@
 {% set subtitle = settings.subtitle | default("عرض خاص على معالج ryzen 9550x") %}
 {% set custom_image = settings.image | default("") %}
 {% set video_src = settings.video | default("") %}
-{% set video_loop = settings.video_loop | default(true) %}
-{% set show_timer_label = settings.show_timer_label | default(true) %}
 {% set timer_label = settings.timer_label | default("متبقي على انتهاء الخصم:") %}
 {% set feature_heading = settings.feature_heading | default("") %}
 {% set feature_text = settings.feature_text | default("") %}
@@ -71,7 +69,7 @@
                 muted
                 playsinline
                 preload="auto"
-                {% if video_loop %}loop{% endif %}
+                {% if settings.video_loop != false %}loop{% endif %}
                 {% if poster_src %}poster="{{ poster_src }}"{% endif %}
                 aria-label="{{ media_alt }}"
               >
@@ -111,7 +109,7 @@
           </div>
         {% endif %}
 
-        {% if show_timer_label and timer_label %}
+        {% if settings.show_timer_label != false and timer_label %}
           <p class="angel-product-spotlight__timer-label">
             <span class="angel-product-spotlight__timer-icon" aria-hidden="true">⏱</span>
             {{ timer_label }}

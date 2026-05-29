@@ -113,24 +113,30 @@
   <link rel="stylesheet" type="text/css" href="{{ 'slide-menu.css' | asset_url }}" />
   <link rel="stylesheet" type="text/css" href="{{ 'slide-menu-style.css?v=1.17' | asset_url }}" />
 
+  {% set fonts_url = (settings.fonts_ar_url | default('', true)) | trim if session.lang == 'ar' else (settings.fonts_en_url | default('', true)) | trim %}
+  {% if not fonts_url %}
+    {% set fonts_url = (settings.fonts_ar_url | default('', true)) | trim %}
+  {% endif %}
+  {% set angel_default_font_css = 'angel-ping-font.css?v=1.2' | asset_url %}
+  {% set angel_use_builtin_ping = not fonts_url or fonts_url == 'https://cdn.fontstatic.com/f/ping-ar-lt.css' %}
+  {% if angel_use_builtin_ping %}
+    <link rel="preload" href="{{ 'alfont_com_PingARLT-Medium.otf' | asset_url }}" as="font" type="font/otf" crossorigin>
+    <link rel="preload" href="{{ 'alfont_com_PingARLT-Bold.otf' | asset_url }}" as="font" type="font/otf" crossorigin>
+    <link rel="stylesheet" href="{{ angel_default_font_css }}">
+  {% elif fonts_url %}
+    <link rel="stylesheet" href="{{ fonts_url }}">
+  {% endif %}
+
   <link rel="stylesheet" href="{{ ('main.css?v=' ~ ver) | asset_url }}" />
 
   <link rel="stylesheet" type="text/css" href="{{ ('angel-product.css?v=' ~ ver ~ '.1') | asset_url }}" />
 
-  <link rel="stylesheet" type="text/css" href="{{ 'custom.css?v=1.186' | asset_url }}" />
+  <link rel="stylesheet" type="text/css" href="{{ 'custom.css?v=1.194' | asset_url }}" />
 
   <link rel="stylesheet" type="text/css" href="{{ ('angel-cart-toast.css?v=' ~ ver) | asset_url }}" />
 
   {% if session.lang == 'ar' %}
     <link rel="stylesheet" href="{{ 'main.rtl.css?v=1.25' | asset_url }}">
-  {% endif %}
-
-  {% set fonts_url = (settings.fonts_ar_url | default('', true)) | trim if session.lang == 'ar' else (settings.fonts_en_url | default('', true)) | trim %}
-  {% if not fonts_url %}
-    {% set fonts_url = (settings.fonts_ar_url | default('', true)) | trim %}
-  {% endif %}
-  {% if fonts_url %}
-    <link rel="stylesheet" href="{{ fonts_url }}">
   {% endif %}
 
   {% block top_links %}{% endblock %}
@@ -176,9 +182,10 @@
 {% set cs_force_dark_header = settings.color_system_force_dark_header | default(false) %}
 {% set cs_force_dark_menu = settings.color_system_force_dark_sliding_menu | default(false) %}
 {% set cs_force_dark_footer = settings.color_system_force_dark_footer | default(false) %}
+{% include 'components/angel-header-flags.jinja' %}
 
 <body
-  class="{{ session.locale.language.direction }}{% if pc_fix_dark %} angel-pcard--dark-fixed{% endif %}{% if pc_hide_border %} angel-pcard--no-border{% endif %}{% if pc_hide_discount %} angel-pcard--no-discount{% endif %}{% if pc_hide_bg %} angel-pcard--no-bg{% endif %}{% if pc_title_bold %} angel-pcard--title-bold{% endif %}{% if pc_title_one_line %} angel-pcard--title-one-line{% endif %}{% if pc_center %} angel-pcard--center{% endif %}{% if pc_cart_no_bg %} angel-pcard--cart-no-bg{% endif %}{% if pc_hide_oos_btn %} angel-pcard--oos-label{% endif %}{% if pc_hide_atc %} angel-pcard--no-atc{% endif %}{% if pc_hide_wishlist %} angel-pcard--no-wishlist{% endif %}{% if pc_hide_ratings %} angel-pcard--no-ratings{% endif %}{% if pc_hide_category %} angel-pcard--no-category{% endif %}{% if pc_hover_shine %} angel-pcard--hover-shine{% endif %}{% if pc_hide_brand %} angel-pcard--no-brand{% endif %}{% if pc_actions_under %} angel-pcard--actions-under{% endif %}{% if not pc_quick_view %} angel-pcard--no-quickview{% endif %}{% if pc_image_ratio == 'tall' %} angel-pcard--img-tall{% endif %}{% if pc_image_mode == 'hover_second' %} angel-pcard--img-hover-second{% elif pc_image_mode == 'gallery' %} angel-pcard--img-gallery{% endif %}{% if cs_theme_mode == 'auto' %} angel-theme--auto angel-theme--light{% elif cs_theme_mode == 'dark' %} angel-theme--dark{% else %} angel-theme--light{% endif %}{% if cs_force_dark_header %} angel-theme--dark-header{% endif %}{% if cs_force_dark_menu %} angel-theme--dark-menu{% endif %}{% if cs_force_dark_footer %} angel-theme--dark-footer{% endif %} angel-pcard--corner-{{ pc_corner }} angel-pcard--cart-icon-{{ pc_cart_icon }}{% if pc_show_options %} angel-pcard--show-options{% endif %}"
+  class="{{ session.locale.language.direction }}{% if settings.header_enable_bottom_nav %} has-angel-bottom-nav{% endif %}{% if settings.header_mobile_logo_right %} angel-hdr-logo-right{% endif %}{% if settings.header_mobile_back_button %} angel-hdr-mobile-back{% endif %}{% if settings.header_big_icons %} angel-hdr-big-icons{% endif %}{% if settings.header_merge_with_hero_banner and session.template == 'home' %} angel-hdr-merge-hero{% endif %}{% if pc_fix_dark %} angel-pcard--dark-fixed{% endif %}{% if pc_hide_border %} angel-pcard--no-border{% endif %}{% if pc_hide_discount %} angel-pcard--no-discount{% endif %}{% if pc_hide_bg %} angel-pcard--no-bg{% endif %}{% if pc_title_bold %} angel-pcard--title-bold{% endif %}{% if pc_title_one_line %} angel-pcard--title-one-line{% endif %}{% if pc_center %} angel-pcard--center{% endif %}{% if pc_cart_no_bg %} angel-pcard--cart-no-bg{% endif %}{% if pc_hide_oos_btn %} angel-pcard--oos-label{% endif %}{% if pc_hide_atc %} angel-pcard--no-atc{% endif %}{% if pc_hide_wishlist %} angel-pcard--no-wishlist{% endif %}{% if pc_hide_ratings %} angel-pcard--no-ratings{% endif %}{% if pc_hide_category %} angel-pcard--no-category{% endif %}{% if pc_hover_shine %} angel-pcard--hover-shine{% endif %}{% if pc_hide_brand %} angel-pcard--no-brand{% endif %}{% if pc_actions_under %} angel-pcard--actions-under{% endif %}{% if not pc_quick_view %} angel-pcard--no-quickview{% endif %}{% if pc_image_ratio == 'tall' %} angel-pcard--img-tall{% endif %}{% if pc_image_mode == 'hover_second' %} angel-pcard--img-hover-second{% elif pc_image_mode == 'gallery' %} angel-pcard--img-gallery{% endif %}{% if cs_theme_mode == 'auto' %} angel-theme--auto angel-theme--light{% elif cs_theme_mode == 'dark' %} angel-theme--dark{% else %} angel-theme--light{% endif %}{% if cs_force_dark_header %} angel-theme--dark-header{% endif %}{% if cs_force_dark_menu %} angel-theme--dark-menu{% endif %}{% if cs_force_dark_footer %} angel-theme--dark-footer{% endif %} angel-pcard--corner-{{ pc_corner }} angel-pcard--cart-icon-{{ pc_cart_icon }}{% if pc_show_options %} angel-pcard--show-options{% endif %}"
   data-template="{{ session.template }}"
   {% if template == 'category' and category is not none %} data-category-id="{{ category.id }}" {% endif %}
 >
@@ -221,10 +228,10 @@
       {% if settings.store_background_bg_color %}--angel-store-bg-color: {{ settings.store_background_bg_color }};{% endif %}
       {% if settings.store_background_bg_image %}--angel-store-bg-image: url('{{ image_url(settings.store_background_bg_image, q=90, f='auto') }}');{% endif %}
       {% if session.lang == 'ar' %}
-        {% if settings.fonts_ar_family %}--angel-font-family: {{ settings.fonts_ar_family }};{% endif %}
+        --angel-font-family: {{ (settings.fonts_ar_family | default('"PingARLT", Tahoma, Arial, sans-serif', true)) | trim }};
         {% if settings.fonts_ar_weight %}--angel-font-weight: {{ settings.fonts_ar_weight }};{% endif %}
       {% else %}
-        {% if settings.fonts_en_family %}--angel-font-family: {{ settings.fonts_en_family }};{% endif %}
+        --angel-font-family: {{ (settings.fonts_en_family | default('"PingARLT", Tahoma, Arial, sans-serif', true)) | trim }};
         {% if settings.fonts_en_weight %}--angel-font-weight: {{ settings.fonts_en_weight }};{% endif %}
       {% endif %}
       {% if settings.colors_header_background_color %}
@@ -341,21 +348,29 @@
 
   function setActiveTab(index) {
     if (!index) return;
+    var activeId = String(index);
 
     tabs.forEach(function (tab) {
-      var isActive = tab.getAttribute('data-hero-tab') === index;
+      var tabId = String(tab.getAttribute('data-hero-tab') || '');
+      var isActive = tabId === activeId;
       tab.classList.toggle('is-active', isActive);
       tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
 
     document.querySelectorAll('[data-home-tab]').forEach(function (el) {
-      var target = el.getAttribute('data-home-tab');
+      var target = String(el.getAttribute('data-home-tab') || '').trim();
       if (!target) return;
-      el.hidden = target !== index;
+      var show = target === activeId;
+      el.hidden = !show;
+      el.classList.toggle('angel-home-tab-hidden', !show);
+      if (show) {
+        el.removeAttribute('hidden');
+        el.style.removeProperty('display');
+      }
     });
 
     try {
-      window.dispatchEvent(new CustomEvent('angel:homeTabChange', { detail: { tab: index } }));
+      window.dispatchEvent(new CustomEvent('angel:homeTabChange', { detail: { tab: activeId } }));
     } catch (e) {}
   }
 

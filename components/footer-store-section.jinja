@@ -168,8 +168,8 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
                         {% else %}
                             {% set cs_dark_logo = settings.color_system_dark_logo | default(none) %}
                             {% set cs_mode = (settings.color_system_theme_mode | default('light')) %}
-                            {% set use_dark_logo = cs_mode == 'dark' or (settings.color_system_force_dark_footer | default(false)) %}
-                            {% if cs_mode == 'auto' and cs_dark_logo and not (settings.color_system_force_dark_footer | default(false)) %}
+                            {% set use_dark_logo = cs_mode == 'dark' or settings.color_system_force_dark_footer %}
+                            {% if cs_mode == 'auto' and cs_dark_logo and not settings.color_system_force_dark_footer %}
                                 <img class="angel-footer-store__brand-logo angel-footer-store__brand-logo--light" src="{{ image_url(store.logo, h=120, q=90) }}" alt="{{ store.name }}" loading="lazy" decoding="async" />
                                 <img class="angel-footer-store__brand-logo angel-footer-store__brand-logo--dark d-none" src="{{ image_url(cs_dark_logo, h=120, q=90) }}" alt="{{ store.name }}" loading="lazy" decoding="async" />
                             {% elif use_dark_logo and cs_dark_logo %}
@@ -192,7 +192,7 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
                 </div>
 
                 <div class="col-12 col-sm-6 col-lg-3 angel-footer-store__col">
-                    {% if not (settings.links_1_hide | default(false)) %}
+                    {% if not settings.links_1_hide %}
                         <div class="angel-footer-store__block">
                             <h3 class="angel-footer-store__heading">{{ settings.links_1_title }}</h3>
                             {% for link in settings.links_1_links | default([]) %}
@@ -200,7 +200,7 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
                             {% endfor %}
                         </div>
                     {% endif %}
-                    {% if not (settings.links_2_hide | default(false)) %}
+                    {% if not settings.links_2_hide %}
                         <div class="angel-footer-store__block angel-footer-store__block--spaced">
                             <h3 class="angel-footer-store__heading">{{ settings.links_2_title }}</h3>
                             {% for link in settings.links_2_links | default([]) %}
@@ -210,7 +210,7 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
                     {% endif %}
                 </div>
 
-                {% if not (settings.customer_service_hide | default(false)) %}
+                {% if not settings.customer_service_hide %}
                 <div class="col-12 col-sm-6 col-lg-3 angel-footer-store__col">
                     <div class="angel-footer-store__block">
                         <h3 class="angel-footer-store__heading">
@@ -252,7 +252,7 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
 
                 <div class="col-12 col-sm-6 col-lg-3 angel-footer-store__col">
                     <div class="angel-footer-store__block">
-                        {% if not (settings.app_section_hide | default(false)) %}
+                        {% if not settings.app_section_hide %}
                         <h3 class="angel-footer-store__heading">
                             {% if settings.app_section_title %}{{ settings.app_section_title }}{% else %}{{ _("Store app") }}{% endif %}
                         </h3>

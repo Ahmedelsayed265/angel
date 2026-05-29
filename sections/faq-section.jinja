@@ -5,7 +5,6 @@
 {% set bg_color = settings.bg_color | default("#141414") %}
 {% set card_bg = settings.card_bg_color | default("#2b2b2b") %}
 {% set accent = settings.accent_color | default("#54c8e9") %}
-{% set open_first = settings.open_first | default(false) %}
 {% set home_tab = settings.home_tab | default('') %}
 
 {% if faq_items and faq_items | length > 0 %}
@@ -32,7 +31,7 @@
     <div class="angel-faq-grid" data-faq-accordion>
       {% for item in faq_items %}
         {% if item.question %}
-          {% set is_open = open_first and loop.first %}
+          {% set is_open = settings.open_first and loop.first %}
           <div class="angel-faq-item{% if is_open %} is-open{% endif %}">
             <button
               type="button"

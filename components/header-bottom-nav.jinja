@@ -1,0 +1,35 @@
+{% set header_options_raw = safeget(settings, "header_options", []) %}
+{% set header_options =
+    header_options_raw
+    if header_options_raw is iterable and header_options_raw is not boolean and header_options_raw is not string
+    else []
+%}
+{% set hide_search = 'hide_search_bar' in header_options %}
+
+<nav class="angel-bottom-nav d-lg-none" aria-label="{{ _('Mobile navigation') }}">
+  <a href="/" class="angel-bottom-nav__item{% if template == 'home' %} is-active{% endif %}" aria-current="{% if template == 'home' %}page{% else %}false{% endif %}">
+    <i class="sicon-home" aria-hidden="true"></i>
+    <span>{{ _('Home') }}</span>
+  </a>
+  <button type="button" class="angel-bottom-nav__item" onclick="openSlidingMenu()" aria-label="{{ _('Menu') }}">
+    <i class="sicon-menu" aria-hidden="true"></i>
+    <span>{{ _('Menu') }}</span>
+  </button>
+  {% if not hide_search %}
+  <button type="button" class="angel-bottom-nav__item js-open-search-popup" aria-label="{{ _('Search') }}">
+    <i class="sicon-search" aria-hidden="true"></i>
+    <span>{{ _('Search') }}</span>
+  </button>
+  {% endif %}
+  <a href="{{ url_for('cart_page') }}" class="angel-bottom-nav__item angel-bottom-nav__item--cart" aria-label="{{ _('Cart') }}">
+    <span class="angel-bottom-nav__icon-wrap">
+      <i class="sicon-cart" aria-hidden="true"></i>
+      <span class="cart-badge d-none angel-bottom-nav__badge"></span>
+    </span>
+    <span>{{ _('Cart') }}</span>
+  </a>
+  <a href="{{ url_for('profile') }}" class="angel-bottom-nav__item" aria-label="{{ _('Account') }}">
+    <i class="sicon-user" aria-hidden="true"></i>
+    <span>{{ _('Account') }}</span>
+  </a>
+</nav>

@@ -1,0 +1,550 @@
+/* صور متحركة (ملاك) — Salla parity, isolated from legacy hero CSS */
+
+.angel-banners {
+  --angel-banner-accent: var(--primary-color, #54c8e9);
+  --angel-banner-btn-bg: var(--angel-banner-accent);
+  --angel-banner-btn-color: #0f172a;
+  display: block;
+  position: relative;
+  visibility: visible;
+  width: 100%;
+}
+
+.angel-banners[hidden],
+.angel-banners.angel-home-tab-hidden {
+  display: none !important;
+}
+
+.angel-banners__section-bg {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+}
+
+.angel-banners__section-bg img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.angel-banners[style*="--angel-banners-bg"] {
+  background-color: var(--angel-banners-bg);
+}
+
+/* visibility من إعدادات «جوال فقط» / «ديسكتوب فقط» — عبر data-angel-visible فقط */
+@media (min-width: 992px) {
+  .angel-banners[data-angel-visible="mobile"] {
+    display: none !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .angel-banners[data-angel-visible="desktop"] {
+    display: none !important;
+  }
+}
+
+.angel-banner--empty {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* Section entrance animations (أنيميشن ملاك) */
+.angel-banners--anim-fadeIn {
+  animation: angelBannersFadeIn 0.85s ease both;
+}
+
+.angel-banners--anim-fadeInUp {
+  animation: angelBannersFadeInUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.angel-banners--anim-fadeInDown {
+  animation: angelBannersFadeInDown 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.angel-banners--anim-fade {
+  animation: angelBannersFade 0.85s ease both;
+}
+
+.angel-banners--anim-zoomIn {
+  animation: angelBannersZoomIn 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.angel-banners--anim-bounceInUp {
+  animation: angelBannersBounceUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.angel-banners--anim-flipInY {
+  animation: angelBannersFlipY 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes angelBannersFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes angelBannersFadeInUp {
+  from { opacity: 0; transform: translate3d(0, 28px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes angelBannersFadeInDown {
+  from { opacity: 0; transform: translate3d(0, -28px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes angelBannersFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes angelBannersZoomIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes angelBannersBounceUp {
+  0% { opacity: 0; transform: translate3d(0, 36px, 0); }
+  60% { opacity: 1; transform: translate3d(0, -6px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes angelBannersFlipY {
+  from { opacity: 0; transform: perspective(800px) rotateX(18deg); }
+  to { opacity: 1; transform: perspective(800px) rotateX(0); }
+}
+
+/* Swiper shell */
+.angel-banners__swiper {
+  height: 100vh;
+  height: 100svh;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  padding-bottom: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.angel-banners__swiper .swiper-slide {
+  height: auto;
+}
+
+.angel-banner {
+  height: 100vh;
+  height: 100svh;
+  min-height: 100vh;
+  min-height: 100svh;
+  position: relative;
+}
+
+.angel-banner__bg {
+  inset: 0;
+  position: absolute;
+  z-index: 0;
+}
+
+.angel-banner__bg-media {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+}
+
+.angel-banner__bg video.angel-banner__bg-media {
+  object-fit: cover;
+  object-position: center;
+}
+
+.angel-banner__shade {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.45) 50%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.angel-banner__shade--dark {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.72) 50%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+}
+
+.angel-banner__hit {
+  inset: 0;
+  position: absolute;
+  z-index: 2;
+}
+
+.angel-banner__inner {
+  align-items: stretch;
+  display: flex;
+  height: 100%;
+  inset: 0;
+  margin-inline: auto;
+  max-width: 1400px;
+  padding: clamp(120px, 14vh, 156px) clamp(20px, 4vw, 56px) clamp(64px, 8vh, 88px);
+  position: absolute;
+  width: 100%;
+  z-index: 3;
+}
+
+.angel-banner__content {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+/* Split (افتراضي): صورة يسار | نص يمين — ثابت حتى في RTL */
+.angel-banner--split .angel-banner__content {
+  direction: ltr;
+  flex-direction: row;
+  gap: clamp(24px, 4vw, 72px);
+  justify-content: space-between;
+}
+
+.angel-banner--split .angel-banner__media {
+  align-items: center;
+  display: flex;
+  flex: 1 1 48%;
+  justify-content: center;
+  max-width: 52%;
+  min-width: 0;
+}
+
+.angel-banner--split .angel-banner__overlay {
+  display: block;
+  max-height: min(480px, 52vh);
+  max-width: 100%;
+  object-fit: contain;
+  width: auto;
+}
+
+.angel-banner--split .angel-banner__copy {
+  align-items: flex-start;
+  direction: rtl;
+  display: flex;
+  flex: 0 1 440px;
+  flex-direction: column;
+  gap: clamp(14px, 2vh, 22px);
+  justify-content: center;
+  max-width: min(440px, 46%);
+  text-align: right;
+}
+
+.angel-banner--split .angel-banner__text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Vertical (center_text): عمودي — صورة فوق النص */
+.angel-banner--center .angel-banner__content {
+  flex-direction: column;
+  gap: clamp(20px, 3vh, 32px);
+  justify-content: center;
+  margin-inline: auto;
+  max-width: 640px;
+  text-align: center;
+}
+
+.angel-banner--center .angel-banner__copy {
+  align-items: center;
+  direction: rtl;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2vh, 18px);
+  text-align: center;
+  width: 100%;
+}
+
+.angel-banner--center .angel-banner__text {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+}
+
+.angel-banner--center .angel-banner__media--stacked {
+  order: -1;
+}
+
+.angel-banner--center .angel-banner__overlay {
+  display: block;
+  margin-inline: auto;
+  max-height: min(360px, 44vh);
+  max-width: min(320px, 70vw);
+  object-fit: contain;
+}
+
+.angel-banner__title {
+  font-size: clamp(28px, 3.8vw, 44px);
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.angel-banner--center .angel-banner__title {
+  font-size: clamp(24px, 3.2vw, 36px);
+}
+
+.angel-banner__subtitle {
+  font-size: clamp(13px, 1.35vw, 16px);
+  font-weight: 400;
+  line-height: 1.55;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.angel-banner__countdown {
+  color: var(--angel-banner-accent);
+  font-size: clamp(14px, 2vw, 20px);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin: 4px 0 0;
+}
+
+.angel-banner__cta {
+  margin-top: 4px;
+}
+
+.angel-banner--center .angel-banner__cta {
+  margin-top: 8px;
+}
+
+.angel-banner__btn {
+  align-items: center;
+  background: var(--angel-banner-btn-bg);
+  border-radius: 6px;
+  color: var(--angel-banner-btn-color);
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 400;
+  gap: 8px;
+  min-height: 40px;
+  padding: 9px 22px;
+  position: relative;
+  text-decoration: none;
+  transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  z-index: 4;
+}
+
+.angel-banner__btn:hover {
+  box-shadow: 0 8px 28px rgba(84, 200, 233, 0.35);
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.angel-banner__btn--round {
+  border-radius: 999px;
+}
+
+.angel-banner__btn--ghost {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: none !important;
+}
+
+.angel-banner__btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.angel-banner__btn--icon-reverse {
+  flex-direction: row-reverse;
+}
+
+.angel-banner__btn-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Swiper UI */
+.angel-banners .swiper-pagination-bullets.swiper-pagination-horizontal,
+.angel-banners__pagination {
+  align-items: center;
+  bottom: 26px !important;
+  display: flex !important;
+  gap: 8px;
+  justify-content: center;
+  left: 0 !important;
+  opacity: 1 !important;
+  right: 0 !important;
+  transform: none !important;
+  visibility: visible !important;
+  width: 100% !important;
+  z-index: 12;
+}
+
+.angel-banners__pagination .swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  height: 8px;
+  margin: 0 !important;
+  opacity: 1;
+  transition: background 0.25s ease, width 0.25s ease;
+  width: 8px;
+}
+
+.angel-banners__pagination .swiper-pagination-bullet-active {
+  background: var(--angel-banner-accent);
+  width: 24px;
+}
+
+.angel-banners--no-pagination .angel-banners__pagination {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+.angel-banners__arrow {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  display: flex;
+  height: 48px;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  z-index: 20;
+}
+
+.angel-banners__arrow [class^="icon-"] {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.angel-banners__arrow--prev {
+  left: 16px;
+  right: auto;
+}
+
+.angel-banners__arrow--next {
+  color: var(--angel-banner-accent);
+  left: auto;
+  right: 16px;
+}
+
+.angel-banners__arrow:hover {
+  color: #fff;
+}
+
+.angel-banners__arrow--next:hover {
+  color: var(--angel-banner-accent);
+}
+
+@media (min-width: 992px) {
+  .angel-banners--hide-nav-desktop .angel-banners__arrow {
+    display: none !important;
+  }
+}
+
+.angel-banners[data-swiper-effect="cards"] .swiper-slide {
+  max-width: min(420px, 88vw);
+  width: 85%;
+}
+
+/* Text animations (animate.css class names) */
+.animate__animated {
+  animation-duration: 0.9s;
+  animation-fill-mode: both;
+}
+
+.animate__fadeIn {
+  animation-name: angelBannersFadeIn;
+}
+
+.animate__fadeInUp {
+  animation-name: angelBannersFadeInUp;
+}
+
+.animate__fadeInDown {
+  animation-name: angelBannersFadeInDown;
+}
+
+@media (min-width: 992px) {
+  .angel-banner--split .angel-banner__media {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .angel-banner__inner {
+    padding: 112px 16px 72px;
+  }
+
+  .angel-banner--split .angel-banner__content,
+  .angel-banner--center .angel-banner__content {
+    flex-direction: column !important;
+    gap: 20px;
+    justify-content: center !important;
+  }
+
+  .angel-banner--split .angel-banner__media {
+    flex: 0 0 auto;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .angel-banner--split .angel-banner__copy,
+  .angel-banner--center .angel-banner__copy {
+    align-items: center;
+    flex: 0 0 auto;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .angel-banner--split .angel-banner__text,
+  .angel-banner--center .angel-banner__text {
+    align-items: center;
+    text-align: center;
+  }
+
+  .angel-banner--split .angel-banner__overlay {
+    max-height: min(260px, 36vh);
+    max-width: min(320px, 90vw);
+  }
+
+  .angel-banner__title {
+    font-size: clamp(22px, 5.5vw, 28px);
+  }
+
+  .angel-banner__subtitle {
+    font-size: 13px;
+  }
+
+  .angel-banners__arrow {
+    height: 40px;
+    width: 40px;
+  }
+
+  .angel-banners__arrow [class^="icon-"] {
+    font-size: 24px;
+  }
+
+  .angel-banners__arrow--prev {
+    left: 8px;
+  }
+
+  .angel-banners__arrow--next {
+    right: 8px;
+  }
+}

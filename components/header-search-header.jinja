@@ -35,22 +35,22 @@
     ] %}
 {% endif %}
 
+{% if header_mobile_logo_right is not defined %}
+  {% set header_settings = settings %}
+  {% include 'components/angel-header-flags.jinja' %}
+{% endif %}
 {% set header_bg = (settings.header_bg_color | default('', true)) | trim %}
 {% set header_logo_scale_raw = (settings.header_logo_scale | default('2.5', true)) | trim %}
 {% set header_logo_scale = header_logo_scale_raw if header_logo_scale_raw else '2.5' %}
-{% set header_mobile_logo_right = settings.header_mobile_logo_right | default(false) %}
-{% set header_mobile_back = settings.header_mobile_back_button | default(false) %}
-{% set header_big_icons = settings.header_big_icons | default(false) %}
-{% set header_merge_hero = settings.header_merge_with_hero_banner | default(false) %}
 
 <div
-    class="search-header{% if header_mobile_logo_right %} search-header--mobile-logo-right{% endif %}{% if header_mobile_back %} search-header--mobile-back{% endif %}{% if header_big_icons %} search-header--big-icons{% endif %}{% if header_merge_hero %} search-header--merge-hero{% endif %}"
+    class="search-header{% if settings.header_mobile_logo_right %} search-header--mobile-logo-right{% endif %}{% if settings.header_mobile_back_button %} search-header--mobile-back{% endif %}{% if settings.header_big_icons %} search-header--big-icons{% endif %}{% if settings.header_merge_with_hero_banner and _is_home %} search-header--merge-hero{% endif %}"
     style="--angel-header-logo-scale: {{ header_logo_scale | e }};{% if header_bg %} --angel-header-bg: {{ header_bg }};{% endif %}"
 >
     <div class="container">
-        <div class="search-header-bar search-header-bar--trisection">
+        <div class="search-header-bar search-header-bar--trisection{% if settings.header_mobile_logo_right %} search-header-bar--logo-right{% endif %}">
             <div class="search-header-bar__start">
-                {% if header_mobile_back %}
+                {% if settings.header_mobile_back_button %}
                 <button type="button" class="angel-header-back d-lg-none" aria-label="{{ _('Back') }}" onclick="history.back()">
                     <span class="angel-header-back__chevron" aria-hidden="true"></span>
                 </button>
@@ -65,7 +65,7 @@
                 <a href="/" class="search-header-bar__logo-link">
                     {% set cs_dark_logo = settings.color_system_dark_logo | default(none) %}
                     {% set cs_mode = (settings.color_system_theme_mode | default('light')) %}
-                    {% set use_dark_logo = cs_mode == 'dark' or (settings.color_system_force_dark_header | default(false)) %}
+                    {% set use_dark_logo = cs_mode == 'dark' or settings.color_system_force_dark_header %}
                     {% if settings.header_logo %}
                         {% set baseLogoUrl = settings.header_logo %}
                     {% else %}
@@ -82,7 +82,7 @@
                         {% set logoUrlMobile = store.settings.branding.mobile_app_logo %}
                     {% endif %}
 
-                    {% if cs_mode == 'auto' and cs_dark_logo and not (settings.color_system_force_dark_header | default(false)) %}
+                    {% if cs_mode == 'auto' and cs_dark_logo and not settings.color_system_force_dark_header %}
                         <img class="image-logo image-logo--light{% if logoUrlMobile is defined and logoUrlMobile is not none %} d-none d-lg-block {% endif %}" src="{{ image_url(baseLogoUrl, h=175, q=100) }}" alt="{{ store.name }}" style="width: auto; max-height: 100%" decoding="async" fetchpriority="high">
                         <img class="image-logo image-logo--dark d-none{% if logoUrlMobile is defined and logoUrlMobile is not none %} d-lg-block {% endif %}" src="{{ image_url(cs_dark_logo, h=175, q=100) }}" alt="{{ store.name }}" style="width: auto; max-height: 100%" decoding="async" fetchpriority="high">
                     {% else %}
@@ -235,7 +235,7 @@ document.addEventListener('zid-customer-fetched', function (event) {
         document.querySelector('.header');
     var searchHeader = header ? header.querySelector('.search-header') : document.querySelector('.search-header');
     var stickyThreshold = 200;
-    var stickyEnabled = {{ (settings.header_sticky | default(true)) | tojson }};
+    var stickyEnabled = {{ (settings.header_sticky != false) | tojson }};
 
     if (!header && !searchHeader) return;
     if (!stickyEnabled) return;

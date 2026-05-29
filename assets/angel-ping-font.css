@@ -1,0 +1,43 @@
+/*
+ * Ping AR + LT (PingARLT) — bundled in theme assets (no CDN).
+ * Files: alfont_com_PingARLT-Medium.otf, alfont_com_PingARLT-Bold.otf
+ */
+@font-face {
+  font-family: "PingARLT";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("alfont_com_PingARLT-Medium.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "PingARLT";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("alfont_com_PingARLT-Medium.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "PingARLT";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("alfont_com_PingARLT-Medium.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "PingARLT";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("alfont_com_PingARLT-Bold.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "PingARLT";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("alfont_com_PingARLT-Bold.otf") format("opentype");
+}

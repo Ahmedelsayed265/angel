@@ -1,4 +1,12 @@
-<header id="{{ sectionId }}" section-id="{{ sectionId }}" class='d-flex flex-column header'>
+{% set header_settings = settings %}
+{% include 'components/angel-header-flags.jinja' %}
+{% set header_bg = (settings.header_bg_color | default('', true)) | trim %}
+<header
+  id="{{ sectionId }}"
+  section-id="{{ sectionId }}"
+  class="d-flex flex-column header{% if settings.header_sticky == false %} header--sticky-off{% endif %}{% if settings.header_merge_with_hero_banner and _is_home %} header--merge-hero{% endif %}"
+  {% if header_bg %}style="--angel-header-bg: {{ header_bg }}; --angel-header-bg-fixed: {{ header_bg }};"{% endif %}
+>
   {% include 'vitrin:shared/store_messages.jinja' %}
 
   {% set ab_settings=settings %}{% include 'components/header-announcement-bar.jinja' %}
@@ -13,3 +21,6 @@
   {% set menu_settings=settings %}{% include 'components/header-sliding-menu.jinja' %}
   {# {% set menu_settings=settings %}{% include 'components/header-mega-menu.jinja' %} #}
 </header>
+{% if settings.header_enable_bottom_nav %}
+  {% include 'components/header-bottom-nav.jinja' %}
+{% endif %}

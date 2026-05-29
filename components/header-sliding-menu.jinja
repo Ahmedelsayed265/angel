@@ -204,8 +204,8 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
     else []
 %}
 {% set slide_bg = (settings.sliding_menu_bg_color | default('', true)) | trim %}
-{% set slide_has_support = not (settings.sliding_menu_customer_service_hide | default(false)) and (slide_cs_phone or slide_cs_email or slide_tg_href or slide_cs_mobile_url) %}
-{% set slide_has_useful = not (settings.sliding_menu_useful_links_hide | default(false)) %}
+{% set slide_has_support = not settings.sliding_menu_customer_service_hide and (slide_cs_phone or slide_cs_email or slide_tg_href or slide_cs_mobile_url) %}
+{% set slide_has_useful = not settings.sliding_menu_useful_links_hide %}
 
 <div id="sidenav-overlay" onclick="closeSlidingMenu()" aria-hidden="true"></div>
 <nav class="slide-menu angel-slide-menu{% if slide_bg %} angel-slide-menu--custom-bg{% endif %}" id="sliding-menu" aria-label="{{ settings.sliding_menu_title | default(_('Main Menu'), true) }}"{% if slide_bg %} style="--angel-slide-menu-bg: {{ slide_bg }};"{% endif %}>
@@ -226,11 +226,9 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
             <a href="/" class="angel-slide-menu__brand-link">
                 <img class="angel-slide-menu__brand-logo" src="{{ image_url(slide_logo, h=120, q=100) }}" alt="{{ store.name }}" loading="lazy" decoding="async" />
             </a>
-            {% if settings.sliding_menu_tagline %}
-                <p class="angel-slide-menu__brand-tagline">{{ settings.sliding_menu_tagline }}</p>
-            {% else %}
-                <p class="angel-slide-menu__brand-tagline">{{ _("Your trading partner on Salla platform") }}</p>
-            {% endif %}
+    
+            <p class="angel-slide-menu__brand-tagline">{{ settings.sliding_menu_tagline }}</p>
+          
         </div>
     </div>
 
@@ -242,7 +240,7 @@ https://t.me/{{ t | replace('@', '') | replace('https://t.me/', '') | replace('h
                 {% set link_url = (link.url | default('', true)) | trim %}
                 {% if link_title and link_url %}
                     {% set href = link_url | localized_url if link_url[0:1] == '/' else link_url %}
-                    <a class="angel-slide-menu__custom-link{% if link.new_row | default(false) %} is-full{% endif %}" href="{{ href }}"{% if href and href[0:4] == 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
+                    <a class="angel-slide-menu__custom-link{% if link.new_row %} is-full{% endif %}" href="{{ href }}"{% if href and href[0:4] == 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
                         {% if link.image %}
                             <img class="angel-slide-menu__custom-img" src="{{ image_url(link.image, h=96, q=90) }}" alt="" loading="lazy" decoding="async" />
                         {% endif %}

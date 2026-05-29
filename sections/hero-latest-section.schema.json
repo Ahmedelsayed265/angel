@@ -1,16 +1,23 @@
 {
   "section_id": "angel-hero-latest-section",
   "template": "sections/hero-latest-section.jinja",
-  "icon": "fa fa-clock-o",
+  "icon": "fa fa-picture-o",
   "name": {
-    "ar": "الهيرو — شكل 3 (سلايدر)",
-    "en": "Hero — Layout 3 (slider)"
+    "ar": "صور متحركة (ملاك)",
+    "en": "Animated banners (Angel)"
   },
   "settings": [
     {
       "id": "home_tab",
       "type": "select",
-      "label": { "ar": "عرض داخل تبويب الرئيسية", "en": "Show in home tab" },
+      "label": {
+        "ar": "عرض داخل تبويب الرئيسية",
+        "en": "Show in home tab"
+      },
+      "info": {
+        "ar": "اتركه فارغًا ليظهر في كل التبويبات. تبويب 1 = أول تبويب في الهيدر (يمين)، 2 = الثاني، 3 = الثالث. يجب أن يطابق التبويب الذي تفتحه في المتجر.",
+        "en": "Leave empty for all tabs. Tab 1 = first header tab (right in RTL), 2 = second, 3 = third. Must match the tab you view on the store."
+      },
       "default": "",
       "options": [
         { "value": "", "label": { "ar": "كل التبويبات (افتراضي)", "en": "All tabs (default)" } },
@@ -19,21 +26,306 @@
         { "value": "3", "label": { "ar": "تبويب 3", "en": "Tab 3" } }
       ]
     },
-    { "id": "bg_image", "type": "image", "label": { "ar": "صورة خلفية (افتراضي)", "en": "Default background image" } },
-    { "id": "space_between", "type": "number", "label": { "ar": "المسافة بين الشرائح (px)", "en": "Space between (px)" }, "default": 0 },
+    {
+      "id": "transition_effect",
+      "type": "select",
+      "label": { "ar": "اختر طريقة انتقال البنرات", "en": "Banner transition" },
+      "default": "flip",
+      "options": [
+        { "value": "slide", "label": { "ar": "شرائح", "en": "Slides" } },
+        { "value": "fade", "label": { "ar": "ظهور", "en": "Fade" } },
+        { "value": "cube", "label": { "ar": "مكعب", "en": "Cube" } },
+        { "value": "coverflow", "label": { "ar": "معرض", "en": "Coverflow" } },
+        { "value": "flip", "label": { "ar": "دوران", "en": "Flip" } },
+        { "value": "cards", "label": { "ar": "بطاقات", "en": "Cards" } }
+      ]
+    },
+    {
+      "id": "full_width",
+      "type": "checkbox",
+      "label": { "ar": "تكبير حجم البنر بعرض الشاشة", "en": "Full-width banner" },
+      "default": true
+    },
+    {
+      "id": "loop",
+      "type": "checkbox",
+      "label": { "ar": "دوران البنرات بلا نهاية", "en": "Infinite loop" },
+      "info": {
+        "ar": "قد يتسبب تفعيل هذا الخيار في بطء تحميل الصفحة.",
+        "en": "May slow page loading when enabled."
+      },
+      "default": false
+    },
+    {
+      "id": "autoplay",
+      "type": "checkbox",
+      "label": { "ar": "تحريك البنرات تلقائياً", "en": "Autoplay banners" },
+      "default": false
+    },
+    {
+      "id": "hide_pagination",
+      "type": "checkbox",
+      "label": { "ar": "إخفاء نقاط التنقل أسفل البنرات", "en": "Hide pagination dots" },
+      "default": false
+    },
+    {
+      "id": "hide_nav_desktop",
+      "type": "checkbox",
+      "label": { "ar": "إخفاء أسهم التنقل في الكمبيوتر", "en": "Hide arrows on desktop" },
+      "default": false
+    },
     {
       "id": "slides",
       "type": "list",
-      "label": { "ar": "الشرائح", "en": "Slides" },
+      "label": { "ar": "إضافة البنرات", "en": "Add banners" },
+      "info": {
+        "ar": "أضف عدداً غير محدود من البنرات مع خيارات الزر والرابط لكل بانر.",
+        "en": "Add banners with button and link options per slide."
+      },
       "settings": [
-        { "id": "heading", "type": "text", "label": { "ar": "العنوان", "en": "Heading" } },
-        { "id": "subtitle", "type": "text", "label": { "ar": "العنوان الفرعي", "en": "Subtitle" } },
-        { "id": "button_text", "type": "text", "label": { "ar": "نص الزر", "en": "Button text" } },
-        { "id": "button_url", "type": "url", "label": { "ar": "رابط الزر", "en": "Button URL" } },
-        { "id": "bg_image", "type": "image", "label": { "ar": "خلفية الشريحة (اختياري)", "en": "Slide background (optional)" } },
-        { "id": "image", "type": "image", "label": { "ar": "صورة المنتج/العنصر", "en": "Slide image" } }
+        {
+          "id": "media_url",
+          "type": "url",
+          "label": { "ar": "أضف رابط صورة أو فيديو", "en": "Image or video URL" },
+          "info": {
+            "ar": "في حال إضافة رابط صورة أو فيديو تظهر بدلاً من صورة البانر الأساسية. الصيغ: gif, webp, mp4.",
+            "en": "Replaces the primary banner when set. Formats: gif, webp, mp4."
+          }
+        },
+        {
+          "id": "bg_image",
+          "type": "image",
+          "label": { "ar": "صورة البانر الأساسية", "en": "Primary banner image" },
+          "info": {
+            "ar": "يمكنك اختيار أي مقاس مناسب لك وسيظهر بالكامل.",
+            "en": "Any size; displayed in full."
+          }
+        },
+        {
+          "id": "bg_image_mobile",
+          "type": "image",
+          "label": { "ar": "صورة البانر للجوال", "en": "Mobile banner image" },
+          "info": {
+            "ar": "تظهر في الجوالات فقط بدلاً من صورة البانر الأساسية.",
+            "en": "Mobile only; replaces primary on small screens."
+          }
+        },
+        {
+          "id": "overlay_image",
+          "type": "image",
+          "label": { "ar": "صورة فوق البانر (بدون خلفية)", "en": "Overlay image (transparent)" },
+          "info": {
+            "ar": "صورة بخلفية شفافة تظهر فوق صورة البانر.",
+            "en": "Transparent PNG shown over the banner."
+          }
+        },
+        {
+          "id": "dark_overlay",
+          "type": "checkbox",
+          "label": { "ar": "إضافة خلفية سوداء شفافة", "en": "Dark transparent overlay" },
+          "default": false
+        },
+        {
+          "id": "heading",
+          "type": "text",
+          "label": { "ar": "نص رئيسي", "en": "Main text" }
+        },
+        {
+          "id": "heading_animation",
+          "type": "text",
+          "label": { "ar": "أضف أنيميشن للنص الرئيسي", "en": "Main text animation" },
+          "info": {
+            "ar": "مثال: animate__fadeInUp",
+            "en": "e.g. animate__fadeInUp"
+          }
+        },
+        {
+          "id": "heading_color",
+          "type": "color",
+          "label": { "ar": "لون النص الرئيسي", "en": "Main text color" },
+          "default": "#ffffff"
+        },
+        {
+          "id": "subtitle",
+          "type": "text",
+          "label": { "ar": "نص إضافي", "en": "Additional text" }
+        },
+        {
+          "id": "subtitle_animation",
+          "type": "text",
+          "label": { "ar": "أضف أنيميشن للنص الإضافي", "en": "Additional text animation" }
+        },
+        {
+          "id": "subtitle_color",
+          "type": "color",
+          "label": { "ar": "لون النص الإضافي", "en": "Additional text color" },
+          "default": "#ffffff"
+        },
+        {
+          "id": "reverse_text_order",
+          "type": "checkbox",
+          "label": { "ar": "النص الإضافي قبل العنوان", "en": "Subtitle before title" },
+          "info": {
+            "ar": "يعرض النص الإضافي أولاً ثم العنوان الرئيسي (الزر يبقى في الأسفل).",
+            "en": "Shows subtitle first, then main title (button stays at bottom)."
+          },
+          "default": false
+        },
+        {
+          "id": "center_text",
+          "type": "checkbox",
+          "label": { "ar": "تخطيط عمودي (صورة فوق النص)", "en": "Vertical layout (image above text)" },
+          "info": {
+            "ar": "عطّله للتخطيط الأفقي (صورة | نص). يظهر أفقياً من عرض 992px فما فوق؛ في الجوال والمعاينة الضيقة يبقى عمودياً.",
+            "en": "Off = side-by-side (image | text) from 992px up; mobile/narrow preview stays stacked."
+          },
+          "default": false
+        },
+        {
+          "id": "countdown_enabled",
+          "type": "checkbox",
+          "label": { "ar": "تفعيل عداد الخصم في البانر", "en": "Enable discount countdown" },
+          "default": false
+        },
+        {
+          "id": "countdown_end",
+          "type": "text",
+          "label": { "ar": "حدد تاريخ إنتهاء الخصم", "en": "Discount end date" },
+          "info": {
+            "ar": "مثال: 09-23-2025",
+            "en": "e.g. 09-23-2025"
+          }
+        },
+        {
+          "id": "banner_url",
+          "type": "url",
+          "label": { "ar": "رابط البانر أو الزر", "en": "Banner or button link" }
+        },
+        {
+          "id": "button_text",
+          "type": "text",
+          "label": { "ar": "نص الزر", "en": "Button text" },
+          "info": {
+            "ar": "عند إضافة نص هنا سوف يظهر الزر على البانر.",
+            "en": "When set, the button appears on the banner."
+          }
+        },
+        {
+          "id": "button_animation",
+          "type": "text",
+          "label": { "ar": "أضف أنيميشن للزر", "en": "Button animation" },
+          "info": {
+            "ar": "مثال: animate__fadeInUp",
+            "en": "e.g. animate__fadeInUp"
+          }
+        },
+        {
+          "id": "btn_hide_icon",
+          "type": "checkbox",
+          "label": { "ar": "إخفاء أيقونة الزر", "en": "Hide button icon" },
+          "default": false
+        },
+        {
+          "id": "btn_no_bg",
+          "type": "checkbox",
+          "label": { "ar": "زر بدون لون خلفية", "en": "Button without background" },
+          "default": false
+        },
+        {
+          "id": "btn_rounded",
+          "type": "checkbox",
+          "label": { "ar": "زر مع حواف دائرية", "en": "Rounded button" },
+          "default": true
+        },
+        {
+          "id": "btn_reverse_icon",
+          "type": "checkbox",
+          "label": { "ar": "عكس اتجاه أيقونة الزر مع النص", "en": "Reverse button icon" },
+          "default": false
+        },
+        {
+          "id": "btn_bg_color",
+          "type": "color",
+          "label": { "ar": "لون خلفية الزر", "en": "Button background color" },
+          "info": {
+            "ar": "يُتجاهل عند تفعيل «زر بدون لون خلفية».",
+            "en": "Ignored when «Button without background» is enabled."
+          }
+        },
+        {
+          "id": "btn_text_color",
+          "type": "color",
+          "label": { "ar": "لون نص الزر", "en": "Button text color" }
+        }
       ]
+    },
+    {
+      "id": "element_bg_color",
+      "type": "color",
+      "label": { "ar": "لون خلفية العنصر", "en": "Element background color" },
+      "info": {
+        "ar": "استخدم الأبيض (#ffffff) للحصول على خلفية شفافة.",
+        "en": "Use white (#ffffff) for a transparent background."
+      },
+      "default": "#ffffff"
+    },
+    {
+      "id": "element_bg_image",
+      "type": "image",
+      "label": { "ar": "صورة خلفية العنصر", "en": "Element background image" }
+    },
+    {
+      "id": "show_mobile_only",
+      "type": "checkbox",
+      "label": { "ar": "عرض العنصر في الجوال فقط", "en": "Show on mobile only" },
+      "info": {
+        "ar": "إن فُعّل يُخفى السيكشن على الكمبيوتر (أكبر من 992px).",
+        "en": "When enabled, section is hidden on desktop (wider than 992px)."
+      },
+      "default": false
+    },
+    {
+      "id": "show_desktop_only",
+      "type": "checkbox",
+      "label": { "ar": "عرض العنصر في الكمبيوتر والتابلت فقط", "en": "Show on desktop/tablet only" },
+      "default": false
+    },
+    {
+      "id": "show_ar_only",
+      "type": "checkbox",
+      "label": { "ar": "عرض العنصر في الواجهة باللغة العربية فقط", "en": "Arabic interface only" },
+      "default": false
+    },
+    {
+      "id": "show_en_only",
+      "type": "checkbox",
+      "label": { "ar": "عرض العنصر في الواجهة بالإنجليزية فقط", "en": "English interface only" },
+      "default": false
+    },
+    {
+      "id": "section_animation",
+      "type": "select",
+      "label": { "ar": "أنيميشن ملاك", "en": "Angel animation" },
+      "default": "off",
+      "options": [
+        { "value": "off", "label": { "ar": "إيقاف", "en": "Off" } },
+        { "value": "fadeIn", "label": { "ar": "ظهور", "en": "Fade in" } },
+        { "value": "fadeInUp", "label": { "ar": "ظهور لأعلى", "en": "Fade in up" } },
+        { "value": "fadeInDown", "label": { "ar": "ظهور لأسفل", "en": "Fade in down" } },
+        { "value": "fade", "label": { "ar": "وضوح", "en": "Clarity" } },
+        { "value": "zoomIn", "label": { "ar": "تكبير", "en": "Zoom in" } },
+        { "value": "bounceInUp", "label": { "ar": "قفز لأعلى", "en": "Bounce up" } },
+        { "value": "flipInY", "label": { "ar": "دوران عمودي", "en": "Vertical flip" } }
+      ]
+    },
+    {
+      "id": "custom_classes",
+      "type": "text",
+      "label": { "ar": "Classes", "en": "Classes" },
+      "info": {
+        "ar": "أضف كلاسات خاصة لحاوية السيكشن.",
+        "en": "Add special classes to the parent section."
+      }
     }
   ]
 }
-

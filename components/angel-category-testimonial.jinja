@@ -1,5 +1,5 @@
 {# Category testimonials — layout schema + product reviews (SSR/API) #}
-{% if settings.category_testimonials_enabled | default(true) %}
+{% if settings.category_testimonials_enabled != false %}
 {% set store_logo_src = image_url(store.logo, w=192, q=90, f='auto') if store.logo else '' %}
 {% set source = settings.category_testimonials_source | default('both') %}
 {% set max_slides = settings.category_testimonials_max_slides | default(8) | int %}

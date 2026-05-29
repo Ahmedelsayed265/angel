@@ -7,7 +7,6 @@
 {% set subtitle_color = settings.subtitle_color | default("#ffffff") %}
 {% set accent = settings.accent_color | default("#54c8e9") %}
 {% set slides_desktop = (settings.slides_desktop | default('6')) | int %}
-{% set show_arrows = settings.show_arrows | default(true) %}
 {% set bg_height = settings.bg_height | default(384) %}
 {% set slides_count = slides_desktop if slides_desktop >= 2 and slides_desktop <= 8 else 6 %}
 
@@ -53,7 +52,7 @@
             {% endif %}
           </header>
         {% endif %}
-        {% if show_arrows %}
+        {% if settings.show_arrows != false %}
           <div class="angel-category-products__nav-wrap">
             <button type="button" class="swiper-button-prev angel-category-products__nav angel-category-products__nav--prev" aria-label="{{ _('Previous') }}"></button>
             <button type="button" class="swiper-button-next angel-category-products__nav angel-category-products__nav--next" aria-label="{{ _('Next') }}"></button>
@@ -98,7 +97,7 @@
       }
 
       var isRtl = window.appDirection === 'rtl';
-      var showArrows = {{ 'true' if show_arrows else 'false' }};
+      var showArrows = {{ 'true' if settings.show_arrows != false else 'false' }};
       var slideGap = 12;
 
       var swiper = new Swiper(el, {

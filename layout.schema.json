@@ -20,9 +20,10 @@
             "en": "Font URL"
           },
           "info": {
-            "ar": "رابط ملف CSS للخط (مثل Fontstatic).",
-            "en": "A CSS URL that loads the font (e.g. Fontstatic)."
-          }
+            "ar": "اتركه فارغاً لاستخدام PingARLT المرفق مع الثيم (ملفات .otf محلية بدون CDN). أو ضع رابط CSS لخط آخر.",
+            "en": "Leave empty for bundled PingARLT (.otf in theme assets, no CDN). Or paste another font CSS URL."
+          },
+          "default": ""
         },
         {
           "id": "ar_family",
@@ -32,9 +33,10 @@
             "en": "Font family"
           },
           "info": {
-            "ar": "اسم الخط كما هو في (font-family). يمكن إضافة أكثر من خط والفصل بينهم بفاصلة \",\".",
-            "en": "Font-family name(s). You can provide multiple, separated by commas."
-          }
+            "ar": "اسم الخط كما هو في (font-family). الافتراضي PingARLT.",
+            "en": "Font-family name(s). Default is PingARLT."
+          },
+          "default": "\"PingARLT\", Tahoma, Arial, sans-serif"
         },
         {
           "id": "ar_weight",
@@ -44,8 +46,8 @@
             "en": "Font weight"
           },
           "info": {
-            "ar": "مثال: 900, 300",
-            "en": "Example: 900, 300"
+            "ar": "مثال: 400 عادي، 500 متوسط، 700 عريض. اتركه فارغاً للاعتماد على أوزان CSS.",
+            "en": "Example: 400 regular, 500 medium, 700 bold. Leave empty to use CSS weights."
           }
         },
         {

@@ -1,0 +1,10 @@
+{# Zid: group "header" + id → settings.header_<id> (انظر docs.zid.sa/schema-files) #}
+{% set _hs = header_settings if header_settings is defined else settings %}
+
+{% set header_mobile_logo_right = _hs.header_mobile_logo_right | default(false) %}
+{% set header_mobile_back = _hs.header_mobile_back_button | default(false) %}
+{% set header_big_icons = _hs.header_big_icons | default(false) %}
+{% set header_merge_hero = _hs.header_merge_with_hero_banner | default(false) %}
+{% set header_enable_bottom_nav = _hs.header_enable_bottom_nav | default(false) %}
+{% set _is_home = (template is defined and template == 'home') or (session is defined and session.template == 'home') %}
+{% set header_merge_hero_home = header_merge_hero and _is_home %}

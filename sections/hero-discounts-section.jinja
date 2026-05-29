@@ -1,6 +1,5 @@
 {% set home_tab = settings.home_tab | default('') %}
 {% set video = settings.video %}
-{% set video_loop = settings.video_loop | default(true) %}
 {% set heading = settings.heading | default('', true) %}
 {% set subtitle = settings.subtitle | default('', true) %}
 {% set button_text = settings.button_text | default('', true) %}
@@ -58,7 +57,7 @@
         <div class="angel-hero-home-layout">
           {% if video %}
             <div class="angel-hero-home-video-wrap angel-hero-discounts-video-wrap">
-              <video class="angel-hero-home-video" autoplay muted playsinline {% if video_loop %}loop{% endif %}>
+              <video class="angel-hero-home-video" autoplay muted playsinline {% if settings.video_loop != false %}loop{% endif %}>
                 <source src="{{ video }}" type="video/mp4">
               </video>
               <span class="angel-hero-discounts-video-fade" aria-hidden="true"></span>

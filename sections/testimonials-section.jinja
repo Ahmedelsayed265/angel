@@ -5,7 +5,6 @@
 {% set bg_color = settings.bg_color | default("#141414") %}
 {% set card_bg = settings.card_bg_color | default("#2b2b2b") %}
 {% set accent = settings.accent_color | default("#54c8e9") %}
-{% set testimonials_autoplay = settings.autoplay | default(true) %}
 {% set testimonials_delay = settings.autoplay_delay | default(6) %}
 
 {% if items and items | length > 0 %}
@@ -21,7 +20,7 @@
     --testimonials-card-bg: {{ card_bg }};
     --testimonials-accent: {{ accent }};
   "
-  data-autoplay="{{ 'true' if testimonials_autoplay else 'false' }}"
+  data-autoplay="{{ 'true' if settings.autoplay != false else 'false' }}"
   data-autoplay-delay="{{ testimonials_delay }}"
 >
   <div class="container angel-testimonials-section__inner">

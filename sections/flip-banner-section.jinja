@@ -6,7 +6,6 @@
 {% set flip_interval_sec = (settings.flip_interval | default(5)) | int %}
 {% set flip_interval_ms = (flip_interval_sec if flip_interval_sec >= 3 else 5) * 1000 %}
 {% set flip_duration = (settings.flip_duration | default('800')) | int %}
-{% set pause_on_hover = settings.pause_on_hover | default(true) %}
 {% set bg_color = settings.bg_color | default("#141414") %}
 {% set border_radius = (settings.border_radius | default(12)) | int %}
 
@@ -24,7 +23,7 @@
   "
   {% if can_flip %}
     data-flip-interval="{{ flip_interval_ms }}"
-    data-pause-hover="{{ 'true' if pause_on_hover else 'false' }}"
+    data-pause-hover="{{ 'true' if settings.pause_on_hover != false else 'false' }}"
   {% endif %}
 >
   <div class="container angel-flip-banner__inner">

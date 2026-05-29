@@ -4,9 +4,8 @@
     if main_tabs_raw is iterable and main_tabs_raw is not boolean and main_tabs_raw is not string
     else []
 %}
-{% set home_tabs_enabled = settings.home_tabs_enabled | default(true) %}
 
-{% if template == 'home' and home_tabs_enabled and main_tabs | length > 0 %}
+{% if template == 'home' and settings.home_tabs_enabled != false and main_tabs | length > 0 %}
   <div class="container angel-header-home-tabs-wrap">
     <nav class="angel-header-home-tabs" role="tablist" aria-label="{{ _('Main tabs') }}">
       {% for item in main_tabs %}

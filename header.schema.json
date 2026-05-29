@@ -379,14 +379,6 @@
           }
         },
         {
-          "id": "text_color",
-          "type": "color",
-          "label": {
-            "ar": "لون النص",
-            "en": "Text color"
-          }
-        },
-        {
           "id": "page_display",
           "type": "select",
           "label": {

@@ -1,71 +1,162 @@
-{% set home_tab = settings.home_tab | default('') %}
-{% set bg_image = settings.bg_image %}
-{% set space_between = settings.space_between | default(0) %}
-{% set slides = safeget(settings, 'slides', []) %}
+{% macro angel_anim(raw) -%}
+{%- set r = (raw | default('', true)) | trim -%}
+{%- if r -%}
+{%- if 'animate__animated' in r %}{{ r }}{% else %}animate__animated {{ r }}{% endif %}
+{%- endif -%}
+{%- endmacro %}
 
-{% if slides and slides | length > 0 %}
+{% set slides = settings.slides | default([]) %}
+{% if slides is not iterable or slides is string %}
+  {% set slides = [] %}
+{% endif %}
+
+{% set home_tab_raw = settings.home_tab | default('', true) %}
+{% set home_tab = home_tab_raw | string | trim if home_tab_raw is not none else '' %}
+{% if home_tab in ['0', 'none', 'None', ''] %}{% set home_tab = '' %}{% endif %}
+
+{% set transition_effect = settings.transition_effect | default('slide') %}
+{% set element_bg_color = settings.element_bg_color | default('#ffffff', true) %}
+{% set element_bg_image = settings.element_bg_image %}
+{% set section_animation = settings.section_animation | default('off') %}
+{% set custom_classes = (settings.custom_classes | default('', true)) | trim %}
+
 <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
+<link rel="stylesheet" href="{{ 'angel-hero-latest.css?v=3.8' | asset_url }}">
 
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
-  class="angel-hero-section"
-  data-layout="swiper"
-  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
+  class="angel-banners{% if settings.full_width != false %} angel-banners--full{% endif %}{% if settings.hide_pagination %} angel-banners--no-pagination{% endif %}{% if settings.hide_nav_desktop %} angel-banners--hide-nav-desktop{% endif %}{% if settings.show_mobile_only %} angel-banners--mobile-only{% endif %}{% if settings.show_desktop_only %} angel-banners--desktop-only{% endif %}{% if section_animation and section_animation != 'off' %} angel-banners--anim-{{ section_animation }}{% endif %}{% if custom_classes %} {{ custom_classes }}{% endif %}"
+  data-swiper-effect="{{ transition_effect | e }}"
+  data-swiper-loop="{{ 'true' if settings.loop else 'false' }}"
+  data-swiper-autoplay="{{ 'true' if settings.autoplay else 'false' }}"
+  {% if home_tab and home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
+  {% if element_bg_color and element_bg_color != '#ffffff' and element_bg_color != '#fff' %}style="--angel-banners-bg: {{ element_bg_color }};"{% endif %}
 >
-  <div class="angel-hero-panels">
-    <div
-      class="angel-hero-panel angel-hero-panel--swiper is-active"
-      data-hero-panel="1"
-      data-layout="swiper"
-      style="--hero-space-between: {{ space_between }}px;"
-    >
-      <div class="angel-hero-panel-inner angel-hero-swiper-wrap">
-        <div class="swiper angel-hero-swiper angel-hero-latest-swiper">
-          <div class="swiper-wrapper">
-            {% for slide in slides %}
-              {% set slide_bg = slide.bg_image if slide.bg_image else bg_image %}
-              <div class="swiper-slide">
-                <div class="angel-hero-slide" style="--slide-flex-dir: row;">
-                  <div class="angel-hero-slide-bg">
-                    {% if slide_bg %}
-                      <img class="angel-hero-slide-bg-img" src="{{ slide_bg }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
-                    {% endif %}
-                    <span class="angel-hero-slide-bg-fade" aria-hidden="true"></span>
+  {% if element_bg_image %}
+    <div class="angel-banners__section-bg" aria-hidden="true">
+      <img src="{{ image_url(element_bg_image, q=90) }}" alt="">
+    </div>
+  {% endif %}
+
+  <div class="swiper angel-banners__swiper">
+    <div class="swiper-wrapper">
+      {% for slide in slides %}
+        {% set media_url = (slide.media_url | default('', true)) | trim %}
+        {% set media_lower = media_url | lower %}
+        {% set is_video = media_url and ('.mp4' in media_lower or '.webm' in media_lower or '.mov' in media_lower) %}
+        {% set is_media_image = media_url and not is_video %}
+        {% set slide_link = (slide.banner_url | default('', true)) | trim %}
+        {% set countdown_end = (slide.countdown_end | default('', true)) | trim %}
+        {% set btn_bg_color = (slide.btn_bg_color | default('', true)) | trim %}
+        {% set btn_text_color = (slide.btn_text_color | default('', true)) | trim %}
+        {% set heading_color = slide.heading_color | default('#ffffff', true) %}
+        {% set subtitle_color = slide.subtitle_color | default('#ffffff', true) %}
+
+        <div class="swiper-slide">
+          <article class="angel-banner{% if slide.center_text %} angel-banner--center{% else %} angel-banner--split{% endif %}">
+            <div class="angel-banner__bg">
+              {% if is_video %}
+                <video class="angel-banner__bg-media" autoplay muted playsinline loop preload="{% if loop.first %}auto{% else %}metadata{% endif %}">
+                  <source src="{{ media_url }}" type="{% if '.webm' in media_lower %}video/webm{% elif '.mov' in media_lower %}video/quicktime{% else %}video/mp4{% endif %}">
+                </video>
+              {% elif is_media_image %}
+                <img class="angel-banner__bg-media d-none d-lg-block" src="{{ media_url }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+                {% if slide.bg_image_mobile %}
+                  <img class="angel-banner__bg-media d-lg-none" src="{{ image_url(slide.bg_image_mobile, q=90) }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+                {% elif slide.bg_image %}
+                  <img class="angel-banner__bg-media d-lg-none" src="{{ image_url(slide.bg_image, q=90) }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+                {% else %}
+                  <img class="angel-banner__bg-media d-lg-none" src="{{ media_url }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+                {% endif %}
+              {% elif slide.bg_image or slide.bg_image_mobile %}
+                {% if slide.bg_image %}
+                  <img class="angel-banner__bg-media{% if slide.bg_image_mobile %} d-none d-lg-block{% endif %}" src="{{ image_url(slide.bg_image, q=90) }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+                {% endif %}
+                {% if slide.bg_image_mobile %}
+                  <img class="angel-banner__bg-media d-lg-none" src="{{ image_url(slide.bg_image_mobile, q=90) }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
+                {% endif %}
+              {% endif %}
+              <span class="angel-banner__shade{% if slide.dark_overlay %} angel-banner__shade--dark{% endif %}" aria-hidden="true"></span>
+            </div>
+
+            {% if slide_link and not slide.button_text %}
+              <a class="angel-banner__hit" href="{{ slide_link }}" aria-label="{{ slide.heading | default(_('Banner'), true) | striptags }}"></a>
+            {% endif %}
+
+            <div class="container angel-banner__inner">
+              <div class="angel-banner__content">
+                {% if slide.overlay_image and not slide.center_text %}
+                  <div class="angel-banner__media">
+                    <img class="angel-banner__overlay" src="{{ image_url(slide.overlay_image, q=90) }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
                   </div>
-                  <div class="container angel-hero-slide-body">
-                    <div class="angel-hero-slide-content angel-hero-slide-foreground angel-hero-slide-foreground--image-left">
-                      {% if slide.image %}
-                        <div class="angel-hero-slide-media">
-                          <img class="angel-hero-slide-product" src="{{ slide.image }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
-                        </div>
-                      {% endif %}
-                      <div class="angel-hero-slide-text">
-                        {% if slide.subtitle %}<p class="angel-hero-subtitle angel-hero-slide-subtitle">{{ slide.subtitle }}</p>{% endif %}
-                        {% if slide.heading %}<h2 class="angel-hero-heading angel-hero-slide-heading">{{ slide.heading }}</h2>{% endif %}
-                        {% if slide.button_text %}
-                          <div class="angel-hero-slide-btn-wrap">
-                            <span class="angel-hero-slide-btn-fade" aria-hidden="true"></span>
-                            <a class="angel-hero-btn angel-hero-btn--banner" href="{{ slide.button_url if slide.button_url else 'javascript:;' }}">
-                              <span class="angel-hero-btn-label">{{ slide.button_text }}</span>
-                              <span class="angel-hero-btn-arrow sicon-arrow-up-left" aria-hidden="true"></span>
-                            </a>
-                          </div>
-                        {% endif %}
-                      </div>
+                {% endif %}
+
+                <div class="angel-banner__copy">
+                  {% if slide.overlay_image and slide.center_text %}
+                    <div class="angel-banner__media angel-banner__media--stacked">
+                      <img class="angel-banner__overlay" src="{{ image_url(slide.overlay_image, q=90) }}" alt="" loading="{% if loop.first %}eager{% else %}lazy{% endif %}">
                     </div>
+                  {% endif %}
+
+                  <div class="angel-banner__text">
+                    {% if slide.reverse_text_order %}
+                      {% if slide.subtitle %}
+                        <p class="angel-banner__subtitle {{ angel_anim(slide.subtitle_animation) }}"{% if subtitle_color %} style="color: {{ subtitle_color }};"{% endif %}>{{ slide.subtitle }}</p>
+                      {% endif %}
+                      {% if slide.heading %}
+                        <h2 class="angel-banner__title {{ angel_anim(slide.heading_animation) }}"{% if heading_color %} style="color: {{ heading_color }};"{% endif %}>{{ slide.heading }}</h2>
+                      {% endif %}
+                    {% else %}
+                      {% if slide.heading %}
+                        <h2 class="angel-banner__title {{ angel_anim(slide.heading_animation) }}"{% if heading_color %} style="color: {{ heading_color }};"{% endif %}>{{ slide.heading }}</h2>
+                      {% endif %}
+                      {% if slide.subtitle %}
+                        <p class="angel-banner__subtitle {{ angel_anim(slide.subtitle_animation) }}"{% if subtitle_color %} style="color: {{ subtitle_color }};"{% endif %}>{{ slide.subtitle }}</p>
+                      {% endif %}
+                    {% endif %}
+
+                    {% if slide.countdown_enabled and countdown_end %}
+                      <p class="angel-banner__countdown" data-angel-countdown data-countdown-end="{{ countdown_end | e }}" aria-live="polite"></p>
+                    {% endif %}
                   </div>
+
+                  {% if slide.button_text %}
+                    <div class="angel-banner__cta">
+                      <a
+                        class="angel-banner__btn{% if slide.btn_no_bg %} angel-banner__btn--ghost{% endif %}{% if slide.btn_rounded != false %} angel-banner__btn--round{% endif %}{% if slide.btn_reverse_icon %} angel-banner__btn--icon-reverse{% endif %} {{ angel_anim(slide.button_animation) }}"
+                        href="{{ slide_link if slide_link else 'javascript:;' }}"
+                        {% if (not slide.btn_no_bg and btn_bg_color) or (slide.btn_no_bg and btn_bg_color) or btn_text_color %}style="{% if not slide.btn_no_bg and btn_bg_color %}--angel-banner-btn-bg: {{ btn_bg_color }};{% elif slide.btn_no_bg and btn_bg_color %}border-color: {{ btn_bg_color }};{% endif %}{% if btn_text_color %}--angel-banner-btn-color: {{ btn_text_color }};color: {{ btn_text_color }};{% endif %}"{% endif %}
+                      >
+                        <span class="angel-banner__btn-label">{{ slide.button_text }}</span>
+                        {% if not slide.btn_hide_icon %}
+                          <span class="angel-banner__btn-icon sicon-arrow-up-left" aria-hidden="true"></span>
+                        {% endif %}
+                      </a>
+                    </div>
+                  {% endif %}
                 </div>
               </div>
-            {% endfor %}
-          </div>
-
-          <div class="swiper-pagination angel-hero-pagination"></div>
-          <button type="button" class="swiper-button-prev angel-hero-nav angel-hero-nav--prev" aria-label="{{ _('Previous') }}"></button>
-          <button type="button" class="swiper-button-next angel-hero-nav angel-hero-nav--next" aria-label="{{ _('Next') }}"></button>
+            </div>
+          </article>
         </div>
-      </div>
+      {% endfor %}
     </div>
+
+    {% if not settings.hide_pagination %}
+      <div class="swiper-pagination angel-banners__pagination">
+        {% for slide in slides %}
+          <span class="swiper-pagination-bullet{% if loop.first %} swiper-pagination-bullet-active{% endif %}"></span>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <button type="button" class="angel-banners__arrow angel-banners__arrow--prev" aria-label="{{ _('Previous') }}">
+      <span class="icon-keyboard_arrow_left" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="angel-banners__arrow angel-banners__arrow--next" aria-label="{{ _('Next') }}">
+      <span class="icon-keyboard_arrow_right" aria-hidden="true"></span>
+    </button>
   </div>
 </section>
 
@@ -73,32 +164,103 @@
 <script>
 (function () {
   var section = document.getElementById('{{ sectionId }}');
-  if (!section || typeof Swiper === 'undefined') return;
-  var el = section.querySelector('.angel-hero-swiper');
-  if (!el || el.classList.contains('swiper-initialized')) return;
-  var isRtl = window.appDirection === 'rtl';
-  var spaceBetween = parseInt(getComputedStyle(section).getPropertyValue('--hero-space-between'), 10) || 0;
-  new Swiper(el, {
-    slidesPerView: 1,
-    spaceBetween: spaceBetween,
-    speed: 650,
-    effect: 'slide',
-    grabCursor: true,
-    resistanceRatio: 0.72,
-    observer: true,
-    observeParents: true,
-    direction: 'horizontal',
-    rtl: isRtl,
-    navigation: {
-      nextEl: el.querySelector('.swiper-button-next'),
-      prevEl: el.querySelector('.swiper-button-prev')
-    },
-    pagination: {
-      el: el.querySelector('.swiper-pagination'),
-      clickable: true
+  if (!section) return;
+
+  function initSwiper() {
+    var el = section.querySelector('.angel-banners__swiper');
+    if (!el || typeof Swiper === 'undefined') return;
+    if (!el.querySelector('.swiper-slide')) return;
+    if (el.classList.contains('swiper-initialized')) return;
+
+    var slideCount = el.querySelectorAll('.swiper-slide').length;
+    var effect = section.getAttribute('data-swiper-effect') || 'slide';
+    var loop = section.getAttribute('data-swiper-loop') === 'true' && slideCount > 1;
+    var autoplayOn = section.getAttribute('data-swiper-autoplay') === 'true';
+
+    if (effect === 'fade' && loop && slideCount < 3) loop = false;
+    if (slideCount < 2 && (effect === 'flip' || effect === 'cube' || effect === 'cards' || effect === 'coverflow')) {
+      effect = 'slide';
     }
+
+    var config = {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      speed: effect === 'fade' ? 900 : 650,
+      effect: effect,
+      grabCursor: slideCount > 1,
+      watchOverflow: false,
+      rtl: window.appDirection === 'rtl',
+      loop: loop
+    };
+
+    if (effect === 'fade') config.fadeEffect = { crossFade: true };
+    if (effect === 'flip') config.flipEffect = { slideShadows: false };
+    if (effect === 'cube') config.cubeEffect = { shadow: false, slideShadows: false };
+    if (effect === 'coverflow') {
+      config.coverflowEffect = { rotate: 24, stretch: 0, depth: 120, modifier: 1, slideShadows: false };
+    }
+    if (effect === 'cards') {
+      config.cardsEffect = { perSlideOffset: 10, perSlideRotate: 4, slideShadows: false };
+      config.slidesPerView = 'auto';
+      config.centeredSlides = true;
+    }
+    if (autoplayOn) {
+      config.autoplay = { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true };
+    }
+
+    var paginationEl = el.querySelector('.angel-banners__pagination');
+    if (paginationEl) config.pagination = { el: paginationEl, clickable: true };
+
+    if (el.swiper) {
+      try { el.swiper.destroy(true, true); } catch (e) {}
+    }
+
+    var swiper = new Swiper(el, config);
+    var prevBtn = el.querySelector('.angel-banners__arrow--prev');
+    var nextBtn = el.querySelector('.angel-banners__arrow--next');
+    if (prevBtn) prevBtn.onclick = function () { swiper.slidePrev(); };
+    if (nextBtn) nextBtn.onclick = function () { swiper.slideNext(); };
+  }
+
+  initSwiper();
+  window.addEventListener('load', initSwiper);
+  window.addEventListener('angel:homeTabChange', function () {
+    window.setTimeout(initSwiper, 200);
+  });
+
+  function parseCountdownEnd(value) {
+    if (!value) return NaN;
+    var trimmed = String(value).trim();
+    var parts = trimmed.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/);
+    if (parts) {
+      var p1 = parseInt(parts[1], 10);
+      var p2 = parseInt(parts[2], 10);
+      var year = parseInt(parts[3], 10);
+      var month = p1;
+      var day = p2;
+      if (p1 > 12) { day = p1; month = p2; }
+      else if (p2 > 12) { month = p1; day = p2; }
+      return new Date(year, month - 1, day, 23, 59, 59, 999).getTime();
+    }
+    var parsed = Date.parse(trimmed);
+    return Number.isNaN(parsed) ? NaN : parsed;
+  }
+
+  section.querySelectorAll('[data-angel-countdown]').forEach(function (node) {
+    if (node.dataset.angelCountdownReady === '1') return;
+    var endMs = parseCountdownEnd(node.getAttribute('data-countdown-end'));
+    if (Number.isNaN(endMs)) { node.hidden = true; return; }
+    node.dataset.angelCountdownReady = '1';
+    function tick() {
+      var left = endMs - Date.now();
+      if (left <= 0) { node.hidden = true; node.textContent = '00:00:00'; return; }
+      node.hidden = false;
+      node.textContent = String(Math.floor(left / 3600000)).padStart(2, '0') + ':' +
+        String(Math.floor((left % 3600000) / 60000)).padStart(2, '0') + ':' +
+        String(Math.floor((left % 60000) / 1000)).padStart(2, '0');
+    }
+    tick();
+    window.setInterval(tick, 1000);
   });
 })();
 </script>
-{% endif %}
-

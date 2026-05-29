@@ -1,12 +1,10 @@
 {% set home_tab = settings.home_tab | default('') %}
 {% set video = settings.video %}
-{% set display_video = settings.display_video | default(true) %}
-{% set video_loop = settings.video_loop | default(true) %}
 {% set bg_image = settings.bg_image %}
 {% set video_url = settings.video_url | default('', true) %}
 {% set cards = safeget(settings, "cards", []) %}
 
-{% set show_video = display_video and video %}
+{% set show_video = settings.display_video != false and video %}
 
 {% if show_video or bg_image or (cards and cards | length > 0) %}
 <section
@@ -29,7 +27,7 @@
                   autoplay
                   muted
                   playsinline
-                  {% if video_loop %}loop{% endif %}
+                  {% if settings.video_loop != false %}loop{% endif %}
                   {% if bg_image %}poster="{{ bg_image }}"{% endif %}
                 >
                   <source src="{{ video }}" type="video/mp4">
