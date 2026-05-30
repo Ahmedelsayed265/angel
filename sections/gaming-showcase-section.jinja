@@ -1,11 +1,13 @@
 {% set cards = safeget(settings, "cards", []) %}
 {% set section_bg = settings.section_bg | default("#1a1a1a") %}
+{% set home_tab = settings.home_tab | default('') %}
 
 {% if settings.bg_image or cards | length > 0 %}
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
   class="angel-gaming-showcase"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   style="--ags-section-bg: {{ section_bg }};"
 >
   <div class="angel-gaming-showcase__stage">

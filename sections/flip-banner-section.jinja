@@ -10,12 +10,14 @@
 {% set border_radius = (settings.border_radius | default(12)) | int %}
 
 {% set can_flip = image_front and image_back %}
+{% set home_tab = settings.home_tab | default('') %}
 
 {% if image_front or image_back %}
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
   class="angel-flip-banner{% if not can_flip %} angel-flip-banner--static{% endif %}"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   style="
     --afb-bg: {{ bg_color }};
     --afb-radius: {{ border_radius if border_radius >= 0 else 12 }}px;

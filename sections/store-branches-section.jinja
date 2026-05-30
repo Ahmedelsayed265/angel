@@ -4,12 +4,14 @@
 {% set title_color = settings.title_color | default("#54c8e9") %}
 {% set bg_color = settings.bg_color | default("#141414") %}
 {% set accent_color = settings.accent_color | default("#54c8e9") %}
+{% set home_tab = settings.home_tab | default('') %}
 
 {% if branches and branches | length > 0 %}
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
   class="angel-branches-section"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   style="
     --branches-bg: {{ bg_color }};
     --branches-title: {{ title_color }};

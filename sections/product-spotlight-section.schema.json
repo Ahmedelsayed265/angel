@@ -1,214 +1,337 @@
 {
-    "section_id": "angel-product-spotlight-section",
-    "template": "sections/product-spotlight-section.jinja",
-    "icon": "fa fa-bolt",
-    "name": {
-        "ar": "بانر منتج مميز",
-        "en": "Product spotlight"
+  "section_id": "angel-product-spotlight-section",
+  "template": "sections/product-spotlight-section.jinja",
+  "icon": "fa fa-bolt",
+  "name": {
+    "ar": "منتج مميز (ملاك)",
+    "en": "Product spotlight (Angel)"
+  },
+  "settings": [
+    {
+      "id": "home_tab",
+      "type": "select",
+      "label": {
+        "ar": "اختر التبويب",
+        "en": "Select tab"
+      },
+      "info": {
+        "ar": "اتركه فارغًا ليظهر في كل التبويبات. أو اختر تبويبًا محددًا ليظهر داخله فقط.",
+        "en": "Leave empty to show in all tabs. Or choose a specific tab to show only there."
+      },
+      "default": "",
+      "options": [
+        { "value": "", "label": { "ar": "كل التبويبات", "en": "All tabs" } },
+        { "value": "1", "label": { "ar": "تبويب 1", "en": "Tab 1" } },
+        { "value": "2", "label": { "ar": "تبويب 2", "en": "Tab 2" } },
+        { "value": "3", "label": { "ar": "تبويب 3", "en": "Tab 3" } }
+      ]
     },
-    "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": {
+        "ar": "عنوان رئيسي",
+        "en": "Main title"
+      },
+      "default": "امتلك القوة من إيه إم دي"
+    },
+    {
+      "id": "title_p",
+      "type": "text",
+      "label": {
+        "ar": "عنوان فرعي",
+        "en": "Subtitle"
+      },
+      "default": "عرض خاص على معالج ryzen 9550x"
+    },
+    {
+      "id": "btn",
+      "type": "text",
+      "label": {
+        "ar": "وصف رابط الصورة/الفيديو",
+        "en": "Media link label"
+      },
+      "info": {
+        "ar": "يُستخدم عند الضغط على الصورة أو الفيديو للانتقال لصفحة التفاصيل (للوصولية فقط، لا يظهر كنص).",
+        "en": "Accessibility label when clicking image/video to open details (not shown as text)."
+      },
+      "default": "تفاصيل أكثر"
+    },
+    {
+      "id": "details_product",
+      "type": "product",
+      "label": {
+        "ar": "رابط زر التفاصيل (منتج)",
+        "en": "Details button (product)"
+      }
+    },
+    {
+      "id": "url",
+      "type": "url",
+      "label": {
+        "ar": "رابط زر التفاصيل (رابط خارجي)",
+        "en": "Details button (custom URL)"
+      },
+      "info": {
+        "ar": "يُستخدم إذا لم تُختر منتجًا أعلاه.",
+        "en": "Used when no product is selected above."
+      }
+    },
+    {
+      "id": "video",
+      "type": "video",
+      "label": {
+        "ar": "فيديو البانر",
+        "en": "Banner video"
+      },
+      "info": {
+        "ar": "ارفع فيديو من مكتبة المتجر (mp4). يظهر بدلًا من صورة البانر عند التفعيل.",
+        "en": "Upload from store library (mp4). Replaces the banner image when set."
+      }
+    },
+    {
+      "id": "image",
+      "type": "image",
+      "label": {
+        "ar": "أضف صورة أساسية للمنتج",
+        "en": "Primary product image"
+      }
+    },
+    {
+      "id": "imgs",
+      "type": "list",
+      "max_items": 8,
+      "label": {
+        "ar": "صور إضافية للعرض",
+        "en": "Additional display images"
+      },
+      "settings": [
         {
-            "id": "product",
-            "type": "product",
-            "label": {
-                "ar": "المنتج (اختر منتجاً واحداً)",
-                "en": "Product (select one)"
-            }
-        },
-        {
-            "id": "video",
-            "type": "video",
-            "label": {
-                "ar": "فيديو الجانب",
-                "en": "Side video"
-            }
-        },
-        {
-            "id": "video_loop",
-            "type": "checkbox",
-            "label": {
-                "ar": "تكرار الفيديو (Loop)",
-                "en": "Loop video"
-            },
-            "default": true
-        },
-        {
-            "id": "image",
-            "type": "image",
-            "label": {
-                "ar": "صورة مخصصة (أو غلاف الفيديو قبل التشغيل)",
-                "en": "Custom image (or video poster)"
-            }
-        },
-        {
-            "id": "title",
-            "type": "text",
-            "label": {
-                "ar": "العنوان",
-                "en": "Title"
-            },
-            "default": "امتلك القوة من إيه إم دي"
-        },
-        {
-            "id": "subtitle",
-            "type": "text",
-            "label": {
-                "ar": "العنوان الفرعي",
-                "en": "Subtitle"
-            },
-            "default": "عرض خاص على معالج ryzen 9550x"
-        },
-        {
-            "id": "show_timer_label",
-            "type": "checkbox",
-            "label": {
-                "ar": "إظهار نص المؤقت (بدون عدّاد)",
-                "en": "Show timer label (no countdown)"
-            },
-            "default": true
-        },
-        {
-            "id": "timer_label",
-            "type": "text",
-            "label": {
-                "ar": "نص المؤقت",
-                "en": "Timer label"
-            },
-            "default": "متبقي على انتهاء الخصم:"
-        },
-        {
-            "id": "feature_heading",
-            "type": "text",
-            "label": {
-                "ar": "عنوان الميزة",
-                "en": "Feature heading"
-            },
-            "default": "المعالج الأقوى في العالم"
-        },
-        {
-            "id": "feature_text",
-            "type": "textarea",
-            "label": {
-                "ar": "وصف الميزة",
-                "en": "Feature description"
-            },
-            "default": "أداء فائق للألعاب والإنتاجية مع تقنية V-Cache المتقدمة."
-        },
-        {
-            "id": "add_to_cart_text",
-            "type": "text",
-            "label": {
-                "ar": "نص زر أضف للسلة",
-                "en": "Add to cart text"
-            },
-            "default": "أضف للسلة"
-        },
-        {
-            "id": "cart_btn_text",
-            "type": "text",
-            "label": {
-                "ar": "نص زر السلة",
-                "en": "Cart button text"
-            },
-            "default": "سلة المشتريات"
-        },
-        {
-            "id": "cart_btn_url",
-            "type": "url",
-            "label": {
-                "ar": "رابط زر السلة",
-                "en": "Cart button URL"
-            }
-        },
-        {
-            "id": "title_color",
-            "type": "color",
-            "label": {
-                "ar": "لون العنوان",
-                "en": "Title color"
-            },
-            "default": "#54c8e9"
-        },
-        {
-            "id": "subtitle_color",
-            "type": "color",
-            "label": {
-                "ar": "لون العنوان الفرعي",
-                "en": "Subtitle color"
-            },
-            "default": "#ffffff"
-        },
-        {
-            "id": "bg_color",
-            "type": "color",
-            "label": {
-                "ar": "لون الخلفية",
-                "en": "Background color"
-            },
-            "default": "#1a1a1a"
-        },
-        {
-            "id": "accent_color",
-            "type": "color",
-            "label": {
-                "ar": "لون التمييز",
-                "en": "Accent color"
-            },
-            "default": "#54c8e9"
-        },
-        {
-            "id": "sale_price_color",
-            "type": "color",
-            "label": {
-                "ar": "لون سعر العرض",
-                "en": "Sale price color"
-            },
-            "default": "#e53935"
-        },
-        {
-            "id": "add_btn_bg",
-            "type": "color",
-            "label": {
-                "ar": "لون زر أضف للسلة",
-                "en": "Add to cart background"
-            },
-            "default": "#e53935"
-        },
-        {
-            "id": "cart_btn_bg",
-            "type": "color",
-            "label": {
-                "ar": "لون زر السلة",
-                "en": "Cart button background"
-            },
-            "default": "#54c8e9"
-        },
-        {
-            "id": "features",
-            "type": "list",
-            "max_items": 6,
-            "label": {
-                "ar": "أيقونات المميزات",
-                "en": "Feature icons"
-            },
-            "settings": [
-                {
-                    "id": "icon",
-                    "type": "image",
-                    "label": {
-                        "ar": "الأيقونة",
-                        "en": "Icon"
-                    }
-                },
-                {
-                    "id": "label",
-                    "type": "text",
-                    "label": {
-                        "ar": "وصف (للوصول)",
-                        "en": "Label (accessibility)"
-                    }
-                }
-            ]
+          "id": "img",
+          "type": "image",
+          "label": {
+            "ar": "ارفع الصورة",
+            "en": "Upload image"
+          }
         }
-    ]
+      ]
+    },
+    {
+      "id": "reg_price",
+      "type": "number",
+      "label": {
+        "ar": "سعر المنتج الحالي",
+        "en": "Current price"
+      },
+      "info": {
+        "ar": "يمكنك تركه فارغًا لاستخدام سعر المنتج من المتجر.",
+        "en": "Leave empty to use the store product price."
+      }
+    },
+    {
+      "id": "old_price",
+      "type": "number",
+      "label": {
+        "ar": "سعر المنتج قبل الخصم",
+        "en": "Price before discount"
+      }
+    },
+    {
+      "id": "add_to_cart",
+      "type": "checkbox",
+      "label": {
+        "ar": "تفعيل زر أضف للسلة",
+        "en": "Enable add to cart button"
+      },
+      "default": true
+    },
+    {
+      "id": "add_to_cart_text",
+      "type": "text",
+      "label": {
+        "ar": "نص زر أضف للسلة",
+        "en": "Add to cart button text"
+      },
+      "default": "أضف للسلة"
+    },
+    {
+      "id": "cart_btn_text",
+      "type": "text",
+      "label": {
+        "ar": "نص زر سلة المشتريات",
+        "en": "Cart button text"
+      },
+      "default": "سلة المشتريات"
+    },
+    {
+      "id": "cart_btn_url",
+      "type": "url",
+      "label": {
+        "ar": "رابط زر سلة المشتريات",
+        "en": "Cart button URL"
+      },
+      "default": "/cart"
+    },
+    {
+      "id": "product",
+      "type": "product",
+      "label": {
+        "ar": "اختر المنتج المطلوب إضافته للسلة",
+        "en": "Product for add to cart"
+      }
+    },
+    {
+      "id": "countdown",
+      "type": "checkbox",
+      "label": {
+        "ar": "تفعيل عداد الخصم",
+        "en": "Enable discount countdown"
+      },
+      "default": false
+    },
+    {
+      "id": "date",
+      "type": "text",
+      "label": {
+        "ar": "حدد تاريخ انتهاء الخصم",
+        "en": "Discount end date"
+      },
+      "info": {
+        "ar": "مثال: 30-06-2025 أو 06-30-2025",
+        "en": "e.g. 30-06-2025 or 06-30-2025"
+      }
+    },
+    {
+      "id": "dark",
+      "type": "checkbox",
+      "label": {
+        "ar": "تثبيت المظهر الداكن",
+        "en": "Pin dark appearance"
+      },
+      "default": false
+    },
+    {
+      "id": "items",
+      "type": "list",
+      "max_items": 8,
+      "label": {
+        "ar": "مميزات المنتج",
+        "en": "Product features"
+      },
+      "settings": [
+        {
+          "id": "icon",
+          "type": "image",
+          "label": {
+            "ar": "أيقونة الميزة",
+            "en": "Feature icon"
+          }
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "العنوان",
+            "en": "Title"
+          }
+        },
+        {
+          "id": "text",
+          "type": "textarea",
+          "label": {
+            "ar": "التفاصيل",
+            "en": "Details"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_bg",
+      "type": "color",
+      "label": {
+        "ar": "لون خلفية البانر",
+        "en": "Banner background color"
+      },
+      "info": {
+        "ar": "يغطي البانر بالكامل (المحتوى + الفيديو/الصورة). الأبيض (#ffffff) = شفاف.",
+        "en": "Covers the full banner (content + media). White = transparent."
+      },
+      "default": "#2d2d2d"
+    },
+    {
+      "id": "block_img",
+      "type": "image",
+      "label": {
+        "ar": "صورة خلفية العنصر",
+        "en": "Element background image"
+      }
+    },
+    {
+      "id": "mobile_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الجوال فقط",
+        "en": "Show on mobile only"
+      },
+      "default": false
+    },
+    {
+      "id": "pc_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الكمبيوتر والتابلت فقط",
+        "en": "Show on desktop/tablet only"
+      },
+      "default": false
+    },
+    {
+      "id": "ar_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الواجهة باللغة العربية فقط",
+        "en": "Arabic interface only"
+      },
+      "default": false
+    },
+    {
+      "id": "en_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الواجهة بالإنجليزية فقط",
+        "en": "English interface only"
+      },
+      "default": false
+    },
+    {
+      "id": "wow",
+      "type": "select",
+      "label": {
+        "ar": "أنيميشن ملاك",
+        "en": "Angel animation"
+      },
+      "default": "false",
+      "options": [
+        { "value": "false", "label": { "ar": "إيقاف", "en": "Off" } },
+        { "value": "fade-in", "label": { "ar": "ظهور", "en": "Fade in" } },
+        { "value": "fade-up", "label": { "ar": "ظهور لأعلى", "en": "Fade up" } },
+        { "value": "fade-down", "label": { "ar": "ظهور لأسفل", "en": "Fade down" } },
+        { "value": "blur-in", "label": { "ar": "وضوح", "en": "Blur in" } },
+        { "value": "scale-in", "label": { "ar": "تكبير", "en": "Scale in" } },
+        { "value": "bounce-in", "label": { "ar": "قفز لأعلى", "en": "Bounce in" } },
+        { "value": "flip-y", "label": { "ar": "دوران عمودي", "en": "Flip Y" } }
+      ]
+    },
+    {
+      "id": "classes",
+      "type": "text",
+      "label": {
+        "ar": "Classes",
+        "en": "Classes"
+      },
+      "info": {
+        "ar": "أضف كلاسات خاصة لحاوية السيكشن.",
+        "en": "Add special classes to the parent section."
+      }
+    }
+  ]
 }

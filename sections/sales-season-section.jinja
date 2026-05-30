@@ -11,6 +11,7 @@
 {% set accent = settings.accent_color | default("#54c8e9") %}
 {% set slides_desktop = (settings.slides_desktop | default('6')) | int %}
 {% set slides_count = slides_desktop if slides_desktop >= 4 and slides_desktop <= 8 else 6 %}
+{% set home_tab = settings.home_tab | default('') %}
 
 {% if section_title or products | length > 0 %}
 <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
@@ -21,6 +22,7 @@
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
   class="angel-sales-season"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   style="
     --ss-bg: {{ bg_color }};
     --ss-title: {{ title_color }};

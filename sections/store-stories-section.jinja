@@ -1,67 +1,223 @@
-{% set stories = safeget(settings, "stories", []) %}
-{% set section_title = settings.title | default("قصص المتجر") %}
-{% set exit_label = settings.exit_label | default("خروج") %}
-{% set slide_duration = settings.slide_duration | default(5) %}
-{% set bg_start = settings.bg_color_start | default("#061018") %}
-{% set bg_end = settings.bg_color_end | default("#0e4a6e") %}
-{% set title_grad_start = settings.title_gradient_start | default("#f472b6") %}
-{% set title_grad_end = settings.title_gradient_end | default("#fbbf24") %}
+{% set home_tab_raw = settings.home_tab | default('', true) %}
+{% set home_tab = home_tab_raw | string | trim if home_tab_raw is not none else '' %}
+{% if home_tab in ['0', 'none', 'None', ''] %}{% set home_tab = '' %}{% endif %}
 
-{% if stories and stories | length > 0 %}
+{% set mains_raw = settings.stories_main | default([]) %}
+{% set mains = mains_raw if mains_raw is iterable and mains_raw is not string else [] %}
+{% set contents_raw = settings.stories_content | default([]) %}
+{% set contents = contents_raw if contents_raw is iterable and contents_raw is not string else [] %}
+{% set section_title = settings.title | default('قصص المتجر') %}
+{% set section_subtitle = settings.subtitle | default('', true) | trim %}
+{% set exit_label = settings.exit_label | default('خروج') %}
+{% set slide_duration = settings.slide_duration | default(5) %}
+{% set bg_start = settings.bg_color_start | default('#061018') %}
+{% set bg_end = settings.bg_color_end | default('#0e4a6e') %}
+{% set bg_solid = settings.bg_color_solid | default('#061018') %}
+{% set title_grad_start = settings.title_gradient_start | default('#f472b6') %}
+{% set title_grad_end = settings.title_gradient_end | default('#fbbf24') %}
+{% set title_solid = settings.title_color_solid | default('#54c8e9') %}
+{% set subtitle_solid = settings.subtitle_color_solid | default('#9ca3af') %}
+
+{% set show_section = true %}
+{% if settings.visibility_lang == 'ar' and session.lang != 'ar' %}
+  {% set show_section = false %}
+{% elif settings.visibility_lang == 'en' and session.lang != 'en' %}
+  {% set show_section = false %}
+{% endif %}
+{% if settings.visibility_user == 'guest' and customer is defined and customer and customer.id %}
+  {% set show_section = false %}
+{% elif settings.visibility_user == 'logged' and (customer is not defined or not customer or not customer.id) %}
+  {% set show_section = false %}
+{% endif %}
+
+{% set has_stories = mains | length > 0 %}
+
+{% macro story_slide_has_media(c) -%}
+  {%- set sv = c.video | default(c.video_url | default('')) | string | trim -%}
+  {%- set si = c.image | default('') | string | trim -%}
+  {%- set sm = c.media_url | default('') | string | trim -%}
+  {%- set sy = c.youtube_url | default('') | string | trim -%}
+  {%- set st = c.tiktok_url | default('') | string | trim -%}
+  {{- sv or si or sm or sy or st -}}
+{%- endmacro %}
+
+{% macro story_main_has_slides(main_num) -%}
+  {%- for c in contents -%}
+    {%- if (c.main | default(1) | int) == main_num and story_slide_has_media(c) -%}1{%- endif -%}
+  {%- endfor -%}
+{%- endmacro %}
+
+{% macro render_story_slides_json(main_num) %}
+                {% set slide_ns = namespace(first=true) %}
+                {% for c in contents %}
+                  {% if (c.main | default(1) | int) == main_num and story_slide_has_media(c) %}
+                    {% set slide_video = c.video | default(c.video_url | default('')) | string | trim %}
+                    {% set slide_image = c.image | default('') | string | trim %}
+                    {% set slide_external = c.media_url | default('') | string | trim %}
+                    {% set slide_youtube = c.youtube_url | default('') | string | trim %}
+                    {% set slide_tiktok = c.tiktok_url | default('') | string | trim %}
+                    {% set slide_type = 'image' %}
+                    {% set out_video = '' %}
+                    {% set out_image = '' %}
+                    {% set out_youtube = '' %}
+                    {% set out_tiktok = '' %}
+                    {% if slide_youtube %}
+                      {% set slide_type = 'youtube' %}
+                      {% set out_youtube = slide_youtube %}
+                    {% elif slide_tiktok %}
+                      {% set slide_type = 'tiktok' %}
+                      {% set out_tiktok = slide_tiktok %}
+                    {% elif slide_video %}
+                      {% set slide_type = 'video' %}
+                      {% set out_video = slide_video %}
+                    {% elif slide_image %}
+                      {% set slide_type = 'image' %}
+                      {% set out_image = slide_image %}
+                    {% elif slide_external %}
+                      {% set ext = slide_external | lower %}
+                      {% if 'youtube.com' in ext or 'youtu.be' in ext %}
+                        {% set slide_type = 'youtube' %}
+                        {% set out_youtube = slide_external %}
+                      {% elif 'tiktok.com' in ext %}
+                        {% set slide_type = 'tiktok' %}
+                        {% set out_tiktok = slide_external %}
+                      {% elif ext.endswith('.mp4') or ext.endswith('.webm') or ext.endswith('.mov') or ext.endswith('.m4v') %}
+                        {% set slide_type = 'video' %}
+                        {% set out_video = slide_external %}
+                      {% else %}
+                        {% set slide_type = 'image' %}
+                        {% set out_image = slide_external %}
+                      {% endif %}
+                    {% endif %}
+                    {% if not slide_ns.first %},{% endif %}
+                    {
+                        "type": {{ slide_type | tojson }},
+                        "image": {{ out_image | tojson }},
+                        "video": {{ out_video | tojson }},
+                        "youtube": {{ out_youtube | tojson }},
+                        "tiktok": {{ out_tiktok | tojson }},
+                        "link": {{ (c.link | default('')) | tojson }},
+                        "duration": {{ (c.duration | default(slide_duration)) | int }}
+                      }
+                    {% set slide_ns.first = false %}
+                  {% endif %}
+                {% endfor %}
+{% endmacro %}
+
+{% if show_section and has_stories %}
+{% set sec_classes = ['angel-stories-section'] %}
+{% if settings.title_center %} {% set sec_classes = sec_classes + ['angel-stories-section--title-center'] %} {% endif %}
+{% if settings.title_size and settings.title_size != 'normal' %} {% set sec_classes = sec_classes + ['angel-stories-section--title-' ~ settings.title_size] %} {% endif %}
+{% if settings.title_color == 'solid' %} {% set sec_classes = sec_classes + ['angel-stories-section--title-solid'] %} {% endif %}
+{% if settings.title_color == 'gradient' %} {% set sec_classes = sec_classes + ['angel-stories-section--title-gradient'] %} {% endif %}
+{% if settings.subtitle_color == 'solid' %} {% set sec_classes = sec_classes + ['angel-stories-section--subtitle-solid'] %} {% endif %}
+{% if not settings.title_show_separator %} {% set sec_classes = sec_classes + ['angel-stories-section--no-sep'] %} {% endif %}
+{% if settings.section_padding and settings.section_padding != 'normal' %} {% set sec_classes = sec_classes + ['angel-stories-section--pad-' ~ settings.section_padding] %} {% endif %}
+{% if settings.con_bg_type and settings.con_bg_type != 'none' %} {% set sec_classes = sec_classes + ['angel-stories-section--con-bg-' ~ settings.con_bg_type] %} {% endif %}
+{% if settings.con_radius and settings.con_radius != 'none' %} {% set sec_classes = sec_classes + ['angel-stories-section--con-radius-' ~ settings.con_radius] %} {% endif %}
+{% if settings.con_border_style and settings.con_border_style != 'none' %} {% set sec_classes = sec_classes + ['angel-stories-section--con-border-' ~ settings.con_border_style] %} {% endif %}
+{% if settings.con_shadow_type and settings.con_shadow_type != 'none' %} {% set sec_classes = sec_classes + ['angel-stories-section--con-shadow-' ~ settings.con_shadow_type] %} {% endif %}
+{% if settings.bg_type == 'solid' %} {% set sec_classes = sec_classes + ['angel-stories-section--bg-solid'] %} {% elif settings.bg_type == 'none' %} {% set sec_classes = sec_classes + ['angel-stories-section--bg-none'] %} {% endif %}
+{% if settings.bg_type_image and settings.bg_image %} {% set sec_classes = sec_classes + ['angel-stories-section--bg-image'] %} {% endif %}
+{% if settings.shape_type == 'none' %} {% set sec_classes = sec_classes + ['angel-stories-section--no-shape'] %} {% endif %}
+{% if settings.overlap == 'next' %} {% set sec_classes = sec_classes + ['angel-stories-section--overlap-next'] %} {% elif settings.overlap == 'previous' %} {% set sec_classes = sec_classes + ['angel-stories-section--overlap-prev'] %} {% endif %}
+{% if settings.visibility_device == 'mobile' %} {% set sec_classes = sec_classes + ['angel-stories-section--device-mobile'] %} {% elif settings.visibility_device == 'desktop' %} {% set sec_classes = sec_classes + ['angel-stories-section--device-desktop'] %} {% endif %}
+{% if settings.animation_name and settings.animation_name != 'none' %} {% set sec_classes = sec_classes + ['animate__animated', 'animate__' ~ settings.animation_name] %} {% endif %}
+{% if home_tab in ['1', '2', '3'] %} {% set sec_classes = sec_classes + ['angel-hero-tab-section'] %} {% endif %}
+
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
-  class="angel-stories-section"
+  class="{{ sec_classes | join(' ') }}"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   style="
     --stories-bg-start: {{ bg_start }};
     --stories-bg-end: {{ bg_end }};
+    --stories-bg-solid: {{ bg_solid }};
     --stories-title-start: {{ title_grad_start }};
     --stories-title-end: {{ title_grad_end }};
+    --stories-title-solid: {{ title_solid }};
+    --stories-subtitle-solid: {{ subtitle_solid }};
+    --stories-con-bg: {{ settings.con_bg_color | default('rgba(255,255,255,0.06)') }};
+    --stories-con-border-color: {{ settings.con_border_color | default('#004956') }};
+    --stories-con-border-width: {{ settings.con_border_width | default(0) }}px;
+    {% if settings.bg_type_image and settings.bg_image %}--stories-bg-image: url('{{ settings.bg_image }}');{% endif %}
   "
   data-slide-duration="{{ slide_duration }}"
+  data-section-id-short="{{ sectionId }}"
 >
-  <div class="angel-stories-section__inner">
+  <div class="angel-stories-section__inner angel-stories-section__con">
     <div class="container">
-      <div class="angel-stories-heading">
+      {% if section_title or section_subtitle or settings.title_cta %}
+      <div class="angel-stories-heading{% if settings.title_center %} angel-stories-heading--center{% endif %}">
+        {% if settings.title_show_separator %}
         <span class="angel-stories-heading__line" aria-hidden="true"></span>
-        <h2 class="angel-stories-heading__title">{{ section_title }}</h2>
+        {% endif %}
+        <div class="angel-stories-heading__text">
+          {% if section_title %}
+          <h2 class="angel-stories-heading__title">{{ section_title }}</h2>
+          {% endif %}
+          {% if section_subtitle %}
+          <p class="angel-stories-heading__subtitle">{{ section_subtitle }}</p>
+          {% endif %}
+        </div>
+        {% if settings.title_cta and settings.title_cta_text and settings.title_cta_url %}
+        <a class="angel-stories-heading__cta" href="{{ settings.title_cta_url }}">{{ settings.title_cta_text }}</a>
+        {% endif %}
+        {% if settings.title_show_separator %}
         <span class="angel-stories-heading__line" aria-hidden="true"></span>
+        {% endif %}
       </div>
+      {% endif %}
 
       <div class="angel-stories-rail" role="list">
-        {% for story in stories %}
-          {% set ring = story.border_style | default("cyan") %}
-          {% set cover = story.cover %}
-          {% if cover %}
+        {% set rail_idx = namespace(n=0) %}
+        {% for main in mains %}
+          {% if main.pin and main.avatar and story_main_has_slides(loop.index) %}
+            {% set ring = main.border_style | default('cyan') %}
             <button
               type="button"
               class="angel-stories-item"
               role="listitem"
-              data-story-open="{{ loop.index0 }}"
-              aria-label="{{ story.title if story.title else _('Story') }}"
+              data-story-open="{{ rail_idx.n }}"
+              data-story-memory="{{ '1' if main.memory else '0' }}"
+              aria-label="{{ main.name if main.name else _('Story') }}"
             >
               <span class="angel-stories-item__ring angel-stories-item__ring--{{ ring }}">
-                <img
-                  class="angel-stories-item__img"
-                  src="{{ cover }}"
-                  alt=""
-                  loading="lazy"
-                  width="72"
-                  height="72"
-                >
+                <img class="angel-stories-item__img" src="{{ main.avatar }}" alt="" loading="lazy" width="72" height="72">
               </span>
-              {% if story.title %}
-                <span class="angel-stories-item__label">{{ story.title }}</span>
-              {% endif %}
+              {% if main.name %}<span class="angel-stories-item__label">{{ main.name }}</span>{% endif %}
             </button>
+            {% set rail_idx.n = rail_idx.n + 1 %}
+          {% endif %}
+        {% endfor %}
+        {% for main in mains %}
+          {% if not main.pin and main.avatar and story_main_has_slides(loop.index) %}
+            {% set ring = main.border_style | default('cyan') %}
+            <button
+              type="button"
+              class="angel-stories-item"
+              role="listitem"
+              data-story-open="{{ rail_idx.n }}"
+              data-story-memory="{{ '1' if main.memory else '0' }}"
+              aria-label="{{ main.name if main.name else _('Story') }}"
+            >
+              <span class="angel-stories-item__ring angel-stories-item__ring--{{ ring }}">
+                <img class="angel-stories-item__img" src="{{ main.avatar }}" alt="" loading="lazy" width="72" height="72">
+              </span>
+              {% if main.name %}<span class="angel-stories-item__label">{{ main.name }}</span>{% endif %}
+            </button>
+            {% set rail_idx.n = rail_idx.n + 1 %}
           {% endif %}
         {% endfor %}
       </div>
     </div>
 
+    {% if settings.shape_type != 'none' %}
     <svg class="angel-stories-wave" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,32 C360,8 720,48 1080,24 C1260,12 1380,20 1440,28 L1440,48 L0,48 Z" fill="currentColor"></path>
     </svg>
+    {% endif %}
   </div>
 
   <div
@@ -88,7 +244,6 @@
           </div>
         </div>
       </div>
-
       <div class="angel-stories-viewer__stage" data-story-stage>
         <button type="button" class="angel-stories-tap angel-stories-tap--prev" data-story-prev aria-label="{{ _('Previous') }}"></button>
         <div class="angel-stories-viewer__media" data-story-media></div>
@@ -99,25 +254,43 @@
 
   <script type="application/json" id="{{ sectionId }}-stories-data">
     [
-      {% for story in stories %}
-        {% set story_slides = safeget(story, "slides", []) %}
-        {
-          "title": {{ (story.title | default("")) | tojson }},
-          "cover": {{ (story.cover | default("")) | tojson }},
-          "avatar": {{ (story.avatar if story.avatar else story.cover) | default("") | tojson }},
-          "time": {{ (story.time_label | default("")) | tojson }},
-          "border": {{ (story.border_style | default("cyan")) | tojson }},
-          "slides": [
-            {% for slide in story_slides %}
-              {
-                "image": {{ (slide.image | default("")) | tojson }},
-                "video": {{ (slide.video | default("")) | tojson }},
-                "link": {{ (slide.link | default("")) | tojson }}
-              }{% if not loop.last %},{% endif %}
-            {% endfor %}
-          ]
-        }{% if not loop.last %},{% endif %}
-      {% endfor %}
+        {% set json_ns = namespace(first=true) %}
+        {% for main in mains %}
+          {% if main.pin and main.avatar and story_main_has_slides(loop.index) %}
+            {% if not json_ns.first %},{% endif %}
+            {% set json_ns.first = false %}
+            {% set main_num = loop.index %}
+            {
+              "title": {{ (main.name | default('')) | tojson }},
+              "cover": {{ (main.avatar | default('')) | tojson }},
+              "avatar": {{ (main.avatar | default('')) | tojson }},
+              "time": {{ (main.time_label | default('')) | tojson }},
+              "border": {{ (main.border_style | default('cyan')) | tojson }},
+              "memory": {{ (main.memory | default(false)) | tojson }},
+              "slides": [
+                {{ render_story_slides_json(main_num) }}
+              ]
+            }
+          {% endif %}
+        {% endfor %}
+        {% for main in mains %}
+          {% if not main.pin and main.avatar and story_main_has_slides(loop.index) %}
+            {% if not json_ns.first %},{% endif %}
+            {% set json_ns.first = false %}
+            {% set main_num = loop.index %}
+            {
+              "title": {{ (main.name | default('')) | tojson }},
+              "cover": {{ (main.avatar | default('')) | tojson }},
+              "avatar": {{ (main.avatar | default('')) | tojson }},
+              "time": {{ (main.time_label | default('')) | tojson }},
+              "border": {{ (main.border_style | default('cyan')) | tojson }},
+              "memory": {{ (main.memory | default(false)) | tojson }},
+              "slides": [
+                {{ render_story_slides_json(main_num) }}
+              ]
+            }
+          {% endif %}
+        {% endfor %}
     ]
   </script>
 </section>
@@ -126,6 +299,17 @@
   (function () {
     var section = document.getElementById('{{ sectionId }}');
     if (!section) return;
+
+    var storageKey = 'angel-stories-seen-{{ sectionId }}';
+
+    section.querySelectorAll('[data-story-memory="1"]').forEach(function (btn) {
+      var idx = btn.getAttribute('data-story-open');
+      try {
+        if (localStorage.getItem(storageKey + '-' + idx) === '1') {
+          btn.classList.add('is-seen');
+        }
+      } catch (e) {}
+    });
 
     var dataEl = document.getElementById('{{ sectionId }}-stories-data');
     var modal = document.getElementById('{{ sectionId }}-modal');
@@ -138,9 +322,13 @@
       return;
     }
 
+    stories = stories.filter(function (s) {
+      return s.slides && s.slides.length;
+    });
+
     if (!stories.length) return;
 
-    var duration = (parseInt(section.getAttribute('data-slide-duration'), 10) || 5) * 1000;
+    var defaultDuration = (parseInt(section.getAttribute('data-slide-duration'), 10) || 5) * 1000;
     var progressEl = modal.querySelector('[data-story-progress]');
     var mediaEl = modal.querySelector('[data-story-media]');
     var nameEl = modal.querySelector('[data-story-name]');
@@ -152,6 +340,20 @@
     var progressFallbackTimer = null;
     var activeVideo = null;
     var onVideoTimeUpdate = null;
+    var goNextBusy = false;
+
+    function youtubeEmbed(url) {
+      if (!url) return '';
+      var id = '';
+      var m = url.match(/(?:youtu\.be\/|v=)([A-Za-z0-9_-]{6,})/);
+      if (m) id = m[1];
+      return id ? 'https://www.youtube.com/embed/' + id + '?autoplay=1&mute=1&playsinline=1' : url;
+    }
+
+    function tiktokEmbed(url) {
+      if (!url) return '';
+      return url;
+    }
 
     function clearTimer() {
       window.clearTimeout(timer);
@@ -175,10 +377,15 @@
     }
 
     function getSlides(story) {
-      var slides = story.slides || [];
-      return slides.filter(function (s) {
-        return s.image || s.video;
+      return (story.slides || []).filter(function (s) {
+        return s.image || s.video || s.youtube || s.tiktok;
       });
+    }
+
+    function slideDurationMs(slide) {
+      var sec = parseInt(slide.duration, 10);
+      if (!sec || sec < 1) sec = defaultDuration / 1000;
+      return sec * 1000;
     }
 
     function buildProgress(count) {
@@ -193,7 +400,7 @@
     }
 
     function onProgressEnd() {
-      goNext(true);
+      goNext();
     }
 
     function updateProgressBars() {
@@ -231,59 +438,43 @@
     }
 
     function startImageProgress(slideMs) {
-      modal.style.setProperty('--story-progress-duration', (slideMs / 1000) + 's');
+      modal.style.setProperty('--story-progress-duration', slideMs / 1000 + 's');
       updateProgressBars();
-
       var activeFill = getActiveFill();
       if (!activeFill) {
-        timer = window.setTimeout(function () {
-          goNext(true);
-        }, slideMs);
+        timer = window.setTimeout(function () { goNext(); }, slideMs);
         return;
       }
-
       activeFill.addEventListener('animationend', onProgressEnd, { once: true });
       progressFallbackTimer = window.setTimeout(function () {
         activeFill.removeEventListener('animationend', onProgressEnd);
-        goNext(true);
+        goNext();
       }, slideMs + 200);
     }
 
     function startVideoProgress(video) {
       activeVideo = video;
       video.loop = false;
-
       function bootVideoProgress() {
-        var videoMs = (video.duration && isFinite(video.duration) ? video.duration : duration / 1000) * 1000;
-        modal.style.setProperty('--story-progress-duration', (videoMs / 1000) + 's');
+        var videoMs = (video.duration && isFinite(video.duration) ? video.duration : defaultDuration / 1000) * 1000;
+        modal.style.setProperty('--story-progress-duration', videoMs / 1000 + 's');
         updateProgressBars();
-
         var activeFill = getActiveFill();
         setFillProgress(activeFill, 0);
-
         onVideoTimeUpdate = function () {
           if (!video.duration || !isFinite(video.duration)) return;
           setFillProgress(activeFill, video.currentTime / video.duration);
         };
-
         video.addEventListener('timeupdate', onVideoTimeUpdate);
         video.addEventListener('ended', onProgressEnd, { once: true });
-
-        progressFallbackTimer = window.setTimeout(function () {
-          goNext(true);
-        }, videoMs + 500);
-
+        progressFallbackTimer = window.setTimeout(function () { goNext(); }, videoMs + 500);
         var playPromise = video.play();
         if (playPromise && playPromise.catch) playPromise.catch(function () {});
       }
-
-      if (video.readyState >= 1) {
-        bootVideoProgress();
-      } else {
+      if (video.readyState >= 1) bootVideoProgress();
+      else {
         video.addEventListener('loadedmetadata', bootVideoProgress, { once: true });
-        video.addEventListener('error', function () {
-          startImageProgress(duration);
-        }, { once: true });
+        video.addEventListener('error', function () { startImageProgress(defaultDuration); }, { once: true });
       }
     }
 
@@ -292,7 +483,6 @@
       var story = stories[storyIndex];
       var slides = getSlides(story);
       if (!slides.length) return;
-
       var slide = slides[slideIndex];
       if (!mediaEl) return;
 
@@ -300,11 +490,28 @@
       var wrap = document.createElement('div');
       wrap.className = 'angel-stories-viewer__slide';
       var videoEl = null;
+      var slideMs = slideDurationMs(slide);
 
-      if (slide.video) {
+      if (slide.type === 'youtube' && slide.youtube) {
+        var iframe = document.createElement('iframe');
+        iframe.src = youtubeEmbed(slide.youtube);
+        iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.className = 'angel-stories-viewer__embed';
+        wrap.appendChild(iframe);
+        startImageProgress(Math.max(slideMs, 8000));
+      } else if (slide.type === 'tiktok' && slide.tiktok) {
+        var link = document.createElement('a');
+        link.href = slide.tiktok;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.className = 'angel-stories-viewer__tiktok';
+        link.textContent = slide.link ? '' : 'TikTok';
+        wrap.appendChild(link);
+        startImageProgress(slideMs);
+      } else if (slide.video) {
         videoEl = document.createElement('video');
         videoEl.src = slide.video;
-        videoEl.autoplay = false;
         videoEl.muted = true;
         videoEl.playsInline = true;
         videoEl.preload = 'auto';
@@ -317,22 +524,28 @@
         wrap.appendChild(img);
       }
 
-      if (slide.link) {
-        var link = document.createElement('a');
-        link.href = slide.link;
-        link.className = 'angel-stories-viewer__link';
-        link.setAttribute('aria-label', story.title || '');
-        link.appendChild(wrap);
-        mediaEl.appendChild(link);
+      if (slide.link && slide.type !== 'tiktok') {
+        var a = document.createElement('a');
+        a.href = slide.link;
+        a.className = 'angel-stories-viewer__link';
+        a.appendChild(wrap);
+        mediaEl.appendChild(a);
       } else {
         mediaEl.appendChild(wrap);
       }
 
-      if (videoEl) {
-        startVideoProgress(videoEl);
-      } else {
-        startImageProgress(duration);
-      }
+      if (videoEl) startVideoProgress(videoEl);
+      else if (slide.type !== 'youtube') startImageProgress(slideMs);
+    }
+
+    function markSeen(index) {
+      var story = stories[index];
+      if (!story || !story.memory) return;
+      try {
+        localStorage.setItem(storageKey + '-' + index, '1');
+      } catch (e) {}
+      var btn = section.querySelector('[data-story-open="' + index + '"]');
+      if (btn) btn.classList.add('is-seen');
     }
 
     function openModal(index) {
@@ -350,9 +563,9 @@
         avatarEl.alt = story.title || '';
       }
 
-      modal.style.setProperty('--story-progress-duration', (duration / 1000) + 's');
       buildProgress(slides.length);
       renderSlide();
+      markSeen(index);
 
       modal.hidden = false;
       modal.setAttribute('aria-hidden', 'false');
@@ -374,24 +587,27 @@
       renderSlide();
     }
 
-    function goNext(auto) {
+    function goNext() {
+      if (goNextBusy) return;
+      goNextBusy = true;
       var slides = getSlides(stories[storyIndex]);
       if (!slides.length) {
+        goNextBusy = false;
         closeModal();
         return;
       }
-
       if (slideIndex < slides.length - 1) {
         slideIndex += 1;
         renderSlide();
+        goNextBusy = false;
         return;
       }
-
       if (storyIndex < stories.length - 1) {
+        goNextBusy = false;
         openModal(storyIndex + 1);
         return;
       }
-
+      goNextBusy = false;
       closeModal();
     }
 
@@ -409,12 +625,12 @@
     var prevBtn = modal.querySelector('[data-story-prev]');
     var nextBtn = modal.querySelector('[data-story-next]');
     if (prevBtn) prevBtn.addEventListener('click', goPrev);
-    if (nextBtn) nextBtn.addEventListener('click', function () { goNext(false); });
+    if (nextBtn) nextBtn.addEventListener('click', goNext);
 
     document.addEventListener('keydown', function (e) {
       if (modal.hidden) return;
       if (e.key === 'Escape') closeModal();
-      if (e.key === 'ArrowLeft') goNext(false);
+      if (e.key === 'ArrowLeft') goNext();
       if (e.key === 'ArrowRight') goPrev();
     });
   })();

@@ -2,12 +2,14 @@
 {% set bg_color = settings.bg_color | default("#141414") %}
 {% set title_color = settings.item_title_color | default("#ffffff") %}
 {% set columns = (settings.columns | default('3')) | int %}
+{% set home_tab = settings.home_tab | default('') %}
 
 {% if items and items | length > 0 %}
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
   class="angel-image-title-grid"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   style="
     --itg-bg: {{ bg_color }};
     --itg-title: {{ title_color }};

@@ -1,67 +1,125 @@
-{% set product = settings.product | default(none) %}
-{% if not product %}
-  {% set products_data = safeget(settings, "products", {}) %}
-  {% set product_list = products_data.results if products_data.results else [] %}
-  {% set product = product_list[0] if product_list | length > 0 else none %}
-{% endif %}
-{% set features = safeget(settings, "features", []) %}
+{% set cart_product = settings.product | default(none) %}
+{% set details_product = settings.details_product | default(none) %}
+{% set display_product = cart_product if cart_product else details_product %}
+
+{% set items = safeget(settings, "items", safeget(settings, "features", [])) %}
+{% set imgs = safeget(settings, "imgs", safeget(settings, "gallery_images", [])) %}
 
 {% set section_title = settings.title | default("امتلك القوة من إيه إم دي") %}
-{% set subtitle = settings.subtitle | default("عرض خاص على معالج ryzen 9550x") %}
+{% set subtitle = settings.title_p | default(settings.subtitle | default("عرض خاص على معالج ryzen 9550x")) %}
+{% set details_btn_text = settings.btn | default(settings.details_btn_text | default("تفاصيل أكثر", true)) | trim %}
+{% set details_custom_url = settings.url | default(settings.details_btn_url | default("", true)) | string | trim %}
 {% set custom_image = settings.image | default("") %}
-{% set video_src = settings.video | default("") %}
-{% set timer_label = settings.timer_label | default("متبقي على انتهاء الخصم:") %}
-{% set feature_heading = settings.feature_heading | default("") %}
-{% set feature_text = settings.feature_text | default("") %}
+{% set video_raw = settings.video | default(none) %}
+{% set video_src = '' %}
+{% if video_raw %}
+  {% if video_raw is mapping %}
+    {% set video_src = (video_raw.url | default(video_raw.src | default(video_raw.path | default('', true), true), true)) | string | trim %}
+  {% else %}
+    {% set video_src = video_raw | string | trim %}
+  {% endif %}
+{% endif %}
+{% if not video_src %}
+  {% set video_src = settings.video_url | default(settings.video_link | default('', true), true) | string | trim %}
+{% endif %}
+{% set countdown_end = settings.date | default(settings.countdown_end | default("", true)) | trim %}
+{% set add_to_cart_on = settings.add_to_cart | default(settings.enable_add_to_cart | default(false)) %}
 {% set add_to_cart_text = settings.add_to_cart_text | default("أضف للسلة") %}
 {% set cart_btn_text = settings.cart_btn_text | default("سلة المشتريات") %}
 {% set cart_btn_url = settings.cart_btn_url | default("/cart") %}
 
+{% set home_tab = settings.home_tab | default(settings.multihome | default('')) | string | trim %}
+{% if home_tab in ['0', '', 'none', 'None'] %}{% set home_tab = '' %}{% endif %}
+
+{% set wow = settings.wow | default(settings.section_animation | default('false')) | string %}
+{% if wow in ['off', 'false', '0', ''] %}{% set wow = '' %}{% endif %}
+{% set custom_classes = (settings.classes | default(settings.custom_classes | default('', true))) | trim %}
+
+{% set banner_bg = settings.block_bg | default(settings.bg_color | default("#2d2d2d")) %}
+{% set banner_bg_image = settings.block_img | default(settings.bg_image | default("")) %}
+{% set is_banner_transparent = banner_bg | lower in ['#ffffff', '#fff', 'ffffff', 'fff'] %}
+{% set timer_label = settings.timer_label | default("متبقي على انتهاء الخصم:") %}
+
 {% set title_color = settings.title_color | default("#54c8e9") %}
 {% set subtitle_color = settings.subtitle_color | default("#ffffff") %}
-{% set bg_color = settings.bg_color | default("#1a1a1a") %}
 {% set accent = settings.accent_color | default("#54c8e9") %}
 {% set sale_price_color = settings.sale_price_color | default("#e53935") %}
 {% set add_btn_bg = settings.add_btn_bg | default("#e53935") %}
 {% set cart_btn_bg = settings.cart_btn_bg | default("#54c8e9") %}
+{% set currency_code = session.currency.code if session.currency and session.currency.code else 'ر.س' %}
 
-{% set poster_src = custom_image %}
-{% if not poster_src and product and product.main_image and product.main_image.image %}
-  {% set poster_src = product.main_image.image.large | default(product.main_image.image.medium, true) %}
-{% endif %}
-
-{% set image_src = "" %}
-{% if not video_src %}
-  {% set image_src = poster_src %}
-{% endif %}
-
+{% set product = cart_product if add_to_cart_on and cart_product else display_product %}
 {% set product_id = product.id if product else "" %}
 {% set product_slug = product.slug if product else "" %}
-{% set has_sale = product and product.formatted_sale_price is not none %}
+
+{% set details_slug = details_product.slug if details_product else product_slug %}
+{% set details_href = details_custom_url if details_custom_url else ("/products/" ~ details_slug if details_slug else "") %}
+
+{% set poster_src = custom_image %}
+{% if not poster_src and display_product and display_product.main_image and display_product.main_image.image %}
+  {% set poster_src = display_product.main_image.image.large | default(display_product.main_image.image.medium, true) %}
+{% endif %}
+
+{% set image_src = poster_src if not video_src else "" %}
+
 {% set has_options = product and (product.has_options or product.has_fields or product.product_class == 'dynamic_bundle') %}
 {% set is_out_of_stock = product and (product.is_infinite == false and product.quantity <= 0) and not (product.can_be_preordered | default(false)) %}
-{% set media_alt = product.name if product else section_title %}
+{% set media_alt = display_product.name if display_product else section_title %}
 
-{% if section_title or product or video_src or image_src %}
+{% set manual_current = settings.reg_price | default(settings.price_current | default(none)) %}
+{% set manual_before = settings.old_price | default(settings.price_before | default(none)) %}
+{% set use_manual_prices = manual_current is not none and manual_current != '' %}
+{% set show_old_price = false %}
+{% set display_sale = '' %}
+{% set display_old = '' %}
+{% if use_manual_prices %}
+  {% set display_sale = manual_current ~ ' ' ~ currency_code %}
+  {% if manual_before is not none and manual_before != '' and (manual_before | int) > (manual_current | int) %}
+    {% set display_old = manual_before ~ ' ' ~ currency_code %}
+    {% set show_old_price = true %}
+  {% endif %}
+{% elif display_product %}
+  {% if display_product.formatted_sale_price is not none %}
+    {% set display_sale = display_product.formatted_sale_price %}
+    {% set display_old = display_product.formatted_price %}
+    {% set show_old_price = true %}
+  {% else %}
+    {% set display_sale = display_product.formatted_price %}
+  {% endif %}
+{% endif %}
+
+{% set show_section = true %}
+{% if settings.ar_only | default(settings.show_ar_only | default(false)) and session.lang != 'ar' %}{% set show_section = false %}{% endif %}
+{% if settings.en_only | default(settings.show_en_only | default(false)) and session.lang != 'en' %}{% set show_section = false %}{% endif %}
+
+{% set dark_on = settings.dark | default(settings.dark_theme | default(true)) %}
+
+{% if show_section and (section_title or display_product or video_src or image_src) %}
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
-  class="angel-product-spotlight"
+  class="angel-product-spotlight{% if settings.mobile_only | default(settings.show_mobile_only | default(false)) %} angel-product-spotlight--mobile-only{% endif %}{% if settings.pc_only | default(settings.show_desktop_only | default(false)) %} angel-product-spotlight--desktop-only{% endif %}{% if wow %} angel-product-spotlight--anim-{{ wow }}{% endif %}{% if custom_classes %} {{ custom_classes }}{% endif %}"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   style="
-    --ps-bg: {{ bg_color }};
+    --ps-bg: {{ banner_bg }};
     --ps-title: {{ title_color }};
     --ps-subtitle: {{ subtitle_color }};
     --ps-accent: {{ accent }};
     --ps-sale: {{ sale_price_color }};
     --ps-add-bg: {{ add_btn_bg }};
     --ps-cart-bg: {{ cart_btn_bg }};
+    {% if banner_bg_image and not is_banner_transparent %}--ps-bg-image: url('{{ banner_bg_image }}');{% endif %}
   "
 >
   <div class="container angel-product-spotlight__inner">
+    <div class="angel-product-spotlight__shell{% if dark_on != false %} angel-product-spotlight__shell--dark{% endif %}{% if is_banner_transparent %} angel-product-spotlight__shell--transparent{% endif %}">
     <div class="angel-product-spotlight__grid">
-     {% if video_src or image_src %}
+      {% if video_src or image_src %}
         <div class="angel-product-spotlight__media">
           <div class="angel-product-spotlight__media-frame">
+            {% if details_href %}
+              <a class="angel-product-spotlight__media-link" href="{{ details_href }}" aria-label="{{ details_btn_text if details_btn_text else _('More details') }}">
+            {% endif %}
             {% if video_src %}
               <video
                 class="angel-product-spotlight__video"
@@ -69,11 +127,11 @@
                 muted
                 playsinline
                 preload="auto"
-                {% if settings.video_loop != false %}loop{% endif %}
+                loop
                 {% if poster_src %}poster="{{ poster_src }}"{% endif %}
                 aria-label="{{ media_alt }}"
               >
-                <source src="{{ video_src }}">
+                <source src="{{ video_src }}" type="video/mp4">
               </video>
             {% else %}
               <img
@@ -85,10 +143,13 @@
                 height="480"
               >
             {% endif %}
+            {% if details_href %}
+              </a>
+            {% endif %}
           </div>
         </div>
       {% endif %}
-      
+
       <div class="angel-product-spotlight__content">
         {% if section_title %}
           <h2 class="angel-product-spotlight__title">{{ section_title }}</h2>
@@ -97,53 +158,83 @@
           <p class="angel-product-spotlight__subtitle">{{ subtitle }}</p>
         {% endif %}
 
-        {% if product %}
+        {% if display_sale %}
           <div class="angel-product-spotlight__prices">
-            {% if has_sale %}
-              <span class="angel-product-spotlight__price-sale">{{ product.formatted_sale_price }}</span>
+            <span class="angel-product-spotlight__price-sale">{{ display_sale }}</span>
+            {% if show_old_price %}
               <span class="angel-product-spotlight__price-prefix">بدلاً من</span>
-              <span class="angel-product-spotlight__price-old">{{ product.formatted_price }}</span>
-            {% else %}
-              <span class="angel-product-spotlight__price-sale">{{ product.formatted_price }}</span>
+              <span class="angel-product-spotlight__price-old">{{ display_old }}</span>
             {% endif %}
           </div>
         {% endif %}
 
-        {% if settings.show_timer_label != false and timer_label %}
+        {% if settings.countdown and countdown_end %}
+          <p class="angel-product-spotlight__countdown" data-angel-countdown data-countdown-end="{{ countdown_end | e }}" aria-live="polite"></p>
+        {% elif timer_label %}
           <p class="angel-product-spotlight__timer-label">
             <span class="angel-product-spotlight__timer-icon" aria-hidden="true">⏱</span>
             {{ timer_label }}
           </p>
         {% endif %}
 
-        {% if features | length > 0 %}
-          <div class="angel-product-spotlight__pills" role="list">
-            {% for item in features %}
-              {% if item.icon %}
-                <span
-                  class="angel-product-spotlight__pill{% if loop.first %} is-active{% endif %}"
-                  role="listitem"
-                >
-                  <img src="{{ item.icon }}" alt="{{ item.label if item.label else '' }}" width="22" height="22" loading="lazy">
-                </span>
-              {% endif %}
-            {% endfor %}
+        {% if items | length > 0 %}
+          <div class="angel-product-spotlight__tabs" data-ps-features>
+            <div class="angel-product-spotlight__pills" role="tablist" aria-label="{{ _('Product features') }}">
+              {% set tab_i = namespace(n=0) %}
+              {% for item in items %}
+                {% set icon_src = item.icon | default(item.image | default('', true)) | string | trim %}
+                {% if icon_src %}
+                  <button
+                    type="button"
+                    class="angel-product-spotlight__pill{% if tab_i.n == 0 %} is-active{% endif %}"
+                    role="tab"
+                    id="{{ sectionId }}-tab-{{ tab_i.n }}"
+                    data-ps-tab="{{ tab_i.n }}"
+                    aria-selected="{{ 'true' if tab_i.n == 0 else 'false' }}"
+                    aria-controls="{{ sectionId }}-panel-{{ tab_i.n }}"
+                    aria-label="{{ item.title if item.title else (_('Feature') ~ ' ' ~ (tab_i.n + 1)) }}"
+                  >
+                    {% if icon_src[:4] == 'http' or icon_src[:1] == '/' or '.' in icon_src %}
+                      <img class="angel-product-spotlight__pill-img" src="{{ icon_src }}" alt="" width="22" height="22" loading="lazy">
+                    {% else %}
+                      <i class="{{ icon_src }} angel-product-spotlight__pill-icon" aria-hidden="true"></i>
+                    {% endif %}
+                  </button>
+                  {% set tab_i.n = tab_i.n + 1 %}
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div class="angel-product-spotlight__tab-panels">
+              {% set tab_i = namespace(n=0) %}
+              {% for item in items %}
+                {% set icon_src = item.icon | default(item.image | default('', true)) | string | trim %}
+                {% set feat_text = item.text | default(item.details | default('', true)) | trim %}
+                {% if icon_src %}
+                  <div
+                    class="angel-product-spotlight__feature-panel{% if tab_i.n == 0 %} is-active{% endif %}"
+                    role="tabpanel"
+                    id="{{ sectionId }}-panel-{{ tab_i.n }}"
+                    data-ps-tab-panel="{{ tab_i.n }}"
+                    aria-labelledby="{{ sectionId }}-tab-{{ tab_i.n }}"
+                    {% if tab_i.n > 0 %}hidden{% endif %}
+                  >
+                    {% if item.title %}
+                      <h3 class="angel-product-spotlight__feature-title">{{ item.title }}</h3>
+                    {% endif %}
+                    {% if feat_text %}
+                      <p class="angel-product-spotlight__feature-desc">{{ feat_text }}</p>
+                    {% endif %}
+                  </div>
+                  {% set tab_i.n = tab_i.n + 1 %}
+                {% endif %}
+              {% endfor %}
+            </div>
           </div>
         {% endif %}
 
-        {% if feature_heading or feature_text %}
-          <div class="angel-product-spotlight__feature-copy">
-            {% if feature_heading %}
-              <h3 class="angel-product-spotlight__feature-title">{{ feature_heading }}</h3>
-            {% endif %}
-            {% if feature_text %}
-              <p class="angel-product-spotlight__feature-desc">{{ feature_text }}</p>
-            {% endif %}
-          </div>
-        {% endif %}
-
-        <div class="angel-product-spotlight__actions">
-          {% if product and not is_out_of_stock %}
+        {% set show_add_btn = add_to_cart_on and ((cart_product and not is_out_of_stock) or product_slug) %}
+        <div class="angel-product-spotlight__actions{% if not show_add_btn %} angel-product-spotlight__actions--single{% endif %}">
+          {% if add_to_cart_on and cart_product and not is_out_of_stock %}
             {% if has_options %}
               <a class="angel-product-spotlight__btn angel-product-spotlight__btn--add" href="/products/{{ product_slug }}">
                 <i class="sicon-cart angel-product-spotlight__btn-icon" aria-hidden="true"></i>
@@ -160,21 +251,83 @@
                 {{ add_to_cart_text }}
               </button>
             {% endif %}
-          {% elif product_slug %}
+          {% elif add_to_cart_on and product_slug %}
             <a class="angel-product-spotlight__btn angel-product-spotlight__btn--add" href="/products/{{ product_slug }}">
               {{ _("Notify me when available") }}
             </a>
           {% endif %}
 
-          {% if cart_btn_text %}
-            <a class="angel-product-spotlight__btn angel-product-spotlight__btn--cart" href="{{ cart_btn_url if cart_btn_url else '/cart' }}">
-              {{ cart_btn_text }}
-              <span class="sicon-arrow-left angel-product-spotlight__btn-arrow" aria-hidden="true"></span>
-            </a>
-          {% endif %}
+          <a class="angel-product-spotlight__btn angel-product-spotlight__btn--cart" href="{{ cart_btn_url if cart_btn_url else '/cart' }}">
+            {{ cart_btn_text }}
+            <span class="sicon-arrow-left angel-product-spotlight__btn-icon" aria-hidden="true"></span>
+          </a>
         </div>
       </div>
     </div>
+    </div>
   </div>
 </section>
+
+<script>
+(function () {
+  var section = document.getElementById('{{ sectionId }}');
+  if (!section) return;
+
+  var tabsRoot = section.querySelector('[data-ps-features]');
+  if (tabsRoot) {
+    var pills = tabsRoot.querySelectorAll('[data-ps-tab]');
+    var panels = tabsRoot.querySelectorAll('[data-ps-tab-panel]');
+    pills.forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        var idx = pill.getAttribute('data-ps-tab');
+        pills.forEach(function (p) {
+          var on = p.getAttribute('data-ps-tab') === idx;
+          p.classList.toggle('is-active', on);
+          p.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        panels.forEach(function (panel) {
+          var show = panel.getAttribute('data-ps-tab-panel') === idx;
+          panel.classList.toggle('is-active', show);
+          panel.hidden = !show;
+        });
+      });
+    });
+  }
+
+  function parseCountdownEnd(raw) {
+    var trimmed = (raw || '').trim();
+    if (!trimmed) return NaN;
+    var m = trimmed.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+    if (m) {
+      var p1 = parseInt(m[1], 10);
+      var p2 = parseInt(m[2], 10);
+      var year = parseInt(m[3], 10);
+      var month = p1;
+      var day = p2;
+      if (p1 > 12) { day = p1; month = p2; }
+      else if (p2 > 12) { month = p1; day = p2; }
+      return new Date(year, month - 1, day, 23, 59, 59, 999).getTime();
+    }
+    var parsed = Date.parse(trimmed);
+    return Number.isNaN(parsed) ? NaN : parsed;
+  }
+
+  section.querySelectorAll('[data-angel-countdown]').forEach(function (node) {
+    if (node.dataset.angelCountdownReady === '1') return;
+    var endMs = parseCountdownEnd(node.getAttribute('data-countdown-end'));
+    if (Number.isNaN(endMs)) { node.hidden = true; return; }
+    node.dataset.angelCountdownReady = '1';
+    function tick() {
+      var left = endMs - Date.now();
+      if (left <= 0) { node.hidden = true; node.textContent = '00:00:00'; return; }
+      node.hidden = false;
+      node.textContent = String(Math.floor(left / 3600000)).padStart(2, '0') + ':' +
+        String(Math.floor((left % 3600000) / 60000)).padStart(2, '0') + ':' +
+        String(Math.floor((left % 60000) / 1000)).padStart(2, '0');
+    }
+    tick();
+    window.setInterval(tick, 1000);
+  });
+})();
+</script>
 {% endif %}

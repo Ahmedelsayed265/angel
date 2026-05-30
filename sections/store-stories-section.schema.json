@@ -1,172 +1,566 @@
 {
-    "section_id": "angel-store-stories-section",
-    "template": "sections/store-stories-section.jinja",
-    "icon": "fa fa-circle",
-    "name": {
-        "ar": "قصص المتجر",
-        "en": "Store stories"
+  "section_id": "angel-store-stories-section",
+  "template": "sections/store-stories-section.jinja",
+  "icon": "fa fa-circle",
+  "name": {
+    "ar": "قصص المتجر",
+    "en": "Store stories"
+  },
+  "settings": [
+    {
+      "id": "home_tab",
+      "type": "select",
+      "label": {
+        "ar": "اختر التبويب",
+        "en": "Select tab"
+      },
+      "default": "",
+      "options": [
+        { "value": "", "label": { "ar": "كل التبويبات", "en": "All tabs" } },
+        { "value": "1", "label": { "ar": "تبويب 1", "en": "Tab 1" } },
+        { "value": "2", "label": { "ar": "تبويب 2", "en": "Tab 2" } },
+        { "value": "3", "label": { "ar": "تبويب 3", "en": "Tab 3" } }
+      ]
     },
-    "settings": [
+    {
+      "id": "exit_label",
+      "type": "text",
+      "label": {
+        "ar": "نص زر الخروج",
+        "en": "Exit button label"
+      },
+      "default": "خروج"
+    },
+    {
+      "id": "stories_main",
+      "type": "list",
+      "max_items": 12,
+      "label": {
+        "ar": "أولًا: القصص الأساسية",
+        "en": "Step 1: Main stories"
+      },
+      "info": {
+        "ar": "الدائرة + الاسم. رقم القصة = ترتيبها هنا (الأولى = 1).",
+        "en": "Circle cover + name. Story number matches order here (first = 1)."
+      },
+      "settings": [
         {
-            "id": "title",
-            "type": "text",
-            "label": {
-                "ar": "عنوان القسم",
-                "en": "Section title"
-            },
-            "default": "قصص المتجر"
+          "id": "name",
+          "type": "text",
+          "label": {
+            "ar": "اسم القصة الأساسية",
+            "en": "Story name"
+          }
         },
         {
-            "id": "exit_label",
-            "type": "text",
-            "label": {
-                "ar": "نص زر الخروج",
-                "en": "Exit button label"
-            },
-            "default": "خروج"
+          "id": "avatar",
+          "type": "image",
+          "label": {
+            "ar": "صورة القصة الأساسية",
+            "en": "Story cover image"
+          }
         },
         {
-            "id": "slide_duration",
-            "type": "number",
-            "label": {
-                "ar": "مدة كل شريحة (ثانية)",
-                "en": "Slide duration (seconds)"
-            },
-            "default": 5
+          "id": "pin",
+          "type": "checkbox",
+          "label": {
+            "ar": "تثبيت القصة في بداية العنصر",
+            "en": "Pin story at start"
+          },
+          "default": false
         },
         {
-            "id": "bg_color_start",
-            "type": "color",
-            "label": {
-                "ar": "لون الخلفية (بداية)",
-                "en": "Background gradient start"
-            },
-            "default": "#061018"
+          "id": "memory",
+          "type": "checkbox",
+          "label": {
+            "ar": "تذكر فتح المستخدم للقصة",
+            "en": "Remember viewed story"
+          },
+          "default": false
         },
         {
-            "id": "bg_color_end",
-            "type": "color",
-            "label": {
-                "ar": "لون الخلفية (نهاية)",
-                "en": "Background gradient end"
-            },
-            "default": "#0e4a6e"
+          "id": "time_label",
+          "type": "text",
+          "label": {
+            "ar": "الوقت (مثال: منذ ١ ساعة)",
+            "en": "Time label"
+          },
+          "default": "منذ ١ ساعة"
         },
         {
-            "id": "title_gradient_start",
-            "type": "color",
-            "label": {
-                "ar": "تدرج العنوان (بداية)",
-                "en": "Title gradient start"
-            },
-            "default": "#f472b6"
-        },
-        {
-            "id": "title_gradient_end",
-            "type": "color",
-            "label": {
-                "ar": "تدرج العنوان (نهاية)",
-                "en": "Title gradient end"
-            },
-            "default": "#fbbf24"
-        },
-        {
-            "id": "stories",
-            "type": "list",
-            "max_items": 12,
-            "label": {
-                "ar": "القصص",
-                "en": "Stories"
-            },
-            "settings": [
-                {
-                    "id": "title",
-                    "type": "text",
-                    "label": {
-                        "ar": "اسم القصة",
-                        "en": "Story name"
-                    }
-                },
-                {
-                    "id": "cover",
-                    "type": "image",
-                    "label": {
-                        "ar": "صورة الدائرة",
-                        "en": "Circle cover"
-                    }
-                },
-                {
-                    "id": "avatar",
-                    "type": "image",
-                    "label": {
-                        "ar": "صورة الملف (داخل العارض)",
-                        "en": "Avatar in viewer"
-                    }
-                },
-                {
-                    "id": "time_label",
-                    "type": "text",
-                    "label": {
-                        "ar": "الوقت (مثال: منذ ١ ساعة)",
-                        "en": "Time label"
-                    },
-                    "default": "منذ ١ ساعة"
-                },
-                {
-                    "id": "border_style",
-                    "type": "select",
-                    "label": {
-                        "ar": "لون الإطار",
-                        "en": "Ring color"
-                    },
-                    "default": "cyan",
-                    "options": [
-                        {
-                            "label": { "ar": "سماوي", "en": "Cyan" },
-                            "value": "cyan"
-                        },
-                        {
-                            "label": { "ar": "وردي", "en": "Pink" },
-                            "value": "pink"
-                        }
-                    ]
-                },
-                {
-                    "id": "slides",
-                    "type": "list",
-                    "max_items": 10,
-                    "label": {
-                        "ar": "شرائح القصة",
-                        "en": "Story slides"
-                    },
-                    "settings": [
-                        {
-                            "id": "image",
-                            "type": "image",
-                            "label": {
-                                "ar": "صورة الشريحة",
-                                "en": "Slide image"
-                            }
-                        },
-                        {
-                            "id": "video",
-                            "type": "video",
-                            "label": {
-                                "ar": "فيديو الشريحة (اختياري)",
-                                "en": "Slide video (optional)"
-                            }
-                        },
-                        {
-                            "id": "link",
-                            "type": "url",
-                            "label": {
-                                "ar": "رابط عند الضغط",
-                                "en": "Click URL"
-                            }
-                        }
-                    ]
-                }
-            ]
+          "id": "border_style",
+          "type": "select",
+          "label": {
+            "ar": "لون الإطار",
+            "en": "Ring color"
+          },
+          "default": "cyan",
+          "options": [
+            { "value": "cyan", "label": { "ar": "سماوي", "en": "Cyan" } },
+            { "value": "pink", "label": { "ar": "وردي", "en": "Pink" } }
+          ]
         }
-    ]
+      ]
+    },
+    {
+      "id": "stories_content",
+      "type": "list",
+      "max_items": 60,
+      "label": {
+        "ar": "ثانيًا: محتوى القصص",
+        "en": "Step 2: Story content"
+      },
+      "info": {
+        "ar": "كل عنصر = شريحة. حدد رقم القصة الأساسية (١ = الأولى في القائمة أعلاه). أضف صورة أو فيديو من المكتبة أو رابط خارجي.",
+        "en": "Each item = one slide. Set main story number (1 = first in list above). Add library image/video or an external URL."
+      },
+      "settings": [
+        {
+          "id": "main",
+          "type": "number",
+          "label": {
+            "ar": "رقم القصة الأساسية",
+            "en": "Main story number"
+          },
+          "default": 1
+        },
+        {
+          "id": "image",
+          "type": "image",
+          "label": {
+            "ar": "صورة الشريحة",
+            "en": "Slide image"
+          }
+        },
+        {
+          "id": "video",
+          "type": "video",
+          "label": {
+            "ar": "فيديو الشريحة",
+            "en": "Slide video"
+          }
+        },
+        {
+          "id": "media_url",
+          "type": "url",
+          "label": {
+            "ar": "رابط وسائط خارجي",
+            "en": "External media URL"
+          },
+          "info": {
+            "ar": "صورة (gif, webp) أو فيديو (mp4) من أي رابط. يُستخدم إذا لم تُختر صورة أو فيديو من المكتبة.",
+            "en": "Image (gif, webp) or video (mp4) from any URL. Used when no library image/video is set."
+          }
+        },
+        {
+          "id": "link",
+          "type": "url",
+          "label": {
+            "ar": "رابط عند الضغط",
+            "en": "Click URL"
+          }
+        },
+        {
+          "id": "duration",
+          "type": "number",
+          "label": {
+            "ar": "مدة المحتوى (ثانية)",
+            "en": "Duration (seconds)"
+          },
+          "default": 10
+        }
+      ]
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "label": {
+        "ar": "العنوان الرئيسي",
+        "en": "Main title"
+      },
+      "default": "قصص المتجر"
+    },
+    {
+      "id": "subtitle",
+      "type": "text",
+      "label": {
+        "ar": "العنوان الفرعي",
+        "en": "Subtitle"
+      }
+    },
+    {
+      "id": "title_cta",
+      "type": "checkbox",
+      "label": {
+        "ar": "تفعيل زر العنوان",
+        "en": "Enable title button"
+      },
+      "default": false
+    },
+    {
+      "id": "title_cta_text",
+      "type": "text",
+      "label": {
+        "ar": "نص زر العنوان",
+        "en": "Title button text"
+      }
+    },
+    {
+      "id": "title_cta_url",
+      "type": "url",
+      "label": {
+        "ar": "رابط زر العنوان",
+        "en": "Title button URL"
+      }
+    },
+    {
+      "id": "title_show_separator",
+      "type": "checkbox",
+      "label": {
+        "ar": "تفعيل الخط الفاصل",
+        "en": "Show separator lines"
+      },
+      "default": true
+    },
+    {
+      "id": "title_center",
+      "type": "checkbox",
+      "label": {
+        "ar": "محاذاة العنوان للمنتصف",
+        "en": "Center title"
+      },
+      "default": false
+    },
+    {
+      "id": "title_size",
+      "type": "select",
+      "label": {
+        "ar": "حجم العناوين",
+        "en": "Title size"
+      },
+      "default": "normal",
+      "options": [
+        { "value": "normal", "label": { "ar": "افتراضي", "en": "Default" } },
+        { "value": "small", "label": { "ar": "صغير", "en": "Small" } },
+        { "value": "large", "label": { "ar": "كبير", "en": "Large" } },
+        { "value": "xlarge", "label": { "ar": "كبير جداً", "en": "Extra large" } }
+      ]
+    },
+    {
+      "id": "title_color",
+      "type": "select",
+      "label": {
+        "ar": "لون العنوان الرئيسي",
+        "en": "Title color mode"
+      },
+      "default": "gradient",
+      "options": [
+        { "value": "default", "label": { "ar": "افتراضي", "en": "Default" } },
+        { "value": "solid", "label": { "ar": "لون ثابت", "en": "Solid" } },
+        { "value": "gradient", "label": { "ar": "لون متدرج", "en": "Gradient" } }
+      ]
+    },
+    {
+      "id": "title_color_solid",
+      "type": "color",
+      "label": {
+        "ar": "لون العنوان (ثابت)",
+        "en": "Solid title color"
+      },
+      "default": "#54c8e9"
+    },
+    {
+      "id": "title_gradient_start",
+      "type": "color",
+      "label": {
+        "ar": "تدرج العنوان (بداية)",
+        "en": "Title gradient start"
+      },
+      "default": "#f472b6"
+    },
+    {
+      "id": "title_gradient_end",
+      "type": "color",
+      "label": {
+        "ar": "تدرج العنوان (نهاية)",
+        "en": "Title gradient end"
+      },
+      "default": "#fbbf24"
+    },
+    {
+      "id": "subtitle_color",
+      "type": "select",
+      "label": {
+        "ar": "لون العنوان الفرعي",
+        "en": "Subtitle color mode"
+      },
+      "default": "default",
+      "options": [
+        { "value": "default", "label": { "ar": "افتراضي", "en": "Default" } },
+        { "value": "solid", "label": { "ar": "لون ثابت", "en": "Solid" } }
+      ]
+    },
+    {
+      "id": "subtitle_color_solid",
+      "type": "color",
+      "label": {
+        "ar": "لون العنوان الفرعي (ثابت)",
+        "en": "Solid subtitle color"
+      },
+      "default": "#9ca3af"
+    },
+    {
+      "id": "slide_duration",
+      "type": "number",
+      "label": {
+        "ar": "مدة الشريحة الافتراضية (ثانية)",
+        "en": "Default slide duration (sec)"
+      },
+      "default": 5
+    },
+    {
+      "id": "section_padding",
+      "type": "select",
+      "label": {
+        "ar": "مسافة الحاوية الداخلية",
+        "en": "Section padding"
+      },
+      "default": "normal",
+      "options": [
+        { "value": "none", "label": { "ar": "بدون", "en": "None" } },
+        { "value": "tiny", "label": { "ar": "صغيرة جداً", "en": "Tiny" } },
+        { "value": "compact", "label": { "ar": "صغيرة", "en": "Compact" } },
+        { "value": "normal", "label": { "ar": "متوسطة", "en": "Normal" } },
+        { "value": "relaxed", "label": { "ar": "كبيرة", "en": "Relaxed" } }
+      ]
+    },
+    {
+      "id": "con_bg_type",
+      "type": "select",
+      "label": {
+        "ar": "خلفية الحاوية",
+        "en": "Container background"
+      },
+      "default": "none",
+      "options": [
+        { "value": "none", "label": { "ar": "بدون", "en": "None" } },
+        { "value": "solid", "label": { "ar": "لون ثابت", "en": "Solid" } },
+        { "value": "blur", "label": { "ar": "فلتر ضبابي", "en": "Blur" } },
+        { "value": "glass", "label": { "ar": "فلتر زجاجي", "en": "Glass" } }
+      ]
+    },
+    {
+      "id": "con_bg_color",
+      "type": "color",
+      "label": {
+        "ar": "لون خلفية الحاوية",
+        "en": "Container background color"
+      },
+      "default": "rgba(255,255,255,0.06)"
+    },
+    {
+      "id": "con_radius",
+      "type": "select",
+      "label": {
+        "ar": "انحناء زوايا الحاوية",
+        "en": "Container radius"
+      },
+      "default": "none",
+      "options": [
+        { "value": "none", "label": { "ar": "بدون", "en": "None" } },
+        { "value": "md", "label": { "ar": "صغير", "en": "Small" } },
+        { "value": "lg", "label": { "ar": "متوسط", "en": "Medium" } },
+        { "value": "xl", "label": { "ar": "كبير", "en": "Large" } },
+        { "value": "full", "label": { "ar": "دائري", "en": "Full" } }
+      ]
+    },
+    {
+      "id": "con_border_style",
+      "type": "select",
+      "label": {
+        "ar": "إطار الحاوية",
+        "en": "Container border"
+      },
+      "default": "none",
+      "options": [
+        { "value": "none", "label": { "ar": "بدون", "en": "None" } },
+        { "value": "solid", "label": { "ar": "خط متصل", "en": "Solid" } },
+        { "value": "dashed", "label": { "ar": "خط متقطع", "en": "Dashed" } }
+      ]
+    },
+    {
+      "id": "con_border_color",
+      "type": "color",
+      "label": {
+        "ar": "لون إطار الحاوية",
+        "en": "Border color"
+      },
+      "default": "#004956"
+    },
+    {
+      "id": "con_border_width",
+      "type": "number",
+      "label": {
+        "ar": "سمك إطار الحاوية",
+        "en": "Border width (px)"
+      },
+      "default": 0
+    },
+    {
+      "id": "con_shadow_type",
+      "type": "select",
+      "label": {
+        "ar": "ظل الحاوية",
+        "en": "Container shadow"
+      },
+      "default": "none",
+      "options": [
+        { "value": "none", "label": { "ar": "بدون", "en": "None" } },
+        { "value": "soft", "label": { "ar": "ناعم", "en": "Soft" } },
+        { "value": "medium", "label": { "ar": "متوسط", "en": "Medium" } },
+        { "value": "strong", "label": { "ar": "قوي", "en": "Strong" } }
+      ]
+    },
+    {
+      "id": "bg_type",
+      "type": "select",
+      "label": {
+        "ar": "خلفية العنصر",
+        "en": "Section background"
+      },
+      "default": "gradient",
+      "options": [
+        { "value": "none", "label": { "ar": "بدون", "en": "None" } },
+        { "value": "solid", "label": { "ar": "لون ثابت", "en": "Solid" } },
+        { "value": "gradient", "label": { "ar": "لون متدرج", "en": "Gradient" } }
+      ]
+    },
+    {
+      "id": "bg_color_start",
+      "type": "color",
+      "label": {
+        "ar": "لون الخلفية (بداية)",
+        "en": "Background start"
+      },
+      "default": "#061018"
+    },
+    {
+      "id": "bg_color_end",
+      "type": "color",
+      "label": {
+        "ar": "لون الخلفية (نهاية)",
+        "en": "Background end"
+      },
+      "default": "#0e4a6e"
+    },
+    {
+      "id": "bg_color_solid",
+      "type": "color",
+      "label": {
+        "ar": "لون الخلفية (ثابت)",
+        "en": "Solid background"
+      },
+      "default": "#061018"
+    },
+    {
+      "id": "bg_type_image",
+      "type": "checkbox",
+      "label": {
+        "ar": "إضافة صورة كخلفية للعنصر",
+        "en": "Background image"
+      },
+      "default": false
+    },
+    {
+      "id": "bg_image",
+      "type": "image",
+      "label": {
+        "ar": "صورة الخلفية",
+        "en": "Background image file"
+      }
+    },
+    {
+      "id": "shape_type",
+      "type": "select",
+      "label": {
+        "ar": "شكل أسفل العنصر",
+        "en": "Bottom shape"
+      },
+      "default": "wave",
+      "options": [
+        { "value": "none", "label": { "ar": "بدون", "en": "None" } },
+        { "value": "wave", "label": { "ar": "موجة", "en": "Wave" } }
+      ]
+    },
+    {
+      "id": "overlap",
+      "type": "select",
+      "label": {
+        "ar": "دمج العنصر مع المجاور",
+        "en": "Overlap adjacent section"
+      },
+      "default": "none",
+      "options": [
+        { "value": "none", "label": { "ar": "بدون", "en": "None" } },
+        { "value": "next", "label": { "ar": "مع التالي", "en": "Next" } },
+        { "value": "previous", "label": { "ar": "مع السابق", "en": "Previous" } }
+      ]
+    },
+    {
+      "id": "animation_name",
+      "type": "select",
+      "label": {
+        "ar": "أنيميشن العنصر",
+        "en": "Section animation"
+      },
+      "default": "none",
+      "options": [
+        { "value": "none", "label": { "ar": "بدون", "en": "None" } },
+        { "value": "fade-in", "label": { "ar": "ظهور", "en": "Fade in" } },
+        { "value": "fade-up", "label": { "ar": "ظهور لأعلى", "en": "Fade up" } }
+      ]
+    },
+    {
+      "id": "visibility_device",
+      "type": "select",
+      "label": {
+        "ar": "ظهور حسب الشاشة",
+        "en": "Device visibility"
+      },
+      "default": "all",
+      "options": [
+        { "value": "all", "label": { "ar": "الكل", "en": "All" } },
+        { "value": "mobile", "label": { "ar": "جوال فقط", "en": "Mobile only" } },
+        { "value": "desktop", "label": { "ar": "كمبيوتر فقط", "en": "Desktop only" } }
+      ]
+    },
+    {
+      "id": "visibility_user",
+      "type": "select",
+      "label": {
+        "ar": "ظهور حسب المستخدم",
+        "en": "User visibility"
+      },
+      "default": "all",
+      "options": [
+        { "value": "all", "label": { "ar": "الكل", "en": "All" } },
+        { "value": "guest", "label": { "ar": "زوار فقط", "en": "Guests only" } },
+        { "value": "logged", "label": { "ar": "مسجّل فقط", "en": "Logged in only" } }
+      ]
+    },
+    {
+      "id": "visibility_lang",
+      "type": "select",
+      "label": {
+        "ar": "ظهور حسب اللغة",
+        "en": "Language visibility"
+      },
+      "default": "all",
+      "options": [
+        { "value": "all", "label": { "ar": "الكل", "en": "All" } },
+        { "value": "ar", "label": { "ar": "عربي فقط", "en": "Arabic only" } },
+        { "value": "en", "label": { "ar": "إنجليزي فقط", "en": "English only" } }
+      ]
+    }
+  ]
 }

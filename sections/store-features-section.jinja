@@ -7,12 +7,14 @@
 {% set value_color = settings.value_color | default("#ffffff") %}
 {% set label_color = settings.label_color | default("#9ca3af") %}
 {% set count_duration = (settings.count_duration | default(2000)) | int %}
+{% set home_tab = settings.home_tab | default('') %}
 
 {% if features and features | length > 0 %}
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
   class="angel-store-features"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   data-count-up="{{ 'true' if settings.enable_count_up != false else 'false' }}"
   data-count-duration="{{ count_duration if count_duration > 0 else 2000 }}"
   style="

@@ -10,7 +10,7 @@
     {
       "id": "home_tab",
       "type": "select",
-      "label": { "ar": "عرض داخل تبويب الرئيسية", "en": "Show in home tab" },
+      "label": { "ar": "اختر التبويب", "en": "Select tab" },
       "default": "",
       "options": [
         { "value": "", "label": { "ar": "كل التبويبات (افتراضي)", "en": "All tabs (default)" } },

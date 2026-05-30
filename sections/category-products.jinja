@@ -9,6 +9,7 @@
 {% set slides_desktop = (settings.slides_desktop | default('6')) | int %}
 {% set bg_height = settings.bg_height | default(384) %}
 {% set slides_count = slides_desktop if slides_desktop >= 2 and slides_desktop <= 8 else 6 %}
+{% set home_tab = settings.home_tab | default('') %}
 
 {% if products and products | length > 0 %}
 <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
@@ -19,6 +20,7 @@
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
   class="angel-category-products"
+  {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   data-slides-desktop="{{ slides_count }}"
   data-product-count="{{ products | length }}"
   style="

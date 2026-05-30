@@ -8,6 +8,25 @@
     },
     "settings": [
         {
+            "id": "home_tab",
+            "type": "select",
+            "label": {
+                "ar": "اختر التبويب",
+                "en": "Select tab"
+            },
+            "info": {
+                "ar": "اتركه فارغًا ليظهر في كل التبويبات. أو اختر تبويبًا محددًا ليظهر داخله فقط.",
+                "en": "Leave empty to show in all tabs. Or choose a specific tab to show only there."
+            },
+            "default": "",
+            "options": [
+                { "value": "", "label": { "ar": "كل التبويبات", "en": "All tabs" } },
+                { "value": "1", "label": { "ar": "تبويب 1", "en": "Tab 1" } },
+                { "value": "2", "label": { "ar": "تبويب 2", "en": "Tab 2" } },
+                { "value": "3", "label": { "ar": "تبويب 3", "en": "Tab 3" } }
+            ]
+        },
+        {
             "id": "bg_image",
             "type": "image",
             "label": {
