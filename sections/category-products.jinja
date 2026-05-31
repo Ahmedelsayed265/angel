@@ -43,25 +43,24 @@
     <span class="angel-category-products__overlay" aria-hidden="true"></span>
 
     <div class="container angel-category-products__toolbar-wrap">
-      <div class="angel-category-products__toolbar">
-        {% if display_title or subtitle %}
-          <header class="angel-category-products__header">
-            {% if display_title %}
-              <h2 class="angel-category-products__title">{{ display_title }}</h2>
-            {% endif %}
-            {% if subtitle %}
-              <p class="angel-category-products__subtitle">{{ subtitle }}</p>
-            {% endif %}
-          </header>
-        {% endif %}
-        {% if settings.show_arrows != false %}
-          <div class="angel-category-products__nav-wrap">
-            <button type="button" class="swiper-button-prev angel-category-products__nav angel-category-products__nav--prev" aria-label="{{ _('Previous') }}"></button>
-            <button type="button" class="swiper-button-next angel-category-products__nav angel-category-products__nav--next" aria-label="{{ _('Next') }}"></button>
-          </div>
-        {% endif %}
-      </div>
+      {% if display_title or subtitle %}
+        <header class="angel-category-products__header">
+          {% if display_title %}
+            <h2 class="angel-category-products__title">{{ display_title }}</h2>
+          {% endif %}
+          {% if subtitle %}
+            <p class="angel-category-products__subtitle">{{ subtitle }}</p>
+          {% endif %}
+        </header>
+      {% endif %}
     </div>
+
+    {% if settings.show_arrows != false %}
+      <div class="angel-category-products__nav-wrap" aria-hidden="false">
+        <button type="button" class="swiper-button-prev angel-category-products__nav angel-category-products__nav--prev" aria-label="{{ _('Previous') }}"></button>
+        <button type="button" class="swiper-button-next angel-category-products__nav angel-category-products__nav--next" aria-label="{{ _('Next') }}"></button>
+      </div>
+    {% endif %}
   </div>
 
   <div class="angel-category-products__products">

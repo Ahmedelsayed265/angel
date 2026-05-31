@@ -93,6 +93,19 @@
             "default": true
         },
         {
+            "id": "drag_flip",
+            "type": "checkbox",
+            "label": {
+                "ar": "القلب بالسحب (ماوس / لمس)",
+                "en": "Flip by drag (mouse / touch)"
+            },
+            "info": {
+                "ar": "اسحب يمينًا أو يسارًا لقلب البانر. يعمل مع التبديل التلقائي.",
+                "en": "Drag left or right to flip. Works alongside auto-flip."
+            },
+            "default": true
+        },
+        {
             "id": "bg_color",
             "type": "color",
             "label": {

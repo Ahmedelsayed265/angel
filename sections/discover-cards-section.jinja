@@ -1,22 +1,40 @@
-{% set items = safeget(settings, "cards", []) %}
-{% set section_title = settings.title | default("اكتشف") %}
+{% set items = safeget(settings, "items", safeget(settings, "cards", [])) %}
+{% set section_title = settings.title | default("مقالات متحركة") %}
+{% set subtitle = settings.title_p | default(settings.subtitle | default("اطلع على أحدث الأخبار")) %}
+{% set home_tab = settings.home_tab | default('') | string | trim %}
+{% if home_tab in ['0', '', 'none', 'None'] %}
+  {% set home_tab = settings.multihome | default('') | string | trim %}
+{% endif %}
+{% if home_tab in ['0', '', 'none', 'None'] %}{% set home_tab = '' %}{% endif %}
+
+{% set bg_color = settings.block_bg | default(settings.bg_color | default("#141414")) %}
+{% set bg_image = settings.block_img | default(settings.bg_image | default("")) %}
+{% set is_transparent_bg = bg_color | lower in ['#ffffff', '#fff', 'ffffff', 'fff'] %}
+{% set dark_on = settings.dark | default(settings.dark_theme | default(false)) %}
+
 {% set title_color = settings.title_color | default("#54c8e9") %}
-{% set bg_color = settings.bg_color | default("#141414") %}
 {% set card_bg = settings.card_bg_color | default("#2b2b2b") %}
 {% set accent = settings.accent_color | default("#54c8e9") %}
 {% set btn_bg = settings.button_bg_color | default("#54c8e9") %}
 {% set btn_color = settings.button_text_color | default("#0f172a") %}
 {% set slides_desktop = (settings.slides_desktop | default('3')) | int %}
 {% set slides_count = slides_desktop if slides_desktop >= 2 and slides_desktop <= 4 else 3 %}
-{% set home_tab = settings.home_tab | default('') %}
 
-{% if section_title or items | length > 0 %}
+{% set wow = settings.wow | default(settings.section_animation | default('false')) | string %}
+{% if wow in ['off', 'false', '0', ''] %}{% set wow = '' %}{% endif %}
+{% set custom_classes = (settings.classes | default(settings.custom_classes | default('', true))) | trim %}
+
+{% set show_section = true %}
+{% if settings.ar_only | default(settings.show_ar_only | default(false)) and session.lang != 'ar' %}{% set show_section = false %}{% endif %}
+{% if settings.en_only | default(settings.show_en_only | default(false)) and session.lang != 'en' %}{% set show_section = false %}{% endif %}
+
+{% if show_section and (section_title or subtitle or items | length > 0) %}
 <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
 
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
-  class="angel-discover-cards"
+  class="angel-discover-cards{% if dark_on %} angel-discover-cards--dark{% endif %}{% if is_transparent_bg %} angel-discover-cards--bg-transparent{% endif %}{% if settings.mobile_only | default(settings.show_mobile_only | default(false)) %} angel-discover-cards--mobile-only{% endif %}{% if settings.pc_only | default(settings.show_desktop_only | default(false)) %} angel-discover-cards--desktop-only{% endif %}{% if wow %} angel-discover-cards--anim-{{ wow }}{% endif %}{% if custom_classes %} {{ custom_classes }}{% endif %}"
   {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   style="
     --adc-bg: {{ bg_color }};
@@ -26,12 +44,18 @@
     --adc-btn-bg: {{ btn_bg }};
     --adc-btn-color: {{ btn_color }};
     --adc-slides: {{ slides_count }};
+    {% if bg_image and not is_transparent_bg %}--adc-bg-image: url('{{ bg_image }}');{% endif %}
   "
 >
   <div class="container angel-discover-cards__inner">
-    {% if section_title %}
+    {% if section_title or subtitle %}
       <header class="angel-discover-cards__header">
-        <h2 class="angel-discover-cards__title">{{ section_title }}</h2>
+        {% if section_title %}
+          <h2 class="angel-discover-cards__title">{{ section_title }}</h2>
+        {% endif %}
+        {% if subtitle %}
+          <p class="angel-discover-cards__subtitle">{{ subtitle }}</p>
+        {% endif %}
       </header>
     {% endif %}
 
@@ -40,31 +64,42 @@
         <div class="swiper angel-discover-cards-swiper">
           <div class="swiper-wrapper">
             {% for item in items %}
-              {% if item.image or item.title or item.description %}
+              {% set item_image = item.image | default('') %}
+              {% set item_title = item.title | default('') %}
+              {% set item_text = item.text | default(item.description | default('', true)) %}
+              {% set item_btn = item.btn | default(item.button_text | default('قراءة المزيد', true)) | trim %}
+              {% set item_url = item.url | default('') | string | trim %}
+              {% if item_image or item_title or item_text %}
                 <div class="swiper-slide">
                   <article class="angel-discover-card">
-                    {% if item.image %}
+                    {% if item_image %}
                       <div class="angel-discover-card__media">
+                        {% if item_url %}
+                          <a class="angel-discover-card__media-link" href="{{ item_url }}" aria-label="{{ item_title if item_title else item_btn }}">
+                        {% endif %}
                         <img
                           class="angel-discover-card__img"
-                          src="{{ item.image }}"
-                          alt="{{ item.title if item.title else '' }}"
+                          src="{{ item_image }}"
+                          alt="{{ item_title if item_title else '' }}"
                           loading="{% if loop.first %}eager{% else %}lazy{% endif %}"
                         >
+                        {% if item_url %}
+                          </a>
+                        {% endif %}
                       </div>
                     {% endif %}
                     <div class="angel-discover-card__body">
-                      {% if item.title %}
-                        <h3 class="angel-discover-card__title">{{ item.title }}</h3>
+                      {% if item_title %}
+                        <h3 class="angel-discover-card__title">{{ item_title }}</h3>
                       {% endif %}
-                      {% if item.description %}
-                        <p class="angel-discover-card__desc">{{ item.description }}</p>
+                      {% if item_text %}
+                        <p class="angel-discover-card__desc">{{ item_text }}</p>
                       {% endif %}
-                      {% if item.button_text %}
+                      {% if item_btn %}
                         <a
                           class="angel-discover-card__btn"
-                          href="{{ item.url if item.url else 'javascript:;' }}"
-                        >{{ item.button_text }}</a>
+                          href="{{ item_url if item_url else 'javascript:;' }}"
+                        >{{ item_btn }}</a>
                       {% endif %}
                     </div>
                   </article>

@@ -1,21 +1,39 @@
-{% set features = safeget(settings, "features", []) %}
+{% set items = safeget(settings, "items", safeget(settings, "features", [])) %}
 {% set section_title = settings.title | default("مميزات المتجر") %}
-{% set subtitle = settings.subtitle | default("") %}
+{% set subtitle = settings.title_p | default(settings.subtitle | default("أفضل متجر في السعودية")) %}
+{% set home_tab = settings.home_tab | default('') | string | trim %}
+{% if home_tab in ['0', '', 'none', 'None'] %}
+  {% set home_tab = settings.multihome | default('') | string | trim %}
+{% endif %}
+{% if home_tab in ['0', '', 'none', 'None'] %}{% set home_tab = '' %}{% endif %}
+
+{% set bg_color = settings.block_bg | default(settings.bg_color | default("#141414")) %}
+{% set bg_image = settings.block_img | default(settings.bg_image | default("")) %}
+{% set is_transparent_bg = bg_color | lower in ['#ffffff', '#fff', 'ffffff', 'fff'] %}
+{% set bg_hide = settings.bg_hide | default(settings.hide_bg | default(false)) %}
+{% set vertical_mobile = settings.vertical | default(settings.vertical_mobile | default(false)) %}
+{% set dark_on = settings.dark | default(settings.dark_theme | default(false)) %}
+
 {% set title_color = settings.title_color | default("#54c8e9") %}
 {% set subtitle_color = settings.subtitle_color | default("#9ca3af") %}
-{% set bg_color = settings.bg_color | default("#141414") %}
 {% set value_color = settings.value_color | default("#ffffff") %}
 {% set label_color = settings.label_color | default("#9ca3af") %}
 {% set count_duration = (settings.count_duration | default(2000)) | int %}
-{% set home_tab = settings.home_tab | default('') %}
 
-{% if features and features | length > 0 %}
+{% set wow = settings.wow | default(settings.section_animation | default('false')) | string %}
+{% if wow in ['off', 'false', '0', ''] %}{% set wow = '' %}{% endif %}
+{% set custom_classes = (settings.classes | default(settings.custom_classes | default('', true))) | trim %}
+
+{% set show_section = true %}
+{% if settings.ar_only | default(settings.show_ar_only | default(false)) and session.lang != 'ar' %}{% set show_section = false %}{% endif %}
+{% if settings.en_only | default(settings.show_en_only | default(false)) and session.lang != 'en' %}{% set show_section = false %}{% endif %}
+
+{% if show_section and (section_title or subtitle or items | length > 0) %}
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
-  class="angel-store-features"
+  class="angel-store-features{% if dark_on %} angel-store-features--dark{% endif %}{% if bg_hide or is_transparent_bg %} angel-store-features--bg-hide{% endif %}{% if vertical_mobile %} angel-store-features--vertical-mobile{% endif %}{% if settings.mobile_only | default(settings.show_mobile_only | default(false)) %} angel-store-features--mobile-only{% endif %}{% if settings.pc_only | default(settings.show_desktop_only | default(false)) %} angel-store-features--desktop-only{% endif %}{% if wow %} angel-store-features--anim-{{ wow }}{% endif %}{% if custom_classes %} {{ custom_classes }}{% endif %}"
   {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
-  data-count-up="{{ 'true' if settings.enable_count_up != false else 'false' }}"
   data-count-duration="{{ count_duration if count_duration > 0 else 2000 }}"
   style="
     --sf-bg: {{ bg_color }};
@@ -23,73 +41,91 @@
     --sf-subtitle: {{ subtitle_color }};
     --sf-value: {{ value_color }};
     --sf-label: {{ label_color }};
+    {% if bg_image and not bg_hide and not is_transparent_bg %}--sf-bg-image: url('{{ bg_image }}');{% endif %}
   "
 >
   <div class="container angel-store-features__inner">
-    <header class="angel-store-features-header">
-      <h2 class="angel-store-features-header__title">{{ section_title }}</h2>
-      {% if subtitle and subtitle | trim != section_title | trim %}
-        <p class="angel-store-features-header__subtitle">{{ subtitle }}</p>
-      {% endif %}
-    </header>
+    {% if section_title or subtitle %}
+      <header class="angel-store-features-header">
+        {% if section_title %}
+          <h2 class="angel-store-features-header__title">{{ section_title }}</h2>
+        {% endif %}
+        {% if subtitle and subtitle | trim != section_title | trim %}
+          <p class="angel-store-features-header__subtitle">{{ subtitle }}</p>
+        {% endif %}
+      </header>
+    {% endif %}
 
-    <div class="angel-store-features-grid" role="list">
-      {% for item in features %}
-        {% set display_value = item.value | default('', true) | trim %}
-        {% if not display_value and item.count_to is defined and item.count_to is not none and (item.count_to | string | trim) != '' %}
-          {% set display_value = (item.count_prefix | default('', true)) ~ (item.count_to | string) ~ (item.count_suffix | default('', true)) %}
-        {% endif %}
-        {% if item.icon or item.label or display_value %}
-          <div class="angel-store-features-item" role="listitem">
-            {% if item.icon %}
-              <img
-                class="angel-store-features-item__icon"
-                src="{{ item.icon }}"
-                alt=""
-                loading="lazy"
-                width="80"
-                height="80"
-              >
-            {% endif %}
-            {% if display_value %}
-              <p
-                class="angel-store-features-item__value"
-                {% if settings.enable_count_up != false %}data-count-from-value="{{ display_value | e }}"{% endif %}
-              >{{ display_value }}</p>
-            {% endif %}
-            {% if item.label %}
-              <p class="angel-store-features-item__label">{{ item.label }}</p>
-            {% endif %}
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
+    {% if items | length > 0 %}
+      <div class="angel-store-features-grid" role="list">
+        {% for item in items %}
+          {% set item_title = item.title | default(item.value | default('', true)) | string | trim %}
+          {% set item_label = item.title_p | default(item.label | default('', true)) | string | trim %}
+          {% set icon_img = item.img | default(item.image | default('', true)) | string | trim %}
+          {% set icon_gif = item.flaticon | default(item.icon_url | default('', true)) | string | trim %}
+          {% set icon_class = item.icon | default('') | string | trim %}
+          {% if icon_class and (icon_class[:4] == 'http' or icon_class[:1] == '/' or '.' in icon_class) %}
+            {% if not icon_gif %}{% set icon_gif = icon_class %}{% endif %}
+            {% set icon_class = '' %}
+          {% endif %}
+          {% set item_count = item.num | default(item.enable_count | default(settings.enable_count_up | default(false))) %}
+          {% if item_title or item_label or icon_img or icon_gif or icon_class %}
+            <div class="angel-store-features-item" role="listitem">
+              {% if icon_img %}
+                <img class="angel-store-features-item__icon" src="{{ icon_img }}" alt="" loading="lazy" width="80" height="80">
+              {% elif icon_gif %}
+                <img class="angel-store-features-item__icon" src="{{ icon_gif }}" alt="" loading="lazy" width="80" height="80">
+              {% elif icon_class %}
+                <i class="{{ icon_class }} angel-store-features-item__icon angel-store-features-item__icon--sicon" aria-hidden="true"></i>
+              {% endif %}
+              {% if item_title %}
+                <p
+                  class="angel-store-features-item__value"
+                  {% if item_count %}data-count-from-value="{{ item_title | e }}"{% endif %}
+                >{{ item_title }}</p>
+              {% endif %}
+              {% if item_label %}
+                <p class="angel-store-features-item__label">{{ item_label }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
 </section>
 
 <script>
   (function () {
     var section = document.getElementById('{{ sectionId }}');
-    if (!section || section.getAttribute('data-count-up') !== 'true') return;
+    if (!section) return;
 
     var duration = parseInt(section.getAttribute('data-count-duration'), 10) || 2000;
 
-    function parseCountFromText(raw) {
+    function parseMalakCount(raw) {
       if (!raw) return null;
       var text = String(raw).trim();
+      var malak = text.match(/^([\s\S]*?)@([\d,]+)@([\s\S]*)$/);
+      if (malak) {
+        var target = parseFloat(malak[2].replace(/,/g, ''));
+        if (isNaN(target)) return null;
+        return {
+          prefix: malak[1],
+          suffix: malak[3],
+          target: target,
+          separator: /,/.test(malak[2])
+        };
+      }
       var groups = text.match(/\d[\d,]*/g);
       if (!groups || groups.length !== 1) return null;
-
       var match = text.match(/^([\s\S]*?)(\d[\d,]*)([\s\S]*)$/);
       if (!match) return null;
-
-      var target = parseFloat(match[2].replace(/,/g, ''));
-      if (isNaN(target)) return null;
-
+      var targetNum = parseFloat(match[2].replace(/,/g, ''));
+      if (isNaN(targetNum)) return null;
       return {
         prefix: match[1],
         suffix: match[3],
-        target: target,
+        target: targetNum,
         separator: /,/.test(match[2])
       };
     }
@@ -118,7 +154,7 @@
     }
 
     section.querySelectorAll('[data-count-from-value]').forEach(function (el) {
-      var parsed = parseCountFromText(el.getAttribute('data-count-from-value'));
+      var parsed = parseMalakCount(el.getAttribute('data-count-from-value'));
       el.removeAttribute('data-count-from-value');
       if (!parsed) return;
       applyCountMarkup(el, parsed);
@@ -135,28 +171,19 @@
 
     function runCount(el) {
       if (el.getAttribute('data-count-done') === 'true') return;
-
       var target = parseFloat(el.getAttribute('data-count-to'));
       if (isNaN(target)) return;
-
       var useSeparator = el.getAttribute('data-count-separator') === 'true';
       var startTime = null;
-
       el.setAttribute('data-count-done', 'true');
-
       function frame(ts) {
         if (!startTime) startTime = ts;
         var progress = Math.min((ts - startTime) / duration, 1);
         var eased = 1 - Math.pow(1 - progress, 3);
-        var current = target * eased;
-        el.textContent = formatCount(current, useSeparator);
-        if (progress < 1) {
-          requestAnimationFrame(frame);
-        } else {
-          el.textContent = formatCount(target, useSeparator);
-        }
+        el.textContent = formatCount(target * eased, useSeparator);
+        if (progress < 1) requestAnimationFrame(frame);
+        else el.textContent = formatCount(target, useSeparator);
       }
-
       requestAnimationFrame(frame);
     }
 
@@ -168,7 +195,6 @@
           observer.unobserve(entry.target);
         });
       }, { threshold: 0.35, rootMargin: '0px 0px -8% 0px' });
-
       counters.forEach(function (el) { observer.observe(el); });
     } else {
       counters.forEach(runCount);

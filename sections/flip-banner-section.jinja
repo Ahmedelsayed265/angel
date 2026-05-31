@@ -26,6 +26,7 @@
   {% if can_flip %}
     data-flip-interval="{{ flip_interval_ms }}"
     data-pause-hover="{{ 'true' if settings.pause_on_hover != false else 'false' }}"
+    data-drag-flip="{{ 'true' if settings.drag_flip != false else 'false' }}"
   {% endif %}
 >
   <div class="container angel-flip-banner__inner">
@@ -41,6 +42,7 @@
               src="{{ image_front }}"
               alt=""
               loading="eager"
+              draggable="false"
               width="1200"
               height="320"
             >
@@ -60,6 +62,7 @@
               src="{{ image_back }}"
               alt=""
               loading="{% if image_front %}lazy{% else %}eager{% endif %}"
+              draggable="false"
               width="1200"
               height="320"
             >
@@ -84,38 +87,145 @@
 
     var intervalMs = parseInt(section.getAttribute('data-flip-interval'), 10) || 5000;
     var pauseOnHover = section.getAttribute('data-pause-hover') === 'true';
+    var dragFlip = section.getAttribute('data-drag-flip') !== 'false';
     var timerId = null;
-    var flipped = false;
+    var flipped = card.classList.contains('is-flipped');
+    var dragging = false;
+    var moved = false;
+    var startX = 0;
+    var startAngle = 0;
+    var lastAngle = flipped ? 180 : 0;
+    var activePointer = null;
 
     function prefersReducedMotion() {
       return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
 
-    function flip() {
-      flipped = !flipped;
-      card.classList.toggle('is-flipped', flipped);
+    function isRtl() {
+      return document.documentElement.getAttribute('dir') === 'rtl' || window.appDirection === 'rtl';
     }
 
-    function start() {
-      if (prefersReducedMotion()) return;
-      stop();
+    function syncFlippedClass() {
+      card.classList.toggle('is-flipped', flipped);
+      if (card.hasAttribute('aria-pressed')) {
+        card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+      }
+    }
+
+    function applyAngle(angle, animate) {
+      lastAngle = angle;
+      card.classList.remove('is-flipped');
+      if (animate) {
+        card.style.transition = '';
+        card.style.transform = '';
+        flipped = angle >= 90;
+        syncFlippedClass();
+        return;
+      }
+      card.style.transition = 'none';
+      card.style.transform = 'rotateY(' + angle + 'deg)';
+    }
+
+    function flip() {
+      flipped = !flipped;
+      applyAngle(flipped ? 180 : 0, true);
+    }
+
+    function startAuto() {
+      if (prefersReducedMotion() || dragging) return;
+      stopAuto();
       timerId = window.setInterval(flip, intervalMs);
     }
 
-    function stop() {
+    function stopAuto() {
       if (timerId) {
         window.clearInterval(timerId);
         timerId = null;
       }
     }
 
-    start();
+    function onPointerMove(e) {
+      if (!dragging) return;
+      if (activePointer !== null && e.pointerId !== activePointer) return;
+      var dx = e.clientX - startX;
+      if (Math.abs(dx) > 4) {
+        moved = true;
+        e.preventDefault();
+      }
+      var width = card.offsetWidth || 1;
+      var delta = (dx / width) * 180;
+      if (isRtl()) delta = -delta;
+      var angle = Math.max(0, Math.min(180, startAngle - delta));
+      applyAngle(angle, false);
+    }
+
+    function finishDrag(e) {
+      if (!dragging) return;
+      if (e && activePointer !== null && e.pointerId !== activePointer) return;
+      dragging = false;
+      activePointer = null;
+      card.classList.remove('is-dragging');
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', finishDrag);
+      window.removeEventListener('pointercancel', finishDrag);
+      flipped = lastAngle >= 90;
+      applyAngle(flipped ? 180 : 0, true);
+      startAuto();
+    }
+
+    function onPointerDown(e) {
+      if (!dragFlip) return;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      dragging = true;
+      moved = false;
+      activePointer = e.pointerId;
+      startX = e.clientX;
+      startAngle = flipped ? 180 : 0;
+      lastAngle = startAngle;
+      stopAuto();
+      card.classList.add('is-dragging');
+      applyAngle(startAngle, false);
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', finishDrag);
+      window.addEventListener('pointercancel', finishDrag);
+    }
+
+    if (dragFlip) {
+      card.classList.add('angel-flip-banner__card--draggable');
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+      card.setAttribute('aria-label', '{{ _("Flip banner") }}');
+      card.addEventListener('pointerdown', onPointerDown, true);
+
+      card.addEventListener('click', function (e) {
+        if (moved) {
+          e.preventDefault();
+          e.stopPropagation();
+          moved = false;
+        }
+      }, true);
+
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          flip();
+        }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          flipped = (e.key === 'ArrowLeft') !== isRtl();
+          applyAngle(flipped ? 180 : 0, true);
+        }
+      });
+    }
+
+    startAuto();
 
     if (pauseOnHover) {
-      section.addEventListener('mouseenter', stop);
-      section.addEventListener('mouseleave', start);
-      section.addEventListener('focusin', stop);
-      section.addEventListener('focusout', start);
+      section.addEventListener('mouseenter', stopAuto);
+      section.addEventListener('mouseleave', startAuto);
+      section.addEventListener('focusin', stopAuto);
+      section.addEventListener('focusout', startAuto);
     }
   })();
 </script>

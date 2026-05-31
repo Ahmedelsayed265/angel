@@ -1,146 +1,239 @@
 {
-    "section_id": "angel-store-features-section",
-    "template": "sections/store-features-section.jinja",
-    "icon": "fa fa-star",
-    "name": {
-        "ar": "مميزات المتجر",
-        "en": "Store features"
+  "section_id": "angel-store-features-section",
+  "template": "sections/store-features-section.jinja",
+  "icon": "fa fa-star",
+  "name": {
+    "ar": "مميزات المتجر (ملاك)",
+    "en": "Store features (Angel)"
+  },
+  "settings": [
+    {
+      "id": "home_tab",
+      "type": "select",
+      "label": {
+        "ar": "اختر التبويب",
+        "en": "Select tab"
+      },
+      "info": {
+        "ar": "اتركه فارغًا ليظهر في كل التبويبات. أو اختر تبويبًا محددًا ليظهر داخله فقط.",
+        "en": "Leave empty to show in all tabs. Or choose a specific tab to show only there."
+      },
+      "default": "",
+      "options": [
+        { "value": "", "label": { "ar": "كل التبويبات", "en": "All tabs" } },
+        { "value": "1", "label": { "ar": "تبويب 1", "en": "Tab 1" } },
+        { "value": "2", "label": { "ar": "تبويب 2", "en": "Tab 2" } },
+        { "value": "3", "label": { "ar": "تبويب 3", "en": "Tab 3" } }
+      ]
     },
-    "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": {
+        "ar": "العنوان",
+        "en": "Title"
+      },
+      "default": "مميزات المتجر"
+    },
+    {
+      "id": "title_p",
+      "type": "text",
+      "label": {
+        "ar": "عنوان فرعي",
+        "en": "Subtitle"
+      },
+      "default": "أفضل متجر في السعودية"
+    },
+    {
+      "id": "bg_hide",
+      "type": "checkbox",
+      "label": {
+        "ar": "إخفاء خلفية العنصر",
+        "en": "Hide element background"
+      },
+      "default": false
+    },
+    {
+      "id": "vertical",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض المميزات بشكل عمودي في الجوال",
+        "en": "Vertical features on mobile"
+      },
+      "default": false
+    },
+    {
+      "id": "dark",
+      "type": "checkbox",
+      "label": {
+        "ar": "تثبيت المظهر الداكن",
+        "en": "Pin dark appearance"
+      },
+      "default": false
+    },
+    {
+      "id": "items",
+      "type": "list",
+      "max_items": 12,
+      "label": {
+        "ar": "المميزات",
+        "en": "Features"
+      },
+      "settings": [
         {
-            "id": "home_tab",
-            "type": "select",
-            "label": {
-                "ar": "اختر التبويب",
-                "en": "Select tab"
-            },
-            "info": {
-                "ar": "اتركه فارغًا ليظهر في كل التبويبات. أو اختر تبويبًا محددًا ليظهر داخله فقط.",
-                "en": "Leave empty to show in all tabs. Or choose a specific tab to show only there."
-            },
-            "default": "",
-            "options": [
-                { "value": "", "label": { "ar": "كل التبويبات", "en": "All tabs" } },
-                { "value": "1", "label": { "ar": "تبويب 1", "en": "Tab 1" } },
-                { "value": "2", "label": { "ar": "تبويب 2", "en": "Tab 2" } },
-                { "value": "3", "label": { "ar": "تبويب 3", "en": "Tab 3" } }
-            ]
+          "id": "flaticon",
+          "type": "url",
+          "label": {
+            "ar": "أضف رابط الصورة",
+            "en": "Image link"
+          },
+          "info": {
+            "ar": "يمكنك إضافة رابط أيقونة بصيغة gif",
+            "en": "You can add an icon link in GIF format"
+          }
         },
         {
-            "id": "title",
-            "type": "text",
-            "label": {
-                "ar": "العنوان",
-                "en": "Title"
-            },
-            "default": "مميزات المتجر"
+          "id": "img",
+          "type": "image",
+          "label": {
+            "ar": "أو قم برفع صورة",
+            "en": "Or upload image"
+          },
+          "info": {
+            "ar": "في حال رفع صورة تظهر بدلًا من أيقونة الميزة.",
+            "en": "Uploaded image replaces the feature icon."
+          }
         },
         {
-            "id": "subtitle",
-            "type": "text",
-            "label": {
-                "ar": "العنوان الفرعي",
-                "en": "Subtitle"
-            },
-            "default": ""
+          "id": "icon",
+          "type": "text",
+          "label": {
+            "ar": "أو أختر من أيقونات سلة",
+            "en": "Or choose a Salla icon"
+          }
         },
         {
-            "id": "title_color",
-            "type": "color",
-            "label": {
-                "ar": "لون العنوان",
-                "en": "Title color"
-            },
-            "default": "#54c8e9"
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "عنوان الميزة",
+            "en": "Feature title"
+          },
+          "info": {
+            "ar": "للعداد التصاعدي: ضع الرقم بين @ مثل +@500@تقييم",
+            "en": "For counter: wrap the number with @ e.g. +@500@rating"
+          }
         },
         {
-            "id": "subtitle_color",
-            "type": "color",
-            "label": {
-                "ar": "لون العنوان الفرعي",
-                "en": "Subtitle color"
-            },
-            "default": "#9ca3af"
+          "id": "title_p",
+          "type": "text",
+          "label": {
+            "ar": "تفاصيل عن الميزة",
+            "en": "Feature details"
+          }
         },
         {
-            "id": "bg_color",
-            "type": "color",
-            "label": {
-                "ar": "لون الخلفية",
-                "en": "Background color"
-            },
-            "default": "#141414"
-        },
-        {
-            "id": "value_color",
-            "type": "color",
-            "label": {
-                "ar": "لون النص الرئيسي",
-                "en": "Primary text color"
-            },
-            "default": "#ffffff"
-        },
-        {
-            "id": "label_color",
-            "type": "color",
-            "label": {
-                "ar": "لون النص الثانوي",
-                "en": "Secondary text color"
-            },
-            "default": "#9ca3af"
-        },
-        {
-            "id": "enable_count_up",
-            "type": "checkbox",
-            "label": {
-                "ar": "تفعيل عدّاد الأرقام",
-                "en": "Enable count-up animation"
-            },
-            "default": true
-        },
-        {
-            "id": "count_duration",
-            "type": "text",
-            "label": {
-                "ar": "مدة العدّ بالميلي ثانية (مثال: 2000)",
-                "en": "Count duration in ms"
-            },
-            "default": "2000"
-        },
-        {
-            "id": "features",
-            "type": "list",
-            "max_items": 6,
-            "label": {
-                "ar": "المميزات",
-                "en": "Features"
-            },
-            "settings": [
-                {
-                    "id": "icon",
-                    "type": "image",
-                    "label": {
-                        "ar": "الأيقونة",
-                        "en": "Icon"
-                    }
-                },
-                {
-                    "id": "value",
-                    "type": "text",
-                    "label": {
-                        "ar": "النص الرئيسي (مثال: + 399 تقييم)",
-                        "en": "Primary text (e.g. + 399 ratings)"
-                    }
-                },
-                {
-                    "id": "label",
-                    "type": "text",
-                    "label": {
-                        "ar": "النص الثانوي تحت الرقم (مثال: عدد التقييمات)",
-                        "en": "Secondary text below"
-                    }
-                }
-            ]
+          "id": "num",
+          "type": "checkbox",
+          "label": {
+            "ar": "تفعيل عداد الأرقام التصاعدي",
+            "en": "Enable ascending number counter"
+          },
+          "info": {
+            "ar": "فعل هذا الخيار فقط في حال كان عنوان الميزة الرئيسي يحتوي على أرقام فقط.",
+            "en": "Enable only when the feature title contains numbers."
+          },
+          "default": false
         }
-    ]
+      ]
+    },
+    {
+      "id": "block_bg",
+      "type": "color",
+      "label": {
+        "ar": "لون خلفية العنصر",
+        "en": "Element background color"
+      },
+      "info": {
+        "ar": "استخدم الأبيض (#ffffff) للحصول على خلفية شفافة.",
+        "en": "Use white (#ffffff) for a transparent background."
+      },
+      "default": "#141414"
+    },
+    {
+      "id": "block_img",
+      "type": "image",
+      "label": {
+        "ar": "صورة خلفية العنصر",
+        "en": "Element background image"
+      }
+    },
+    {
+      "id": "mobile_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الجوال فقط",
+        "en": "Show on mobile only"
+      },
+      "default": false
+    },
+    {
+      "id": "pc_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الكمبيوتر والتابلت فقط",
+        "en": "Show on desktop/tablet only"
+      },
+      "default": false
+    },
+    {
+      "id": "ar_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الواجهة باللغة العربية فقط",
+        "en": "Arabic interface only"
+      },
+      "default": false
+    },
+    {
+      "id": "en_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الواجهة بالإنجليزية فقط",
+        "en": "English interface only"
+      },
+      "default": false
+    },
+    {
+      "id": "wow",
+      "type": "select",
+      "label": {
+        "ar": "أنيميشن ملاك",
+        "en": "Angel animation"
+      },
+      "default": "false",
+      "options": [
+        { "value": "false", "label": { "ar": "إيقاف", "en": "Off" } },
+        { "value": "fade-in", "label": { "ar": "ظهور", "en": "Fade in" } },
+        { "value": "fade-up", "label": { "ar": "ظهور لأعلى", "en": "Fade up" } },
+        { "value": "fade-down", "label": { "ar": "ظهور لأسفل", "en": "Fade down" } },
+        { "value": "blur-in", "label": { "ar": "وضوح", "en": "Blur in" } },
+        { "value": "scale-in", "label": { "ar": "تكبير", "en": "Scale in" } },
+        { "value": "bounce-in", "label": { "ar": "قفز لأعلى", "en": "Bounce in" } },
+        { "value": "flip-y", "label": { "ar": "دوران عمودي", "en": "Flip Y" } }
+      ]
+    },
+    {
+      "id": "classes",
+      "type": "text",
+      "label": {
+        "ar": "Classes",
+        "en": "Classes"
+      },
+      "info": {
+        "ar": "أضف كلاسات خاصة لحاوية السيكشن.",
+        "en": "Add special classes to the parent section."
+      }
+    }
+  ]
 }

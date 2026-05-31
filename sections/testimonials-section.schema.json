@@ -1,153 +1,240 @@
 {
-    "section_id": "angel-testimonials-section",
-    "template": "sections/testimonials-section.jinja",
-    "icon": "fa fa-quote-right",
-    "name": {
-        "ar": "آراء العملاء",
-        "en": "Testimonials"
+  "section_id": "angel-testimonials-section",
+  "template": "sections/testimonials-section.jinja",
+  "icon": "fa fa-quote-right",
+  "name": {
+    "ar": "آراء العملاء (ملاك)",
+    "en": "Customer reviews (Angel)"
+  },
+  "settings": [
+    {
+      "id": "home_tab",
+      "type": "select",
+      "label": {
+        "ar": "اختر التبويب",
+        "en": "Select tab"
+      },
+      "info": {
+        "ar": "اتركه فارغًا ليظهر في كل التبويبات. أو اختر تبويبًا محددًا ليظهر داخله فقط.",
+        "en": "Leave empty to show in all tabs. Or choose a specific tab to show only there."
+      },
+      "default": "",
+      "options": [
+        { "value": "", "label": { "ar": "كل التبويبات", "en": "All tabs" } },
+        { "value": "1", "label": { "ar": "تبويب 1", "en": "Tab 1" } },
+        { "value": "2", "label": { "ar": "تبويب 2", "en": "Tab 2" } },
+        { "value": "3", "label": { "ar": "تبويب 3", "en": "Tab 3" } }
+      ]
     },
-    "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": {
+        "ar": "العنوان",
+        "en": "Title"
+      },
+      "default": "آراء العملاء"
+    },
+    {
+      "id": "title_p",
+      "type": "text",
+      "label": {
+        "ar": "عنوان فرعي",
+        "en": "Subtitle"
+      },
+      "default": "قالوا عن متجرنا"
+    },
+    {
+      "id": "dark",
+      "type": "checkbox",
+      "label": {
+        "ar": "تثبيت المظهر الداكن",
+        "en": "Pin dark appearance"
+      },
+      "default": false
+    },
+    {
+      "id": "items",
+      "type": "list",
+      "max_items": 12,
+      "label": {
+        "ar": "آراء العملاء",
+        "en": "Reviews"
+      },
+      "settings": [
         {
-            "id": "home_tab",
-            "type": "select",
-            "label": {
-                "ar": "اختر التبويب",
-                "en": "Select tab"
-            },
-            "info": {
-                "ar": "اتركه فارغًا ليظهر في كل التبويبات. أو اختر تبويبًا محددًا ليظهر داخله فقط.",
-                "en": "Leave empty to show in all tabs. Or choose a specific tab to show only there."
-            },
-            "default": "",
-            "options": [
-                { "value": "", "label": { "ar": "كل التبويبات", "en": "All tabs" } },
-                { "value": "1", "label": { "ar": "تبويب 1", "en": "Tab 1" } },
-                { "value": "2", "label": { "ar": "تبويب 2", "en": "Tab 2" } },
-                { "value": "3", "label": { "ar": "تبويب 3", "en": "Tab 3" } }
-            ]
+          "id": "img",
+          "type": "image",
+          "label": {
+            "ar": "صورة العميل",
+            "en": "Customer photo"
+          }
         },
         {
-            "id": "title",
-            "type": "text",
-            "label": {
-                "ar": "العنوان",
-                "en": "Title"
-            },
-            "default": "قالوا عن متجرنا"
+          "id": "name",
+          "type": "text",
+          "label": {
+            "ar": "اسم العميل",
+            "en": "Customer name"
+          }
         },
         {
-            "id": "subtitle",
-            "type": "text",
-            "label": {
-                "ar": "العنوان الفرعي",
-                "en": "Subtitle"
-            },
-            "default": "أفضل متجر في السعودية"
+          "id": "title_p",
+          "type": "text",
+          "label": {
+            "ar": "معلومات إضافية",
+            "en": "Additional info"
+          }
         },
         {
-            "id": "title_color",
-            "type": "color",
-            "label": {
-                "ar": "لون العنوان",
-                "en": "Title color"
-            },
-            "default": "#54c8e9"
+          "id": "rating",
+          "type": "number",
+          "label": {
+            "ar": "تقييم من 5",
+            "en": "Rating out of 5"
+          },
+          "default": 5
         },
         {
-            "id": "bg_color",
-            "type": "color",
-            "label": {
-                "ar": "لون الخلفية",
-                "en": "Background color"
-            },
-            "default": "#141414"
+          "id": "text",
+          "type": "textarea",
+          "label": {
+            "ar": "نص التقييم",
+            "en": "Review text"
+          }
         },
         {
-            "id": "card_bg_color",
-            "type": "color",
-            "label": {
-                "ar": "لون البطاقة",
-                "en": "Card background"
-            },
-            "default": "#2b2b2b"
+          "id": "image",
+          "type": "image",
+          "label": {
+            "ar": "صورة التقييم",
+            "en": "Review image"
+          }
         },
         {
-            "id": "accent_color",
-            "type": "color",
-            "label": {
-                "ar": "لون التمييز (نجوم / شريط التقدم)",
-                "en": "Accent color"
-            },
-            "default": "#54c8e9"
-        },
-        {
-            "id": "autoplay",
-            "type": "checkbox",
-            "label": {
-                "ar": "تشغيل تلقائي",
-                "en": "Autoplay"
-            },
-            "default": true
-        },
-        {
-            "id": "autoplay_delay",
-            "type": "number",
-            "label": {
-                "ar": "مدة كل شريحة (ثانية)",
-                "en": "Slide duration (seconds)"
-            },
-            "default": 6
-        },
-        {
-            "id": "testimonials",
-            "type": "list",
-            "max_items": 12,
-            "label": {
-                "ar": "الآراء",
-                "en": "Testimonials"
-            },
-            "settings": [
-                {
-                    "id": "avatar",
-                    "type": "image",
-                    "label": {
-                        "ar": "الصورة / الشعار",
-                        "en": "Avatar / logo"
-                    }
-                },
-                {
-                    "id": "name",
-                    "type": "text",
-                    "label": {
-                        "ar": "الاسم",
-                        "en": "Name"
-                    }
-                },
-                {
-                    "id": "rating",
-                    "type": "select",
-                    "label": {
-                        "ar": "التقييم",
-                        "en": "Rating"
-                    },
-                    "default": "5",
-                    "options": [
-                        { "label": { "ar": "5", "en": "5" }, "value": "5" },
-                        { "label": { "ar": "4", "en": "4" }, "value": "4" },
-                        { "label": { "ar": "3", "en": "3" }, "value": "3" },
-                        { "label": { "ar": "2", "en": "2" }, "value": "2" },
-                        { "label": { "ar": "1", "en": "1" }, "value": "1" }
-                    ]
-                },
-                {
-                    "id": "text",
-                    "type": "textarea",
-                    "label": {
-                        "ar": "نص الرأي",
-                        "en": "Review text"
-                    }
-                }
-            ]
+          "id": "video",
+          "type": "url",
+          "label": {
+            "ar": "رابط فيديو",
+            "en": "Video link"
+          }
         }
-    ]
+      ]
+    },
+    {
+      "id": "title_color",
+      "type": "color",
+      "label": {
+        "ar": "لون العنوان",
+        "en": "Title color"
+      },
+      "default": "#54c8e9"
+    },
+    {
+      "id": "card_bg_color",
+      "type": "color",
+      "label": {
+        "ar": "لون بطاقة الرأي",
+        "en": "Review card color"
+      },
+      "default": "#2b2b2b"
+    },
+    {
+      "id": "accent_color",
+      "type": "color",
+      "label": {
+        "ar": "لون التمييز (شريط التقدم)",
+        "en": "Accent color"
+      },
+      "default": "#54c8e9"
+    },
+    {
+      "id": "block_bg",
+      "type": "color",
+      "label": {
+        "ar": "لون خلفية البطاقة",
+        "en": "Card background color"
+      },
+      "info": {
+        "ar": "يغطي البطاقة فقط (العنوان + الآراء) وليس السكشن كله. الأبيض (#ffffff) = شفاف.",
+        "en": "Covers the card only, not the full section. White = transparent."
+      },
+      "default": "#141414"
+    },
+    {
+      "id": "block_img",
+      "type": "image",
+      "label": {
+        "ar": "صورة خلفية العنصر",
+        "en": "Element background image"
+      }
+    },
+    {
+      "id": "mobile_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الجوال فقط",
+        "en": "Show on mobile only"
+      },
+      "default": false
+    },
+    {
+      "id": "pc_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الكمبيوتر والتابلت فقط",
+        "en": "Show on desktop/tablet only"
+      },
+      "default": false
+    },
+    {
+      "id": "ar_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الواجهة باللغة العربية فقط",
+        "en": "Arabic interface only"
+      },
+      "default": false
+    },
+    {
+      "id": "en_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الواجهة بالإنجليزية فقط",
+        "en": "English interface only"
+      },
+      "default": false
+    },
+    {
+      "id": "wow",
+      "type": "select",
+      "label": {
+        "ar": "أنيميشن ملاك",
+        "en": "Angel animation"
+      },
+      "default": "false",
+      "options": [
+        { "value": "false", "label": { "ar": "إيقاف", "en": "Off" } },
+        { "value": "fade-in", "label": { "ar": "ظهور", "en": "Fade in" } },
+        { "value": "fade-up", "label": { "ar": "ظهور لأعلى", "en": "Fade up" } },
+        { "value": "fade-down", "label": { "ar": "ظهور لأسفل", "en": "Fade down" } },
+        { "value": "blur-in", "label": { "ar": "وضوح", "en": "Blur in" } },
+        { "value": "scale-in", "label": { "ar": "تكبير", "en": "Scale in" } },
+        { "value": "bounce-in", "label": { "ar": "قفز لأعلى", "en": "Bounce in" } },
+        { "value": "flip-y", "label": { "ar": "دوران عمودي", "en": "Flip Y" } }
+      ]
+    },
+    {
+      "id": "classes",
+      "type": "text",
+      "label": {
+        "ar": "Classes",
+        "en": "Classes"
+      },
+      "info": {
+        "ar": "أضف كلاسات خاصة لحاوية السيكشن.",
+        "en": "Add special classes to the parent section."
+      }
+    }
+  ]
 }

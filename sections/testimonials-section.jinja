@@ -1,84 +1,128 @@
-{% set items = safeget(settings, "testimonials", []) %}
-{% set section_title = settings.title | default("قالوا عن متجرنا") %}
-{% set subtitle = settings.subtitle | default("أفضل متجر في السعودية") %}
+{% set items = safeget(settings, "items", safeget(settings, "testimonials", [])) %}
+{% set section_title = settings.title | default("آراء العملاء") %}
+{% set subtitle = settings.title_p | default(settings.subtitle | default("قالوا عن متجرنا")) %}
+{% set home_tab = settings.home_tab | default('') | string | trim %}
+{% if home_tab in ['0', '', 'none', 'None'] %}
+  {% set home_tab = settings.multihome | default('') | string | trim %}
+{% endif %}
+{% if home_tab in ['0', '', 'none', 'None'] %}{% set home_tab = '' %}{% endif %}
+
+{% set bg_color = settings.block_bg | default(settings.bg_color | default("#141414")) %}
+{% set bg_image = settings.block_img | default(settings.bg_image | default("")) %}
+{% set is_transparent_bg = bg_color | lower in ['#ffffff', '#fff', 'ffffff', 'fff'] %}
+{% set dark_on = settings.dark | default(settings.dark_theme | default(false)) %}
+
 {% set title_color = settings.title_color | default("#54c8e9") %}
-{% set bg_color = settings.bg_color | default("#141414") %}
 {% set card_bg = settings.card_bg_color | default("#2b2b2b") %}
 {% set accent = settings.accent_color | default("#54c8e9") %}
-{% set testimonials_delay = settings.autoplay_delay | default(6) %}
-{% set home_tab = settings.home_tab | default('') %}
 
-{% if items and items | length > 0 %}
+{% set wow = settings.wow | default(settings.section_animation | default('false')) | string %}
+{% if wow in ['off', 'false', '0', ''] %}{% set wow = '' %}{% endif %}
+{% set custom_classes = (settings.classes | default(settings.custom_classes | default('', true))) | trim %}
+
+{% set show_section = true %}
+{% if settings.ar_only | default(settings.show_ar_only | default(false)) and session.lang != 'ar' %}{% set show_section = false %}{% endif %}
+{% if settings.en_only | default(settings.show_en_only | default(false)) and session.lang != 'en' %}{% set show_section = false %}{% endif %}
+
+{% if show_section and items | length > 0 %}
 <link rel="stylesheet" href="{{ 'swiper-bundle.min.css' | asset_url }}">
 
 <section
   id="{{ sectionId }}"
   section-id="{{ sectionId }}"
-  class="angel-testimonials-section"
+  class="angel-testimonials-section{% if dark_on %} angel-testimonials-section--dark{% endif %}{% if is_transparent_bg %} angel-testimonials-section--bg-transparent{% endif %}{% if settings.mobile_only | default(settings.show_mobile_only | default(false)) %} angel-testimonials-section--mobile-only{% endif %}{% if settings.pc_only | default(settings.show_desktop_only | default(false)) %} angel-testimonials-section--desktop-only{% endif %}{% if wow %} angel-testimonials-section--anim-{{ wow }}{% endif %}{% if custom_classes %} {{ custom_classes }}{% endif %}"
   {% if home_tab in ['1', '2', '3'] %}data-home-tab="{{ home_tab }}"{% endif %}
   style="
     --testimonials-bg: {{ bg_color }};
     --testimonials-title: {{ title_color }};
     --testimonials-card-bg: {{ card_bg }};
     --testimonials-accent: {{ accent }};
+    {% if bg_image and not is_transparent_bg %}--testimonials-bg-image: url('{{ bg_image }}');{% endif %}
   "
-  data-autoplay="{{ 'true' if settings.autoplay != false else 'false' }}"
-  data-autoplay-delay="{{ testimonials_delay }}"
 >
   <div class="container angel-testimonials-section__inner">
-    <span class="angel-testimonials-quote-mark" aria-hidden="true">”</span>
+    <div class="angel-testimonials-section__panel">
+      <span class="angel-testimonials-quote-mark" aria-hidden="true">”</span>
 
-    <header class="angel-testimonials-header">
-      <div class="angel-testimonials-heading">
-        <span class="angel-testimonials-heading__line" aria-hidden="true"></span>
-        <h2 class="angel-testimonials-heading__title">{{ section_title }}</h2>
-        <span class="angel-testimonials-heading__line" aria-hidden="true"></span>
-      </div>
-      {% if subtitle %}
-        <p class="angel-testimonials-header__subtitle">{{ subtitle }}</p>
+      {% if section_title or subtitle %}
+        <header class="angel-testimonials-header">
+          {% if section_title %}
+            <div class="angel-testimonials-heading">
+              <span class="angel-testimonials-heading__line" aria-hidden="true"></span>
+              <h2 class="angel-testimonials-heading__title">{{ section_title }}</h2>
+              <span class="angel-testimonials-heading__line" aria-hidden="true"></span>
+            </div>
+          {% endif %}
+          {% if subtitle %}
+            <p class="angel-testimonials-header__subtitle">{{ subtitle }}</p>
+          {% endif %}
+        </header>
       {% endif %}
-    </header>
 
-    <div class="angel-testimonials-slider-wrap">
-      <div class="swiper angel-testimonials-swiper">
-        <div class="swiper-wrapper">
-          {% for item in items %}
-            {% if item.name or item.text %}
-              {% set rating = (item.rating | default('5')) | int %}
-              <div class="swiper-slide">
-                <article class="angel-testimonials-card">
-                  <span class="angel-testimonials-card__quote" aria-hidden="true">”</span>
-                  {% if item.avatar %}
-                    <div class="angel-testimonials-card__avatar-wrap">
-                      <img
-                        class="angel-testimonials-card__avatar"
-                        src="{{ item.avatar }}"
-                        alt="{{ item.name if item.name else '' }}"
-                        loading="lazy"
-                        width="72"
-                        height="72"
-                      >
+      <div class="angel-testimonials-slider-wrap">
+        <div class="swiper angel-testimonials-swiper">
+          <div class="swiper-wrapper">
+            {% for item in items %}
+              {% set item_name = item.name | default('') | string | trim %}
+              {% set item_text = item.text | default('') | string | trim %}
+              {% set item_meta = item.title_p | default(item.info | default('', true)) | string | trim %}
+              {% set avatar_src = item.img | default(item.avatar | default('', true)) | string | trim %}
+              {% set review_image = item.image | default('') | string | trim %}
+              {% set video_src = item.video | default('') | string | trim %}
+              {% set rating_raw = item.rating | default(5) %}
+              {% set rating = rating_raw | int %}
+              {% if rating < 1 %}{% set rating = 1 %}{% endif %}
+              {% if rating > 5 %}{% set rating = 5 %}{% endif %}
+              {% if item_name or item_text or avatar_src or review_image or video_src %}
+                <div class="swiper-slide">
+                  <article class="angel-testimonials-card">
+                    <span class="angel-testimonials-card__quote" aria-hidden="true">”</span>
+                    {% if avatar_src %}
+                      <div class="angel-testimonials-card__avatar-wrap">
+                        <img
+                          class="angel-testimonials-card__avatar"
+                          src="{{ avatar_src }}"
+                          alt="{{ item_name if item_name else '' }}"
+                          loading="lazy"
+                          width="72"
+                          height="72"
+                        >
+                      </div>
+                    {% endif %}
+                    {% if item_name %}
+                      <h3 class="angel-testimonials-card__name">{{ item_name }}</h3>
+                    {% endif %}
+                    {% if item_meta %}
+                      <p class="angel-testimonials-card__meta">{{ item_meta }}</p>
+                    {% endif %}
+                    <div class="angel-testimonials-card__stars" aria-label="{{ rating }} / 5">
+                      {% for i in range(1, 6) %}
+                        <span class="angel-testimonials-star{% if i <= rating %} is-filled{% endif %}" aria-hidden="true">★</span>
+                      {% endfor %}
                     </div>
-                  {% endif %}
-                  {% if item.name %}
-                    <h3 class="angel-testimonials-card__name">{{ item.name }}</h3>
-                  {% endif %}
-                  <div class="angel-testimonials-card__stars" aria-label="{{ rating }} / 5">
-                    {% for i in range(1, 6) %}
-                      <span class="angel-testimonials-star{% if i <= rating %} is-filled{% endif %}" aria-hidden="true">★</span>
-                    {% endfor %}
-                  </div>
-                  {% if item.text %}
-                    <p class="angel-testimonials-card__text">{{ item.text }}</p>
-                  {% endif %}
-                </article>
-              </div>
-            {% endif %}
-          {% endfor %}
+                    {% if item_text %}
+                      <p class="angel-testimonials-card__text">{{ item_text }}</p>
+                    {% endif %}
+                    {% if video_src %}
+                      <div class="angel-testimonials-card__media">
+                        <video class="angel-testimonials-card__video" controls playsinline preload="metadata">
+                          <source src="{{ video_src }}" type="video/mp4">
+                        </video>
+                      </div>
+                    {% elif review_image %}
+                      <div class="angel-testimonials-card__media">
+                        <img class="angel-testimonials-card__review-img" src="{{ review_image }}" alt="" loading="lazy">
+                      </div>
+                    {% endif %}
+                  </article>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
         </div>
-      </div>
 
-      <div class="angel-testimonials-scrollbar swiper-scrollbar" aria-hidden="true"></div>
+        <div class="angel-testimonials-scrollbar swiper-scrollbar" aria-hidden="true"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -93,8 +137,6 @@
     if (!el) return;
 
     var scrollbarEl = section.querySelector('.angel-testimonials-scrollbar');
-    var autoplayEnabled = section.getAttribute('data-autoplay') === 'true';
-    var autoplayDelay = (parseInt(section.getAttribute('data-autoplay-delay'), 10) || 6) * 1000;
     var isRtl = window.appDirection === 'rtl';
 
     function updateTestimonialsScrollbar(sw) {
@@ -102,7 +144,7 @@
       scrollbarEl.style.display = sw.isLocked ? 'none' : '';
     }
 
-    var config = {
+    new Swiper(el, {
       slidesPerView: 1,
       slidesPerGroup: 1,
       spaceBetween: 16,
@@ -126,17 +168,7 @@
         resize: function () { updateTestimonialsScrollbar(this); },
         breakpoint: function () { updateTestimonialsScrollbar(this); }
       }
-    };
-
-    if (autoplayEnabled) {
-      config.autoplay = {
-        delay: autoplayDelay,
-        disableOnInteraction: false,
-        pauseOnMouseEnter: true
-      };
-    }
-
-    new Swiper(el, config);
+    });
   })();
 </script>
 {% endif %}

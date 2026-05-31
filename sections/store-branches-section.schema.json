@@ -57,8 +57,12 @@
             "id": "bg_color",
             "type": "color",
             "label": {
-                "ar": "لون الخلفية",
-                "en": "Background color"
+                "ar": "لون خلفية البطاقة",
+                "en": "Card background color"
+            },
+            "info": {
+                "ar": "يغطي البطاقة فقط (العنوان + التبويبات + الخريطة) وليس السكشن كله.",
+                "en": "Covers the card only (title + tabs + map), not the full section."
             },
             "default": "#141414"
         },

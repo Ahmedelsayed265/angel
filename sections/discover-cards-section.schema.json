@@ -1,12 +1,12 @@
 {
-    "section_id": "angel-discover-cards-section",
-    "template": "sections/discover-cards-section.jinja",
-    "icon": "fa fa-th-large",
-    "name": {
-        "ar": "اكتشف — بطاقات",
-        "en": "Discover cards"
-    },
-    "settings": [
+  "section_id": "angel-discover-cards-section",
+  "template": "sections/discover-cards-section.jinja",
+  "icon": "fa fa-newspaper-o",
+  "name": {
+    "ar": "مقالات متحركة (ملاك)",
+    "en": "Moving articles (Angel)"
+  },
+  "settings": [
         {
             "id": "home_tab",
             "type": "select",
@@ -26,134 +26,172 @@
                 { "value": "3", "label": { "ar": "تبويب 3", "en": "Tab 3" } }
             ]
         },
+    {
+      "id": "title",
+      "type": "text",
+      "label": {
+        "ar": "العنوان",
+        "en": "Title"
+      },
+      "default": "مقالات متحركة"
+    },
+    {
+      "id": "title_p",
+      "type": "text",
+      "label": {
+        "ar": "عنوان فرعي",
+        "en": "Subtitle"
+      },
+      "default": "اطلع على أحدث الأخبار"
+    },
+    {
+      "id": "dark",
+      "type": "checkbox",
+      "label": {
+        "ar": "تثبيت المظهر الداكن",
+        "en": "Pin dark appearance"
+      },
+      "default": false
+    },
+    {
+      "id": "items",
+      "type": "list",
+      "max_items": 12,
+      "label": {
+        "ar": "المقالات",
+        "en": "Articles"
+      },
+      "settings": [
         {
-            "id": "title",
-            "type": "text",
-            "label": {
-                "ar": "العنوان",
-                "en": "Title"
-            },
-            "default": "اكتشف Xiaomi"
+          "id": "image",
+          "type": "image",
+          "label": {
+            "ar": "صور المقال",
+            "en": "Article image"
+          }
         },
         {
-            "id": "title_color",
-            "type": "color",
-            "label": {
-                "ar": "لون العنوان",
-                "en": "Title color"
-            },
-            "default": "#54c8e9"
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "عنوان المقال",
+            "en": "Article title"
+          }
         },
         {
-            "id": "bg_color",
-            "type": "color",
-            "label": {
-                "ar": "لون الخلفية",
-                "en": "Background color"
-            },
-            "default": "#141414"
+          "id": "text",
+          "type": "textarea",
+          "label": {
+            "ar": "ملخص المقال",
+            "en": "Article summary"
+          }
         },
         {
-            "id": "card_bg_color",
-            "type": "color",
-            "label": {
-                "ar": "لون البطاقة",
-                "en": "Card background"
-            },
-            "default": "#2b2b2b"
+          "id": "btn",
+          "type": "text",
+          "label": {
+            "ar": "نص الزر",
+            "en": "Button text"
+          },
+          "default": "قراءة المزيد"
         },
         {
-            "id": "accent_color",
-            "type": "color",
-            "label": {
-                "ar": "لون مقبض شريط التمرير",
-                "en": "Scrollbar drag color"
-            },
-            "default": "#54c8e9"
-        },
-        {
-            "id": "button_bg_color",
-            "type": "color",
-            "label": {
-                "ar": "لون زر البطاقة",
-                "en": "Button background"
-            },
-            "default": "#54c8e9"
-        },
-        {
-            "id": "button_text_color",
-            "type": "color",
-            "label": {
-                "ar": "لون نص الزر",
-                "en": "Button text color"
-            },
-            "default": "#0f172a"
-        },
-        {
-            "id": "slides_desktop",
-            "type": "select",
-            "label": {
-                "ar": "عدد البطاقات على الشاشة الكبيرة",
-                "en": "Cards per view (desktop)"
-            },
-            "options": [
-                { "value": "2", "label": { "ar": "2", "en": "2" } },
-                { "value": "3", "label": { "ar": "3", "en": "3" } },
-                { "value": "4", "label": { "ar": "4", "en": "4" } }
-            ],
-            "default": "3"
-        },
-        {
-            "id": "cards",
-            "type": "list",
-            "max_items": 12,
-            "label": {
-                "ar": "البطاقات",
-                "en": "Cards"
-            },
-            "settings": [
-                {
-                    "id": "image",
-                    "type": "image",
-                    "label": {
-                        "ar": "الصورة",
-                        "en": "Image"
-                    }
-                },
-                {
-                    "id": "title",
-                    "type": "text",
-                    "label": {
-                        "ar": "العنوان",
-                        "en": "Title"
-                    }
-                },
-                {
-                    "id": "description",
-                    "type": "textarea",
-                    "label": {
-                        "ar": "الوصف",
-                        "en": "Description"
-                    }
-                },
-                {
-                    "id": "button_text",
-                    "type": "text",
-                    "label": {
-                        "ar": "نص الزر",
-                        "en": "Button text"
-                    },
-                    "default": "اعرف أكثر"
-                },
-                {
-                    "id": "url",
-                    "type": "url",
-                    "label": {
-                        "ar": "رابط الزر",
-                        "en": "Button link"
-                    }
-                }
-            ]
+          "id": "url",
+          "type": "url",
+          "label": {
+            "ar": "رابط الزر",
+            "en": "Button link"
+          }
         }
-    ]
+      ]
+    },
+    {
+      "id": "block_bg",
+      "type": "color",
+      "label": {
+        "ar": "لون خلفية العنصر",
+        "en": "Element background color"
+      },
+      "info": {
+        "ar": "استخدم الأبيض (#ffffff) للحصول على خلفية شفافة.",
+        "en": "Use white (#ffffff) for a transparent background."
+      },
+      "default": "#141414"
+    },
+    {
+      "id": "block_img",
+      "type": "image",
+      "label": {
+        "ar": "صورة خلفية العنصر",
+        "en": "Element background image"
+      }
+    },
+    {
+      "id": "mobile_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الجوال فقط",
+        "en": "Show on mobile only"
+      },
+      "default": false
+    },
+    {
+      "id": "pc_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الكمبيوتر والتابلت فقط",
+        "en": "Show on desktop/tablet only"
+      },
+      "default": false
+    },
+    {
+      "id": "ar_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الواجهة باللغة العربية فقط",
+        "en": "Arabic interface only"
+      },
+      "default": false
+    },
+    {
+      "id": "en_only",
+      "type": "checkbox",
+      "label": {
+        "ar": "عرض العنصر في الواجهة بالإنجليزية فقط",
+        "en": "English interface only"
+      },
+      "default": false
+    },
+    {
+      "id": "wow",
+      "type": "select",
+      "label": {
+        "ar": "أنيميشن ملاك",
+        "en": "Angel animation"
+      },
+      "default": "false",
+      "options": [
+        { "value": "false", "label": { "ar": "إيقاف", "en": "Off" } },
+        { "value": "fade-in", "label": { "ar": "ظهور", "en": "Fade in" } },
+        { "value": "fade-up", "label": { "ar": "ظهور لأعلى", "en": "Fade up" } },
+        { "value": "fade-down", "label": { "ar": "ظهور لأسفل", "en": "Fade down" } },
+        { "value": "blur-in", "label": { "ar": "وضوح", "en": "Blur in" } },
+        { "value": "scale-in", "label": { "ar": "تكبير", "en": "Scale in" } },
+        { "value": "bounce-in", "label": { "ar": "قفز لأعلى", "en": "Bounce in" } },
+        { "value": "flip-y", "label": { "ar": "دوران عمودي", "en": "Flip Y" } }
+      ]
+    },
+    {
+      "id": "classes",
+      "type": "text",
+      "label": {
+        "ar": "Classes",
+        "en": "Classes"
+      },
+      "info": {
+        "ar": "أضف كلاسات خاصة لحاوية السيكشن.",
+        "en": "Add special classes to the parent section."
+      }
+    }
+  ]
 }
